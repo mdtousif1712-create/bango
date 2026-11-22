@@ -1,4 +1,4 @@
-import {
+import type {
   Place,
   CategoryMeta,
   RecommendationResponse,
@@ -7,7 +7,7 @@ import {
   AssociationRule
 } from '../types';
 
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL as string) || '/api';
 
 export async function fetchCategories(): Promise<CategoryMeta[]> {
   const res = await fetch(`${API_BASE}/categories`);
