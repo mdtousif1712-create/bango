@@ -26,12 +26,7 @@ import {
   Sparkles,
   MapPin,
   Bookmark,
-  Compass,
   AlertCircle,
-  Map,
-  TrendingUp,
-  Layers,
-  ArrowUpRight,
   Sliders,
   CheckCircle2
 } from 'lucide-react';
@@ -251,121 +246,12 @@ export const App: React.FC = () => {
           
           {/* PAGE 1: DISCOVER */}
           {currentPage === 'discover' && (
-            <div className="space-y-12">
-              <HeroSection
-                onSearch={handleNaturalSearch}
-                isSearching={isSearching}
-                onExploreMap={() => setCurrentPage('map')}
-                onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
-              />
-
-              {/* Discover Overview Feature Row */}
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-                <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#E3DFD7]">
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#F02D25] block mb-1">
-                      Quick Portals
-                    </span>
-                    <h3 className="font-display font-bold text-2xl tracking-tight text-[#191919]">
-                      explore bango ecosystem.
-                    </h3>
-                  </div>
-                  <span className="text-xs text-[#77736D] hidden sm:inline">
-                    Choose any portal or select from the sidebar
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {/* Card 1: Map Explorer */}
-                  <div
-                    onClick={() => setCurrentPage('map')}
-                    className="group bg-white p-6 rounded-3xl border border-[#E3DFD7] shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between min-h-[200px]"
-                  >
-                    <div>
-                      <div className="w-10 h-10 rounded-2xl bg-[#ECE9E2] group-hover:bg-[#F02D25] text-[#191919] group-hover:text-white flex items-center justify-center transition-colors mb-4">
-                        <Map className="w-5 h-5" />
-                      </div>
-                      <h4 className="font-display font-bold text-lg uppercase tracking-tight text-[#191919] group-hover:text-[#F02D25] transition-colors">
-                        Map Explorer
-                      </h4>
-                      <p className="text-xs text-[#77736D] mt-1 leading-relaxed">
-                        65/35 interactive Leaflet map with category-classified markers, popups & live radius search.
-                      </p>
-                    </div>
-                    <div className="mt-4 pt-3 border-t border-[#E3DFD7] flex items-center justify-between text-xs font-bold uppercase text-[#F02D25]">
-                      <span>Open Map</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  {/* Card 2: Trending */}
-                  <div
-                    onClick={() => setCurrentPage('trending')}
-                    className="group bg-white p-6 rounded-3xl border border-[#E3DFD7] shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between min-h-[200px]"
-                  >
-                    <div>
-                      <div className="w-10 h-10 rounded-2xl bg-[#ECE9E2] group-hover:bg-[#F02D25] text-[#191919] group-hover:text-white flex items-center justify-center transition-colors mb-4">
-                        <TrendingUp className="w-5 h-5" />
-                      </div>
-                      <h4 className="font-display font-bold text-lg uppercase tracking-tight text-[#191919] group-hover:text-[#F02D25] transition-colors">
-                        The City Is Talking
-                      </h4>
-                      <p className="text-xs text-[#77736D] mt-1 leading-relaxed">
-                        Top destinations ranked by transactional footfall in Bengaluru mobility data.
-                      </p>
-                    </div>
-                    <div className="mt-4 pt-3 border-t border-[#E3DFD7] flex items-center justify-between text-xs font-bold uppercase text-[#F02D25]">
-                      <span>View Trending</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  {/* Card 3: Domains */}
-                  <div
-                    onClick={() => setCurrentPage('domains')}
-                    className="group bg-white p-6 rounded-3xl border border-[#E3DFD7] shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between min-h-[200px]"
-                  >
-                    <div>
-                      <div className="w-10 h-10 rounded-2xl bg-[#ECE9E2] group-hover:bg-[#F02D25] text-[#191919] group-hover:text-white flex items-center justify-center transition-colors mb-4">
-                        <Layers className="w-5 h-5" />
-                      </div>
-                      <h4 className="font-display font-bold text-lg uppercase tracking-tight text-[#191919] group-hover:text-[#F02D25] transition-colors">
-                        8 Urban Domains
-                      </h4>
-                      <p className="text-xs text-[#77736D] mt-1 leading-relaxed">
-                        Healthcare, transport, parks, tech hubs, restaurants & civic assets.
-                      </p>
-                    </div>
-                    <div className="mt-4 pt-3 border-t border-[#E3DFD7] flex items-center justify-between text-xs font-bold uppercase text-[#F02D25]">
-                      <span>Explore Domains</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </div>
-                  </div>
-
-                  {/* Card 4: Apriori AI */}
-                  <div
-                    onClick={() => setCurrentPage('recommendations')}
-                    className="group bg-white p-6 rounded-3xl border border-[#E3DFD7] shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between min-h-[200px]"
-                  >
-                    <div>
-                      <div className="w-10 h-10 rounded-2xl bg-[#ECE9E2] group-hover:bg-[#F02D25] text-[#191919] group-hover:text-white flex items-center justify-center transition-colors mb-4">
-                        <Sparkles className="w-5 h-5" />
-                      </div>
-                      <h4 className="font-display font-bold text-lg uppercase tracking-tight text-[#191919] group-hover:text-[#F02D25] transition-colors">
-                        Apriori AI Engine
-                      </h4>
-                      <p className="text-xs text-[#77736D] mt-1 leading-relaxed">
-                        Uncover high-confidence associative paths with positive lift metrics.
-                      </p>
-                    </div>
-                    <div className="mt-4 pt-3 border-t border-[#E3DFD7] flex items-center justify-between text-xs font-bold uppercase text-[#F02D25]">
-                      <span>Discover Connections</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <HeroSection
+              onSearch={handleNaturalSearch}
+              isSearching={isSearching}
+              onExploreMap={() => setCurrentPage('map')}
+              onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
+            />
           )}
 
           {/* PAGE 2: MAP EXPLORER */}

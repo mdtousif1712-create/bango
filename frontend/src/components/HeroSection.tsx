@@ -103,7 +103,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const currentSlide = LOCATION_SLIDES[activeSlide];
 
   return (
-    <section className="relative w-full pt-6 pb-16 md:pt-10 md:pb-20 overflow-hidden">
+    <section className="relative w-full min-h-[calc(100vh-60px)] flex items-center pt-8 pb-16 md:py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* 2-Column Editorial Hero Layout */}
