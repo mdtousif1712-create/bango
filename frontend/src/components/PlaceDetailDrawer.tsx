@@ -116,7 +116,7 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
               <span className="px-3 py-1 rounded-full bg-[#F02D25] text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
                 {place.category}
               </span>
-              <h2 className="font-display font-extrabold text-2xl text-white mt-1.5 uppercase leading-tight drop-shadow-sm">
+              <h2 className="font-display font-bold text-2xl text-white mt-1.5 leading-tight drop-shadow-sm">
                 {place.name}
               </h2>
             </div>

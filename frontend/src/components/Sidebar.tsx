@@ -77,24 +77,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className={`cursor-pointer group flex items-center pb-5 mb-4 border-b border-[#E3DFD7] transition-all duration-300 w-full ${
             isHovered ? 'justify-start gap-3' : 'justify-center gap-0'
           }`}
-          title="bango • Smart City Discovery"
+          title="bango™ • smart city discovery"
         >
-          {/* Centered Circular Monogram Badge */}
-          <div className="w-11 h-11 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display font-black text-base tracking-tight transition-colors shrink-0 shadow-sm">
+          {/* Centered Circular Monogram Badge with Chunky Rounded Lettering */}
+          <div className="w-11 h-11 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display font-bold text-lg lowercase tracking-tight transition-colors shrink-0 shadow-sm">
             bg
           </div>
 
-          {/* Full Brand Name (only present when hovered to preserve true alignment) */}
+          {/* Full Brand Name matching the atons™ puffy typography */}
           {isHovered && (
             <div className="flex flex-col whitespace-nowrap overflow-hidden animate-in fade-in duration-200">
-              <div className="flex items-center gap-1.5">
-                <span className="font-display font-black text-2xl uppercase tracking-tight text-[#191919] leading-none group-hover:text-[#F02D25] transition-colors">
+              <div className="flex items-start">
+                <span className="font-display font-bold text-3xl lowercase tracking-tight text-[#191919] leading-none group-hover:text-[#F02D25] transition-colors">
                   bango
                 </span>
-                <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
+                <span className="text-[11px] font-bold text-[#F02D25] ml-0.5 -mt-0.5 select-none">
+                  ™
+                </span>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#77736D] mt-0.5">
-                Smart City Discovery
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[#77736D] mt-1">
+                smart city discovery
               </span>
             </div>
           )}
@@ -346,18 +348,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => handleNavClick('discover')}
             className="cursor-pointer flex items-center gap-3"
           >
-            <div className="w-10 h-10 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-extrabold text-base tracking-tight">
+            <div className="w-10 h-10 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-bold text-base lowercase tracking-tight">
               bg
             </div>
             <div className="flex flex-col">
-              <div className="flex items-center gap-1">
-                <span className="font-display font-black text-2xl uppercase tracking-tight text-[#191919]">
+              <div className="flex items-start">
+                <span className="font-display font-bold text-3xl lowercase tracking-tight text-[#191919] leading-none">
                   bango
                 </span>
-                <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
+                <span className="text-[10px] font-bold text-[#F02D25] ml-0.5 -mt-0.5">
+                  ™
+                </span>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#77736D]">
-                Smart City Discovery
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[#77736D] mt-1">
+                smart city discovery
               </span>
             </div>
           </div>

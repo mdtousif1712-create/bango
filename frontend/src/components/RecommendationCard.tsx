@@ -95,7 +95,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
               </button>
             </div>
 
-            <h4 className="font-display font-bold text-sm text-[#191919] uppercase mt-1 line-clamp-1 group-hover:text-[#F02D25] transition-colors">
+            <h4 className="font-display font-bold text-sm text-[#191919] mt-1 line-clamp-1 group-hover:text-[#F02D25] transition-colors">
               {place.name}
             </h4>
 

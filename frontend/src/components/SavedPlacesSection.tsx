@@ -37,9 +37,9 @@ export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
                 bango &bull; Personal Itinerary &bull; Local Storage
               </span>
             </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-[#191919] uppercase tracking-tight leading-[0.95]">
-              Your City. <br />
-              Your Collection.
+            <h2 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
+              your city. <br />
+              your collection.
             </h2>
           </div>
 

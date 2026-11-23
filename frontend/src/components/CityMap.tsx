@@ -164,7 +164,7 @@ export const CityMap: React.FC<CityMapProps> = ({
 
                   {/* Body Content */}
                   <div className="p-3.5">
-                    <h3 className="font-display font-bold text-[#191919] text-base leading-snug line-clamp-1 uppercase">
+                    <h3 className="font-display font-bold text-[#191919] text-base leading-snug line-clamp-1">
                       {place.name}
                     </h3>
                     <p className="text-[#77736D] text-xs mt-1 line-clamp-1 flex items-center gap-1">

@@ -267,8 +267,8 @@ export const App: React.FC = () => {
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#F02D25] block mb-1">
                       Quick Portals
                     </span>
-                    <h3 className="font-display font-black text-2xl uppercase tracking-tight text-[#191919]">
-                      Explore bango Ecosystem
+                    <h3 className="font-display font-bold text-2xl tracking-tight text-[#191919]">
+                      explore bango ecosystem.
                     </h3>
                   </div>
                   <span className="text-xs text-[#77736D] hidden sm:inline">
@@ -383,8 +383,8 @@ export const App: React.FC = () => {
                         bango &bull; Interactive Geographical Exploration
                       </span>
                     </div>
-                    <h2 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-[#191919] uppercase tracking-tight leading-tight">
-                      Bengaluru Map Explorer
+                    <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[#191919] tracking-tight leading-tight">
+                      bengaluru map explorer.
                     </h2>
                   </div>
                   

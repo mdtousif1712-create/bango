@@ -67,9 +67,9 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                 bango &bull; Association Rule Mining &bull; MLxtend Apriori
               </span>
             </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-[#191919] uppercase tracking-tight leading-[0.95]">
-              Discover <br />
-              What Connects.
+            <h2 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
+              discover <br />
+              what connects.
             </h2>
           </div>
 
@@ -227,7 +227,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                         )}
                       </div>
 
-                      <h3 className="font-display font-bold text-xl text-[#191919] uppercase tracking-tight group-hover:text-[#F02D25] transition-colors line-clamp-1">
+                      <h3 className="font-display font-bold text-xl text-[#191919] tracking-tight group-hover:text-[#F02D25] transition-colors line-clamp-1">
                         {place.name}
                       </h3>
 

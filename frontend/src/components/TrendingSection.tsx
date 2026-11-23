@@ -62,9 +62,9 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                 bango &bull; Smart City Footfall Analytics
               </span>
             </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-[#191919] uppercase tracking-tight leading-[0.95]">
-              The City <br />
-              Is Talking.
+            <h2 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
+              the city <br />
+              is talking.
             </h2>
           </div>
 
@@ -146,7 +146,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                     <MapPin className="w-4 h-4 text-[#F02D25]" />
                     <span>{featured.locality} &bull; Central Bengaluru</span>
                   </div>
-                  <h3 className="font-display font-black text-2xl sm:text-4xl text-white uppercase tracking-tight leading-tight">
+                  <h3 className="font-display font-bold text-2xl sm:text-4xl text-white tracking-tight leading-tight">
                     {featured.name}
                   </h3>
                   <p className="text-white/80 text-xs sm:text-sm mt-2 line-clamp-2 font-normal">
@@ -189,7 +189,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
 
                 <div className="p-4 flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <h4 className="font-display font-bold text-base text-[#191919] uppercase truncate group-hover:text-[#F02D25] transition-colors">
+                    <h4 className="font-display font-bold text-base text-[#191919] truncate group-hover:text-[#F02D25] transition-colors">
                       {place.name}
                     </h4>
                     <p className="text-xs text-[#77736D] truncate mt-0.5 flex items-center gap-1">
@@ -230,7 +230,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#F02D25]">
                     {place.category}
                   </span>
-                  <h4 className="font-display font-bold text-sm text-[#191919] uppercase truncate mt-0.5">
+                  <h4 className="font-display font-bold text-sm text-[#191919] truncate mt-0.5">
                     {place.name}
                   </h4>
                   <p className="text-[11px] text-[#77736D] truncate mt-0.5">

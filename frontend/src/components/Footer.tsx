@@ -26,13 +26,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           
           {/* Brand & Coordinates (6 cols) */}
           <div className="md:col-span-6">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="font-display font-black text-3xl uppercase tracking-tight text-white">
+            <div className="flex items-start gap-1 mb-4">
+              <span className="font-display font-bold text-3xl lowercase tracking-tight text-white leading-none">
                 bango
               </span>
-              <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25]"></span>
-              <span className="text-xs uppercase font-extrabold tracking-widest text-[#ECE9E2]/60 ml-1">
-                Smart City Discovery
+              <span className="text-xs font-bold text-[#F02D25] -mt-0.5 select-none">
+                ™
+              </span>
+              <span className="text-[10px] uppercase font-bold tracking-widest text-[#ECE9E2]/60 ml-2 mt-1">
+                smart city discovery
               </span>
             </div>
             

@@ -52,9 +52,9 @@ export const HowItWorksSection: React.FC<HowItWorksProps> = ({ onOpenAlgorithm, 
                 bango &bull; Algorithmic Architecture
               </span>
             </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl text-white uppercase tracking-tight leading-[0.92]">
-              How It <br />
-              Works.
+            <h2 className="font-display font-bold text-4xl sm:text-6xl md:text-7xl text-white tracking-tight leading-tight">
+              how it <br />
+              works.
             </h2>
           </div>
 
@@ -116,7 +116,7 @@ export const HowItWorksSection: React.FC<HowItWorksProps> = ({ onOpenAlgorithm, 
                   <span className="text-[11px] font-bold uppercase tracking-widest text-[#ECE9E2]/50">
                     {s.subtitle}
                   </span>
-                  <h3 className="font-display font-bold text-2xl text-white uppercase tracking-tight mt-1 mb-4">
+                  <h3 className="font-display font-bold text-2xl text-white tracking-tight mt-1 mb-4">
                     {s.title}
                   </h3>
 

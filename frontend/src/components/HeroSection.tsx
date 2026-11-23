@@ -66,12 +66,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Left: Oversized Typography & Search (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             
-            <h1 className="font-display font-extrabold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-[#191919] leading-[0.92] tracking-tighter uppercase mb-6">
-              Discover <br />
-              Bengaluru <br />
-              <span className="text-[#F02D25] underline decoration-4 underline-offset-8">
-                Differently.
-              </span>
+            <h1 className="font-display font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-[#191919] leading-[1.0] tracking-tight mb-6">
+              discover <br />
+              bengaluru <br />
+              <span className="text-[#F02D25]">differently.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-[#77736D] max-w-xl leading-relaxed mb-8 font-normal">
@@ -177,8 +175,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   </span>
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                 </div>
-                <h4 className="font-display font-bold text-sm text-[#191919] uppercase leading-tight">
-                  bango Apriori Association Engine
+                <h4 className="font-display font-bold text-sm text-[#191919] leading-tight">
+                  bango™ Apriori association engine
                 </h4>
                 <p className="text-[11px] text-[#77736D] mt-0.5">
                   Mining statistical co-occurrences across Namma Metro, tech hubs, parks, and healthcare.

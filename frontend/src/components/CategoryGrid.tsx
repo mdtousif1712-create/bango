@@ -79,9 +79,9 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
                 bango &bull; 8 Smart City Sectors
               </span>
             </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-[#191919] uppercase tracking-tight leading-[0.95]">
-              One City. <br />
-              Endless Possibilities.
+            <h2 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
+              one city. <br />
+              endless possibilities.
             </h2>
           </div>
 
