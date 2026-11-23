@@ -216,7 +216,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full bg-[#F5F3EE] text-[#191919] font-sans antialiased flex flex-col lg:flex-row selection:bg-[#F02D25] selection:text-white">
-      
+
       {/* 1. THEMATIC PERSISTENT SIDEBAR */}
       <Sidebar
         currentPage={currentPage}
@@ -232,7 +232,7 @@ export const App: React.FC = () => {
 
       {/* 2. MAIN CONTENT AREA */}
       <div className="flex-1 min-w-0 flex flex-col min-h-screen">
-        
+
         {/* Mobile Top Navigation Header */}
         <MobileHeader
           currentPage={currentPage}
@@ -243,7 +243,7 @@ export const App: React.FC = () => {
 
         {/* 3. DEDICATED PAGE VIEWS (SWITCHED VIA SIDEBAR) */}
         <main className="flex-1">
-          
+
           {/* PAGE 1: DISCOVER */}
           {currentPage === 'discover' && (
             <HeroSection
@@ -258,7 +258,7 @@ export const App: React.FC = () => {
           {currentPage === 'map' && (
             <div className="py-10 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
+
                 {/* Heading */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                   <div>
@@ -272,7 +272,7 @@ export const App: React.FC = () => {
                       bengaluru map explorer.
                     </h2>
                   </div>
-                  
+
                   <p className="text-xs sm:text-sm text-[#77736D] max-w-md font-normal leading-relaxed">
                     Click any category marker on the map to focus that place, view details, and compute live Apriori association recommendations.
                   </p>
@@ -280,7 +280,7 @@ export const App: React.FC = () => {
 
                 {/* 65 / 35 Responsive Grid Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-                  
+
                   {/* LEFT: 65% Interactive Leaflet Map (8 cols) */}
                   <div className="lg:col-span-8 flex flex-col min-h-[580px] lg:min-h-[660px] relative rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-lg bg-white">
                     <div className="flex-1 w-full h-full relative">
@@ -307,7 +307,7 @@ export const App: React.FC = () => {
 
                   {/* RIGHT: 35% Editorial Discovery Panel (4 cols) */}
                   <div className="lg:col-span-4 flex flex-col min-h-[580px] lg:min-h-[660px] rounded-3xl bg-white border border-[#E3DFD7] p-5 shadow-lg overflow-hidden">
-                    
+
                     {/* Category Filter Pills */}
                     <div className="mb-4 shrink-0">
                       <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] block mb-2">
@@ -338,11 +338,10 @@ export const App: React.FC = () => {
                       <div className="flex items-center gap-1.5 bg-[#F5F3EE] p-1 rounded-2xl">
                         <button
                           onClick={() => setRightPanelTab('recommendations')}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                            rightPanelTab === 'recommendations'
-                              ? 'bg-[#191919] text-white shadow-xs'
-                              : 'text-[#77736D] hover:text-[#191919]'
-                          }`}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${rightPanelTab === 'recommendations'
+                            ? 'bg-[#191919] text-white shadow-xs'
+                            : 'text-[#77736D] hover:text-[#191919]'
+                            }`}
                         >
                           <Sparkles className="w-3.5 h-3.5 text-[#F02D25]" />
                           <span>For You</span>
@@ -355,11 +354,10 @@ export const App: React.FC = () => {
 
                         <button
                           onClick={() => setRightPanelTab('places')}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                            rightPanelTab === 'places'
-                              ? 'bg-[#191919] text-white shadow-xs'
-                              : 'text-[#77736D] hover:text-[#191919]'
-                          }`}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${rightPanelTab === 'places'
+                            ? 'bg-[#191919] text-white shadow-xs'
+                            : 'text-[#77736D] hover:text-[#191919]'
+                            }`}
                         >
                           <MapPin className="w-3.5 h-3.5" />
                           <span>Places</span>
@@ -370,11 +368,10 @@ export const App: React.FC = () => {
 
                         <button
                           onClick={() => setRightPanelTab('saved')}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                            rightPanelTab === 'saved'
-                              ? 'bg-[#191919] text-white shadow-xs'
-                              : 'text-[#77736D] hover:text-[#191919]'
-                          }`}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${rightPanelTab === 'saved'
+                            ? 'bg-[#191919] text-white shadow-xs'
+                            : 'text-[#77736D] hover:text-[#191919]'
+                            }`}
                         >
                           <Bookmark className="w-3.5 h-3.5" />
                           <span>Saved</span>
