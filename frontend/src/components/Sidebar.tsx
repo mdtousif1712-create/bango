@@ -59,7 +59,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   };
 
-  // Helper renderer for desktop sidebar (responsive to isHovered)
+  // Helper renderer for desktop sidebar (collapses to slim centered icon bar, expands on hover)
   const renderDesktopSidebar = () => (
     <aside
       onMouseEnter={() => setIsHovered(true)}
@@ -68,54 +68,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
         isHovered ? 'w-72 px-5' : 'w-20 px-3'
       }`}
     >
-      {/* Top Section */}
-      <div className="flex flex-col w-full">
+      {/* Top Section: Brand & Nav Items */}
+      <div className="flex flex-col w-full items-center">
         
         {/* Brand Logo & Header */}
         <div
           onClick={() => handleNavClick('discover')}
-          className={`cursor-pointer group flex items-center pb-5 mb-5 border-b border-[#E3DFD7] transition-all duration-300 ${
-            isHovered ? 'justify-start gap-3' : 'justify-center'
+          className={`cursor-pointer group flex items-center pb-5 mb-4 border-b border-[#E3DFD7] transition-all duration-300 w-full ${
+            isHovered ? 'justify-start gap-3' : 'justify-center gap-0'
           }`}
           title="bango • Smart City Discovery"
         >
-          {/* Circular Monogram Badge */}
+          {/* Centered Circular Monogram Badge */}
           <div className="w-11 h-11 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display font-black text-base tracking-tight transition-colors shrink-0 shadow-sm">
             bg
           </div>
 
-          {/* Full Brand Name (reveals smoothly on hover) */}
-          <div
-            className={`flex flex-col whitespace-nowrap overflow-hidden transition-all duration-300 ${
-              isHovered
-                ? 'opacity-100 max-w-[200px]'
-                : 'opacity-0 max-w-0 pointer-events-none'
-            }`}
-          >
-            <div className="flex items-center gap-1.5">
-              <span className="font-display font-black text-2xl uppercase tracking-tight text-[#191919] leading-none group-hover:text-[#F02D25] transition-colors">
-                bango
+          {/* Full Brand Name (only present when hovered to preserve true alignment) */}
+          {isHovered && (
+            <div className="flex flex-col whitespace-nowrap overflow-hidden animate-in fade-in duration-200">
+              <div className="flex items-center gap-1.5">
+                <span className="font-display font-black text-2xl uppercase tracking-tight text-[#191919] leading-none group-hover:text-[#F02D25] transition-colors">
+                  bango
+                </span>
+                <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#77736D] mt-0.5">
+                Smart City Discovery
               </span>
-              <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#77736D] mt-0.5">
-              Smart City Discovery
-            </span>
-          </div>
+          )}
         </div>
 
-        {/* Navigation Section */}
-        <div className="space-y-1.5 w-full">
-          {/* Navigation Label (visible only on hover) */}
-          <div
-            className={`overflow-hidden transition-all duration-200 ${
-              isHovered ? 'opacity-100 h-5 mb-1 px-3' : 'opacity-0 h-0 m-0'
-            }`}
-          >
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] whitespace-nowrap">
-              Navigation
-            </span>
-          </div>
+        {/* Navigation Items */}
+        <div className="space-y-2 w-full flex flex-col items-center">
+          {/* Navigation Label (visible only when hovered) */}
+          {isHovered && (
+            <div className="w-full px-3 mb-1 animate-in fade-in duration-150">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] whitespace-nowrap">
+                Navigation
+              </span>
+            </div>
+          )}
 
           {/* Nav Buttons */}
           {NAV_ITEMS.map((item) => {
@@ -133,7 +127,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             ? 'bg-[#191919] text-white shadow-md'
                             : 'text-[#77736D] hover:text-[#191919] hover:bg-[#ECE9E2]'
                         }`
-                      : `w-12 h-12 rounded-2xl justify-center ${
+                      : `w-11 h-11 rounded-2xl justify-center ${
                           isActive
                             ? 'bg-[#191919] text-[#F02D25] shadow-md ring-2 ring-[#F02D25]/30'
                             : 'text-[#77736D] hover:text-[#191919] hover:bg-[#ECE9E2]'
@@ -141,38 +135,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   }`}
                   title={!isHovered ? item.label : undefined}
                 >
-                  <div className="flex items-center gap-3 shrink-0">
+                  {/* When Hovered: Icon + Label */}
+                  {isHovered ? (
+                    <>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <Icon
+                          className={`w-5 h-5 shrink-0 ${
+                            isActive ? 'text-[#F02D25]' : 'text-[#77736D] group-hover:text-[#191919]'
+                          }`}
+                        />
+                        <span className="whitespace-nowrap font-bold">
+                          {item.label}
+                        </span>
+                      </div>
+
+                      {isActive && (
+                        <span className="w-2 h-2 rounded-full bg-[#F02D25] animate-pulse shrink-0"></span>
+                      )}
+                    </>
+                  ) : (
+                    /* When Collapsed: Centered Icon ONLY */
                     <Icon
-                      className={`w-5 h-5 shrink-0 ${
-                        isActive
-                          ? 'text-[#F02D25]'
-                          : isHovered
-                          ? 'text-[#77736D] group-hover:text-[#191919]'
-                          : 'text-[#77736D]'
+                      className={`w-5 h-5 shrink-0 transition-colors ${
+                        isActive ? 'text-[#F02D25]' : 'text-[#77736D] group-hover:text-[#191919]'
                       }`}
                     />
-
-                    {/* Label (visible only when hovered) */}
-                    <span
-                      className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${
-                        isHovered
-                          ? 'opacity-100 max-w-[150px]'
-                          : 'opacity-0 max-w-0 pointer-events-none'
-                      }`}
-                    >
-                      {item.label}
-                    </span>
-                  </div>
-
-                  {/* Active Indicator Dot when hovered */}
-                  {isActive && isHovered && (
-                    <span className="w-2 h-2 rounded-full bg-[#F02D25] animate-pulse shrink-0"></span>
                   )}
                 </button>
 
                 {/* Collapsed Tooltip (shows on linger when not hovered) */}
                 {!isHovered && (
-                  <div className="absolute left-[70px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
+                  <div className="absolute left-[68px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
                     {item.label}
                   </div>
                 )}
@@ -181,22 +174,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
           })}
         </div>
 
+        {/* Divider Between Nav and Urban Tools */}
+        <div className={`transition-all duration-300 border-b border-[#E3DFD7] ${
+          isHovered ? 'w-full my-5' : 'w-10 my-4'
+        }`}></div>
+
         {/* Urban Tools Section */}
-        <div
-          className={`pt-5 border-t border-[#E3DFD7] space-y-2 w-full transition-all duration-300 ${
-            isHovered ? 'mt-6' : 'mt-4'
-          }`}
-        >
-          {/* Urban Tools Label */}
-          <div
-            className={`overflow-hidden transition-all duration-200 ${
-              isHovered ? 'opacity-100 h-5 mb-1 px-3' : 'opacity-0 h-0 m-0'
-            }`}
-          >
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] whitespace-nowrap">
-              Urban Tools
-            </span>
-          </div>
+        <div className="space-y-2 w-full flex flex-col items-center">
+          {/* Urban Tools Label (visible only when hovered) */}
+          {isHovered && (
+            <div className="w-full px-3 mb-1 animate-in fade-in duration-150">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] whitespace-nowrap">
+                Urban Tools
+              </span>
+            </div>
+          )}
 
           {/* Algorithm Insights Button */}
           <div className="relative group w-full flex justify-center">
@@ -205,32 +197,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
               className={`flex items-center transition-all duration-200 shadow-2xs cursor-pointer ${
                 isHovered
                   ? 'w-full justify-between px-3.5 py-2.5 rounded-2xl bg-white border border-[#E3DFD7] hover:bg-[#ECE9E2] text-xs font-bold uppercase tracking-wider text-[#191919]'
-                  : 'w-12 h-12 rounded-2xl bg-white border border-[#E3DFD7] justify-center hover:bg-[#ECE9E2] text-[#F02D25]'
+                  : 'w-11 h-11 rounded-2xl bg-white border border-[#E3DFD7] justify-center hover:bg-[#ECE9E2] text-[#F02D25]'
               }`}
-              title={!isHovered ? 'Algorithm Insights (Apriori Rule Engine)' : undefined}
+              title={!isHovered ? 'Algorithm Insights (Apriori Rules)' : undefined}
             >
-              <div className="flex items-center gap-2.5 shrink-0">
-                <Sliders className="w-4 h-4 text-[#F02D25] group-hover:rotate-45 transition-transform shrink-0" />
-                <span
-                  className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${
-                    isHovered
-                      ? 'opacity-100 max-w-[150px]'
-                      : 'opacity-0 max-w-0 pointer-events-none'
-                  }`}
-                >
-                  Algorithm Insights
-                </span>
-              </div>
-
-              {isHovered && (
-                <span className="text-[10px] font-extrabold text-[#F02D25] bg-[#F5F3EE] px-1.5 py-0.5 rounded-full shrink-0">
-                  ARM
-                </span>
+              {isHovered ? (
+                <>
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <Sliders className="w-4 h-4 text-[#F02D25] group-hover:rotate-45 transition-transform shrink-0" />
+                    <span className="whitespace-nowrap font-bold">
+                      Algorithm Insights
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-extrabold text-[#F02D25] bg-[#F5F3EE] px-1.5 py-0.5 rounded-full shrink-0">
+                    ARM
+                  </span>
+                </>
+              ) : (
+                <Sliders className="w-4 h-4 text-[#F02D25] shrink-0" />
               )}
             </button>
 
             {!isHovered && (
-              <div className="absolute left-[70px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
+              <div className="absolute left-[68px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
                 Algorithm Insights
               </div>
             )}
@@ -247,7 +236,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         ? 'bg-[#191919] text-white border-[#191919]'
                         : 'bg-white border-[#E3DFD7] hover:bg-[#ECE9E2] text-[#191919]'
                     }`
-                  : `w-12 h-12 rounded-2xl justify-center border ${
+                  : `w-11 h-11 rounded-2xl justify-center border ${
                       currentPage === 'saved'
                         ? 'bg-[#191919] text-white border-[#191919]'
                         : 'bg-white border-[#E3DFD7] hover:bg-[#ECE9E2] text-[#191919]'
@@ -255,35 +244,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}
               title={!isHovered ? `Saved Places (${savedCount})` : undefined}
             >
-              <div className="flex items-center gap-2.5 shrink-0">
-                <Bookmark className="w-4 h-4 text-[#F02D25] shrink-0" />
-                <span
-                  className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${
-                    isHovered
-                      ? 'opacity-100 max-w-[150px]'
-                      : 'opacity-0 max-w-0 pointer-events-none'
-                  }`}
-                >
-                  Saved Places
-                </span>
-              </div>
-
-              {/* Counter Badge */}
               {isHovered ? (
-                <span className="w-5 h-5 rounded-full bg-[#F02D25] text-white text-[10px] font-extrabold flex items-center justify-center shrink-0">
-                  {savedCount}
-                </span>
-              ) : (
-                savedCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#F02D25] text-white text-[9px] font-extrabold flex items-center justify-center shadow-xs">
+                <>
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <Bookmark className="w-4 h-4 text-[#F02D25] shrink-0" />
+                    <span className="whitespace-nowrap font-bold">
+                      Saved Places
+                    </span>
+                  </div>
+                  <span className="w-5 h-5 rounded-full bg-[#F02D25] text-white text-[10px] font-extrabold flex items-center justify-center shrink-0">
                     {savedCount}
                   </span>
-                )
+                </>
+              ) : (
+                <>
+                  <Bookmark className="w-4 h-4 text-[#F02D25] shrink-0" />
+                  {savedCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#F02D25] text-white text-[9px] font-extrabold flex items-center justify-center shadow-xs">
+                      {savedCount}
+                    </span>
+                  )}
+                </>
               )}
             </button>
 
             {!isHovered && (
-              <div className="absolute left-[70px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
+              <div className="absolute left-[68px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
                 Saved Places ({savedCount})
               </div>
             )}
@@ -293,46 +279,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Bottom Section: Explore City CTA & Coordinates */}
-      <div
-        className={`pt-5 border-t border-[#E3DFD7] space-y-4 w-full transition-all duration-300 ${
-          isHovered ? 'mt-6' : 'mt-4'
-        }`}
-      >
-        {/* Explore City CTA Pill Button */}
-        <div className="relative group w-full flex justify-center">
+      <div className="flex flex-col w-full items-center">
+        {/* Divider */}
+        <div className={`transition-all duration-300 border-b border-[#E3DFD7] ${
+          isHovered ? 'w-full mb-5' : 'w-10 mb-4'
+        }`}></div>
+
+        {/* Explore City CTA Button */}
+        <div className="relative group w-full flex justify-center mb-3">
           <button
             onClick={() => handleNavClick('map')}
-            className={`group transition-all duration-200 cursor-pointer shadow-md ${
+            className={`transition-all duration-200 cursor-pointer shadow-md flex items-center ${
               isHovered
-                ? 'w-full flex items-center justify-between pl-4 pr-1.5 py-1.5 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider'
-                : 'w-12 h-12 rounded-full bg-[#F02D25] hover:bg-[#E9473D] text-white flex items-center justify-center'
+                ? 'w-full justify-between pl-4 pr-1.5 py-1.5 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider'
+                : 'w-11 h-11 rounded-full bg-[#F02D25] hover:bg-[#E9473D] text-white justify-center'
             }`}
             title={!isHovered ? 'Explore City on Map' : undefined}
           >
-            {isHovered && (
-              <span className="whitespace-nowrap overflow-hidden">
-                Explore City
-              </span>
+            {isHovered ? (
+              <>
+                <span className="whitespace-nowrap font-bold">
+                  Explore City
+                </span>
+                <div className="w-8 h-8 rounded-full bg-[#F02D25] flex items-center justify-center text-white shrink-0">
+                  <ArrowUpRight className="w-4 h-4" />
+                </div>
+              </>
+            ) : (
+              <ArrowUpRight className="w-4 h-4 text-white shrink-0" />
             )}
-            <div
-              className={`rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105 shrink-0 ${
-                isHovered ? 'w-8 h-8 bg-[#F02D25]' : 'w-full h-full'
-              }`}
-            >
-              <ArrowUpRight className="w-4 h-4" />
-            </div>
           </button>
 
           {!isHovered && (
-            <div className="absolute left-[70px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
+            <div className="absolute left-[68px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
               Explore City
             </div>
           )}
         </div>
 
-        {/* City Location Meta */}
+        {/* Location Coordinates / Centered Dot */}
         {isHovered ? (
-          <div className="px-1 text-[11px] text-[#77736D] space-y-1 animate-in fade-in duration-200">
+          <div className="w-full px-1 text-[11px] text-[#77736D] space-y-1 animate-in fade-in duration-200">
             <div className="flex items-center gap-1.5 font-semibold text-[#191919]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25]"></span>
               <span>Bengaluru, Karnataka</span>
@@ -342,7 +329,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </p>
           </div>
         ) : (
-          <div className="flex justify-center" title="Bengaluru, Karnataka • 12.9716° N, 77.5946° E">
+          <div className="flex justify-center py-1" title="Bengaluru, Karnataka • 12.9716° N, 77.5946° E">
             <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
           </div>
         )}
@@ -350,7 +337,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     </aside>
   );
 
-  // Mobile drawer content (always fully expanded for easy touch navigation)
+  // Mobile drawer content (always full-width for touch devices)
   const renderMobileDrawer = () => (
     <aside className="w-72 h-full bg-[#F5F3EE] flex flex-col justify-between p-6 select-none font-sans overflow-y-auto">
       <div>
@@ -386,8 +373,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Mobile Navigation */}
-        <div className="space-y-1.5">
-          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] block px-3 mb-2">
+        <div className="space-y-2">
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] block px-3 mb-1">
             Navigation
           </span>
           {NAV_ITEMS.map((item) => {
@@ -414,8 +401,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Mobile Urban Tools */}
-        <div className="mt-8 pt-6 border-t border-[#E3DFD7] space-y-2">
-          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] block px-3 mb-2">
+        <div className="mt-6 pt-5 border-t border-[#E3DFD7] space-y-2">
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] block px-3 mb-1">
             Urban Tools
           </span>
 
@@ -454,7 +441,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      <div className="mt-8 pt-6 border-t border-[#E3DFD7]">
+      <div className="mt-6 pt-5 border-t border-[#E3DFD7]">
         <button
           onClick={() => handleNavClick('map')}
           className="w-full flex items-center justify-between pl-4 pr-1.5 py-1.5 rounded-full bg-[#191919] text-white text-xs font-bold uppercase tracking-wider"
