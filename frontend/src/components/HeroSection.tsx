@@ -106,18 +106,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <section className="relative w-full pt-6 pb-16 md:pt-10 md:pb-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Editorial Eyebrow Label */}
-        <div className="flex items-center gap-3 mb-6">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25] animate-pulse"></span>
-          <span className="text-xs font-bold uppercase tracking-widest text-[#77736D]">
-            bango &bull; Smart City Discovery &bull; Karnataka, India
-          </span>
-          <span className="hidden sm:inline-block w-12 h-[1px] bg-[#E3DFD7]"></span>
-          <span className="hidden sm:inline-block text-[11px] font-semibold text-[#191919] uppercase tracking-wider bg-[#ECE9E2] px-2.5 py-0.5 rounded-full">
-            Apriori Mining v2.0
-          </span>
-        </div>
-
         {/* 2-Column Editorial Hero Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
