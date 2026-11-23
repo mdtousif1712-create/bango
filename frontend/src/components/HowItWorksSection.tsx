@@ -3,6 +3,7 @@ import { ArrowUpRight, Cpu, Network, Compass, Sparkles, Database, CheckCircle2 }
 
 interface HowItWorksProps {
   onOpenAlgorithm: () => void;
+  onNavigateToMap?: () => void;
 }
 
 const STEPS = [
@@ -35,11 +36,11 @@ const STEPS = [
   },
 ];
 
-export const HowItWorksSection: React.FC<HowItWorksProps> = ({ onOpenAlgorithm }) => {
+export const HowItWorksSection: React.FC<HowItWorksProps> = ({ onOpenAlgorithm, onNavigateToMap }) => {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <section id="how-it-works" className="py-24 bg-[#171717] text-white overflow-hidden relative">
+    <section className="py-16 bg-[#171717] text-white overflow-hidden relative min-h-[calc(100vh-80px)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
@@ -48,7 +49,7 @@ export const HowItWorksSection: React.FC<HowItWorksProps> = ({ onOpenAlgorithm }
             <div className="flex items-center gap-2 mb-3">
               <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25] animate-ping"></span>
               <span className="text-xs font-bold uppercase tracking-widest text-[#F02D25]">
-                Algorithmic Architecture
+                bango &bull; Algorithmic Architecture
               </span>
             </div>
             <h2 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl text-white uppercase tracking-tight leading-[0.92]">
@@ -59,17 +60,28 @@ export const HowItWorksSection: React.FC<HowItWorksProps> = ({ onOpenAlgorithm }
 
           <div className="max-w-md">
             <p className="text-sm sm:text-base text-[#ECE9E2]/70 leading-relaxed font-normal mb-4">
-              Behind Bengaluru Smart City Discovery is a data-mining engine executing Association Rule Mining (ARM) via the Apriori Algorithm to unlock cross-domain urban patterns.
+              Behind <strong className="text-white">bango</strong> is a real data-mining engine executing Association Rule Mining (ARM) via the Apriori Algorithm to unlock cross-domain urban patterns.
             </p>
-            <button
-              onClick={onOpenAlgorithm}
-              className="group flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white text-[#191919] hover:bg-[#F5F3EE] text-xs font-bold uppercase tracking-wider transition-all"
-            >
-              <span>Explore Rule Matrix</span>
-              <div className="w-6 h-6 rounded-full bg-[#F02D25] text-white flex items-center justify-center">
-                <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5" />
-              </div>
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={onOpenAlgorithm}
+                className="group flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white text-[#191919] hover:bg-[#F5F3EE] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+              >
+                <span>Explore Rule Matrix</span>
+                <div className="w-6 h-6 rounded-full bg-[#F02D25] text-white flex items-center justify-center">
+                  <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5" />
+                </div>
+              </button>
+
+              {onNavigateToMap && (
+                <button
+                  onClick={onNavigateToMap}
+                  className="px-5 py-2.5 rounded-full border border-white/20 text-white hover:bg-white/10 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                >
+                  See Rules on Map
+                </button>
+              )}
+            </div>
           </div>
         </div>
 

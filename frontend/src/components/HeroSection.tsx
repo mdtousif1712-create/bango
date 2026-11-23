@@ -36,30 +36,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     e.preventDefault();
     if (query.trim()) {
       onSearch(query.trim());
-      // Smooth scroll to map explorer to see results
-      document.getElementById('map-explorer')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const handleChipClick = (chip: string) => {
     setQuery(chip);
     onSearch(chip);
-    document.getElementById('map-explorer')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section id="hero" className="relative w-full pt-10 pb-16 md:pt-16 md:pb-24 overflow-hidden">
+    <section className="relative w-full pt-6 pb-16 md:pt-10 md:pb-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Editorial Eyebrow Label */}
         <div className="flex items-center gap-3 mb-6">
           <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25] animate-pulse"></span>
           <span className="text-xs font-bold uppercase tracking-widest text-[#77736D]">
-            Bengaluru Smart City Discovery &bull; Karnataka, India
+            bango &bull; Smart City Discovery &bull; Karnataka, India
           </span>
           <span className="hidden sm:inline-block w-12 h-[1px] bg-[#E3DFD7]"></span>
           <span className="hidden sm:inline-block text-[11px] font-semibold text-[#191919] uppercase tracking-wider bg-[#ECE9E2] px-2.5 py-0.5 rounded-full">
-            Apriori Algorithm v2.0
+            Apriori Mining v2.0
           </span>
         </div>
 
@@ -78,7 +75,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </h1>
 
             <p className="text-base sm:text-lg text-[#77736D] max-w-xl leading-relaxed mb-8 font-normal">
-              An intelligent urban discovery platform powered by the <strong className="text-[#191919] font-semibold">Apriori Association Rule Mining</strong> algorithm. Uncover hidden mobility patterns, transit connections, and curated smart city destinations across 8 urban domains.
+              <strong className="text-[#191919] font-bold">bango</strong> is an intelligent urban discovery platform powered by the <strong className="text-[#191919] font-semibold">Apriori Association Rule Mining</strong> algorithm. Uncover hidden mobility patterns, transit connections, and curated smart city destinations across 8 urban domains.
             </p>
 
             {/* Editorial "WHERE DO YOU WANT TO GO?" Search Bar */}
@@ -91,7 +88,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Where do you want to go in Bengaluru?"
+                  placeholder="Where do you want to explore in Bengaluru?"
                   className="flex-1 bg-transparent px-2 py-2 text-sm sm:text-base text-[#191919] placeholder:text-[#77736D] outline-none font-medium"
                 />
                 <button
@@ -114,7 +111,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     key={idx}
                     type="button"
                     onClick={() => handleChipClick(chip)}
-                    className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#F5F3EE] hover:bg-[#ECE9E2] text-[#191919] transition-colors"
+                    className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#F5F3EE] hover:bg-[#ECE9E2] text-[#191919] transition-colors cursor-pointer"
                   >
                     {chip}
                   </button>
@@ -126,9 +123,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={onExploreMap}
-                className="group flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md"
+                className="group flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer"
               >
-                <span>Explore Interactive Map</span>
+                <span>Open Map Explorer</span>
                 <div className="w-6 h-6 rounded-full bg-[#F02D25] flex items-center justify-center text-white">
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </div>
@@ -136,7 +133,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
               <button
                 onClick={onOpenAlgorithm}
-                className="px-6 py-3.5 rounded-full bg-white hover:bg-[#ECE9E2] text-[#191919] text-xs font-bold uppercase tracking-wider border border-[#E3DFD7] transition-all shadow-xs"
+                className="px-6 py-3.5 rounded-full bg-white hover:bg-[#ECE9E2] text-[#191919] text-xs font-bold uppercase tracking-wider border border-[#E3DFD7] transition-all shadow-xs cursor-pointer"
               >
                 Inspect Apriori Engine
               </button>
@@ -153,7 +150,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* Bengaluru Imagery */}
               <img
                 src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=85"
-                alt="Bengaluru Cubbon Park and Heritage"
+                alt="bango Bengaluru Cubbon Park and Heritage"
                 className="w-full h-full object-cover filter contrast-[1.05]"
               />
 
@@ -181,7 +178,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                 </div>
                 <h4 className="font-display font-bold text-sm text-[#191919] uppercase leading-tight">
-                  Real-time Apriori Association Engine
+                  bango Apriori Association Engine
                 </h4>
                 <p className="text-[11px] text-[#77736D] mt-0.5">
                   Mining statistical co-occurrences across Namma Metro, tech hubs, parks, and healthcare.

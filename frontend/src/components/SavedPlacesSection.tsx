@@ -7,6 +7,7 @@ interface SavedPlacesSectionProps {
   onSelectPlace: (place: Place) => void;
   onRemovePlace: (place: Place) => void;
   onViewDetails: (place: Place) => void;
+  onNavigateToMap?: () => void;
 }
 
 export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
@@ -14,18 +15,26 @@ export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
   onSelectPlace,
   onRemovePlace,
   onViewDetails,
+  onNavigateToMap,
 }) => {
+  const handleCardClick = (place: Place) => {
+    onSelectPlace(place);
+    if (onNavigateToMap) {
+      onNavigateToMap();
+    }
+  };
+
   return (
-    <section id="saved-places" className="py-20 bg-[#ECE9E2] border-t border-[#E3DFD7]">
+    <section className="py-12 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
               <span className="text-xs font-bold uppercase tracking-widest text-[#77736D]">
-                Personal Itinerary &bull; Local Storage
+                bango &bull; Personal Itinerary &bull; Local Storage
               </span>
             </div>
             <h2 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-[#191919] uppercase tracking-tight leading-[0.95]">
@@ -35,7 +44,7 @@ export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
           </div>
 
           <div className="text-xs font-semibold text-[#77736D]">
-            <span>{savedPlaces.length} places saved in your browser</span>
+            <span>{savedPlaces.length} destinations saved in your browser</span>
           </div>
         </div>
 
@@ -45,10 +54,7 @@ export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
             {savedPlaces.map((place) => (
               <div
                 key={place.place_id}
-                onClick={() => {
-                  onSelectPlace(place);
-                  document.getElementById('map-explorer')?.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => handleCardClick(place)}
                 className="group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col justify-between"
               >
                 {/* Photo */}
@@ -69,7 +75,7 @@ export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
                       e.stopPropagation();
                       onRemovePlace(place);
                     }}
-                    className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-[#F02D25] text-[#191919] hover:text-white transition-colors"
+                    className="absolute top-3 right-3 p-2 rounded-full bg-white/90 hover:bg-[#F02D25] text-[#191919] hover:text-white transition-colors cursor-pointer"
                     title="Remove from saved"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -99,7 +105,7 @@ export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
                         e.stopPropagation();
                         onViewDetails(place);
                       }}
-                      className="text-xs font-bold uppercase tracking-wider text-[#191919] hover:text-[#F02D25] flex items-center gap-1"
+                      className="text-xs font-bold uppercase tracking-wider text-[#191919] hover:text-[#F02D25] flex items-center gap-1 cursor-pointer"
                     >
                       <span>Details</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
@@ -110,7 +116,7 @@ export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center bg-white rounded-3xl border border-[#E3DFD7] p-8 max-w-xl mx-auto">
+          <div className="py-20 text-center bg-white rounded-3xl border border-[#E3DFD7] p-8 max-w-xl mx-auto my-8">
             <Bookmark className="w-12 h-12 text-[#D1CCC4] mx-auto mb-3" />
             <h4 className="font-display font-bold text-xl text-[#191919] uppercase">
               No saved destinations yet

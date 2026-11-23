@@ -1,4 +1,4 @@
-# Bengaluru Smart City Discovery
+# bango — Bengaluru Smart City Discovery
 
 > A modern, responsive smart city discovery and intelligent recommendation platform for **Bengaluru, Karnataka, India**, powered by an authentic backend **Apriori Algorithm (Association Rule Mining)** engine.
 
@@ -6,7 +6,7 @@
 
 ## 🌆 1. Project Overview
 
-**Bengaluru Smart City Discovery** provides citizens and visitors with an interactive geographical and data-driven exploration experience across 8 core urban domains. The application pairs **Leaflet.js + OpenStreetMap** geographical mapping with an **MLxtend Apriori association engine** that extracts real behavioral co-visitation patterns from 1,250+ smart city mobility journeys.
+**bango** provides citizens and visitors with an interactive geographical and data-driven exploration experience across 8 core urban domains. The application pairs **Leaflet.js + OpenStreetMap** geographical mapping with an **MLxtend Apriori association engine** that extracts real behavioral co-visitation patterns from 1,250+ smart city mobility journeys.
 
 ### Key Highlights
 - **Interactive OpenStreetMap of Bengaluru**: Real coordinates, custom domain markers, user geolocation, and floating place cards.

@@ -1,9 +1,21 @@
 import React from 'react';
 import { ArrowUp, MapPin, Heart, Compass } from 'lucide-react';
+import { PageId } from './Sidebar';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onNavigate?: (page: PageId) => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNav = (page: PageId) => {
+    if (onNavigate) {
+      onNavigate(page);
+      scrollToTop();
+    }
   };
 
   return (
@@ -15,10 +27,13 @@ export const Footer: React.FC = () => {
           {/* Brand & Coordinates (6 cols) */}
           <div className="md:col-span-6">
             <div className="flex items-center gap-2 mb-4">
-              <span className="font-display font-black text-2xl uppercase tracking-tight text-white">
-                Bengaluru Discover
+              <span className="font-display font-black text-3xl uppercase tracking-tight text-white">
+                bango
               </span>
-              <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25]"></span>
+              <span className="text-xs uppercase font-extrabold tracking-widest text-[#ECE9E2]/60 ml-1">
+                Smart City Discovery
+              </span>
             </div>
             
             <p className="text-sm text-[#ECE9E2]/70 max-w-md leading-relaxed mb-6 font-normal">
@@ -27,45 +42,45 @@ export const Footer: React.FC = () => {
 
             <div className="flex items-center gap-2 text-xs font-semibold text-[#ECE9E2]/50">
               <MapPin className="w-4 h-4 text-[#F02D25]" />
-              <span>12.9716° N, 77.5946° E &bull; Elevation 920m &bull; Silicon Valley of India</span>
+              <span>12.9716° N, 77.5946° E &bull; Elevation 920m &bull; Karnataka, India</span>
             </div>
           </div>
 
           {/* Quick Links (3 cols) */}
           <div className="md:col-span-3">
             <h5 className="font-display font-bold text-xs uppercase tracking-widest text-[#ECE9E2]/50 mb-4">
-              Navigation
+              Explore Pages
             </h5>
-            <ul className="space-y-2 text-xs font-semibold text-[#ECE9E2]/80">
+            <ul className="space-y-2.5 text-xs font-semibold text-[#ECE9E2]/80">
               <li>
-                <a href="#hero" className="hover:text-[#F02D25] transition-colors">
+                <button onClick={() => handleNav('discover')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
                   Discover Home
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#map-explorer" className="hover:text-[#F02D25] transition-colors">
-                  Interactive Map Explorer
-                </a>
+                <button onClick={() => handleNav('map')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
+                  Map Explorer
+                </button>
               </li>
               <li>
-                <a href="#trending" className="hover:text-[#F02D25] transition-colors">
+                <button onClick={() => handleNav('trending')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
                   Trending Destinations
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#categories" className="hover:text-[#F02D25] transition-colors">
+                <button onClick={() => handleNav('domains')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
                   8 Smart City Domains
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#recommendations" className="hover:text-[#F02D25] transition-colors">
-                  Apriori Association Mining
-                </a>
+                <button onClick={() => handleNav('recommendations')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
+                  Apriori Association Engine
+                </button>
               </li>
               <li>
-                <a href="#how-it-works" className="hover:text-[#F02D25] transition-colors">
-                  How the Algorithm Works
-                </a>
+                <button onClick={() => handleNav('how-it-works')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
+                  How It Works
+                </button>
               </li>
             </ul>
           </div>
@@ -78,11 +93,11 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-xs text-[#ECE9E2]/80">
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25]"></span>
-                <span>MLxtend Frequent Patterns</span>
+                <span>MLxtend Association Mining</span>
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25]"></span>
-                <span>FastAPI Python Backend</span>
+                <span>FastAPI Python Service</span>
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25]"></span>
@@ -100,12 +115,12 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#ECE9E2]/50">
           <div>
-            &copy; {new Date().getFullYear()} Bengaluru Smart City Discovery. Made for citizens and urban explorers.
+            &copy; {new Date().getFullYear()} bango &bull; Bengaluru Smart City Discovery. Made for urban explorers.
           </div>
 
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-[#F02D25] text-white transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-[#F02D25] text-white transition-colors cursor-pointer"
           >
             <span>Back to top</span>
             <ArrowUp className="w-3.5 h-3.5" />

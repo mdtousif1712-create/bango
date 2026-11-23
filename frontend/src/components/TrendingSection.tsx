@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Place } from '../types';
 import { Star, MapPin, Bookmark, ArrowUpRight, TrendingUp } from 'lucide-react';
 
@@ -8,7 +8,20 @@ interface TrendingSectionProps {
   onSavePlace: (place: Place) => void;
   isPlaceSaved: (placeId: string) => boolean;
   onViewDetails: (place: Place) => void;
+  onNavigateToMap?: () => void;
 }
+
+const CATEGORY_TABS = [
+  'All',
+  'Tourism',
+  'Transportation',
+  'Restaurants',
+  'Healthcare',
+  'Shopping',
+  'Education',
+  'Entertainment',
+  'Real Estate',
+];
 
 export const TrendingSection: React.FC<TrendingSectionProps> = ({
   places,
@@ -16,29 +29,37 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   onSavePlace,
   isPlaceSaved,
   onViewDetails,
+  onNavigateToMap,
 }) => {
-  if (places.length === 0) return null;
+  const [selectedFilter, setSelectedFilter] = useState<string>('All');
 
-  const featured = places[0];
-  const secondary = places.slice(1, 3);
-  const tertiary = places.slice(3, 6);
+  const filteredPlaces =
+    selectedFilter === 'All'
+      ? places
+      : places.filter((p) => p.category.toLowerCase() === selectedFilter.toLowerCase());
+
+  const featured = filteredPlaces[0] || places[0];
+  const secondary = filteredPlaces.slice(1, 3);
+  const tertiary = filteredPlaces.slice(3, 9);
 
   const handleCardClick = (place: Place) => {
     onSelectPlace(place);
-    document.getElementById('map-explorer')?.scrollIntoView({ behavior: 'smooth' });
+    if (onNavigateToMap) {
+      onNavigateToMap();
+    }
   };
 
   return (
-    <section id="trending" className="py-20 bg-[#ECE9E2] border-t border-[#E3DFD7]">
+    <section className="py-12 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
               <span className="text-xs font-bold uppercase tracking-widest text-[#77736D]">
-                Smart City Footfall Analytics
+                bango &bull; Smart City Footfall Analytics
               </span>
             </div>
             <h2 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-[#191919] uppercase tracking-tight leading-[0.95]">
@@ -51,6 +72,23 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
             <TrendingUp className="w-4 h-4 text-[#F02D25]" />
             <span>Ranked by transactional co-occurrences in Bengaluru mobility datasets</span>
           </div>
+        </div>
+
+        {/* Category Filter Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
+          {CATEGORY_TABS.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedFilter(cat)}
+              className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
+                selectedFilter === cat
+                  ? 'bg-[#191919] text-white shadow-sm'
+                  : 'bg-white text-[#77736D] hover:text-[#191919] hover:bg-[#F5F3EE]'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
         {/* Varied Editorial Grid */}

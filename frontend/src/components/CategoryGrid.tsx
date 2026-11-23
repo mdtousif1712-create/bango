@@ -5,6 +5,7 @@ import { CategoryMeta } from '../types';
 interface CategoryGridProps {
   categories: CategoryMeta[];
   onSelectCategory: (categoryName: string) => void;
+  onNavigateToMap?: () => void;
 }
 
 // 8 Smart City Domains with curated editorial photography and descriptive copy
@@ -51,16 +52,22 @@ const DOMAIN_DETAILS: Record<string, { number: string; photo: string; subtitle: 
   },
 };
 
-export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onSelectCategory }) => {
+export const CategoryGrid: React.FC<CategoryGridProps> = ({
+  categories,
+  onSelectCategory,
+  onNavigateToMap,
+}) => {
   const filteredCategories = categories.filter((c) => c.id !== 'all');
 
   const handleCategoryClick = (categoryName: string) => {
     onSelectCategory(categoryName);
-    document.getElementById('map-explorer')?.scrollIntoView({ behavior: 'smooth' });
+    if (onNavigateToMap) {
+      onNavigateToMap();
+    }
   };
 
   return (
-    <section id="categories" className="py-20 bg-[#F5F3EE] border-t border-[#E3DFD7]">
+    <section className="py-12 bg-[#F5F3EE] min-h-[calc(100vh-80px)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -69,7 +76,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onSelect
             <div className="flex items-center gap-2 mb-3">
               <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
               <span className="text-xs font-bold uppercase tracking-widest text-[#77736D]">
-                Urban Domains &bull; 8 Smart City Sectors
+                bango &bull; 8 Smart City Sectors
               </span>
             </div>
             <h2 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-[#191919] uppercase tracking-tight leading-[0.95]">
@@ -79,7 +86,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onSelect
           </div>
 
           <p className="text-sm sm:text-base text-[#77736D] max-w-md font-normal leading-relaxed">
-            Bengaluru’s urban fabric spans 8 interconnected domains. Our Apriori engine models footfall associations across every sector.
+            Bengaluru’s urban fabric spans 8 interconnected domains. Select any domain below to filter locations and view association patterns on the map.
           </p>
         </div>
 
@@ -131,7 +138,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onSelect
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-[#E3DFD7] flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#F02D25]">
-                    <span>Explore Places</span>
+                    <span>Explore on Map</span>
                     <span className="text-[#77736D] group-hover:text-[#191919]">&rarr;</span>
                   </div>
                 </div>
