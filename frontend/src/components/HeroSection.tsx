@@ -25,10 +25,9 @@ const LOCATION_SLIDES: LocationSlide[] = [
     description: 'Mining statistical co-occurrences across Namma Metro, tech hubs, parks, and healthcare.',
     imageUrl: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=85',
     pills: [
-      { name: 'INDIRANAGAR', top: '15%', left: '8%' },
-      { name: 'MG ROAD', top: '22%', right: '12%' },
-      { name: 'CUBBON PARK', bottom: '28%', left: '14%' },
-      { name: 'WHITEFIELD', bottom: '18%', right: '10%' },
+      { name: 'INDIRANAGAR', top: '16%', left: '8%' },
+      { name: 'MG ROAD', top: '26%', right: '8%' },
+      { name: 'CUBBON PARK', top: '50%', left: '10%' },
     ],
   },
   {
@@ -38,10 +37,9 @@ const LOCATION_SLIDES: LocationSlide[] = [
     description: 'Strong cross-domain linkage with Namma Metro Purple Line and commercial shopping corridors.',
     imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=85',
     pills: [
-      { name: '100FT ROAD', top: '16%', left: '10%' },
-      { name: 'DEFENCE COLONY', top: '24%', right: '10%' },
-      { name: 'INDIRANAGAR METRO', bottom: '26%', left: '12%' },
-      { name: 'DOMLUR FLYOVER', bottom: '16%', right: '14%' },
+      { name: '100FT ROAD', top: '16%', left: '8%' },
+      { name: 'DEFENCE COLONY', top: '26%', right: '8%' },
+      { name: 'INDIRANAGAR METRO', top: '50%', left: '10%' },
     ],
   },
   {
@@ -51,10 +49,9 @@ const LOCATION_SLIDES: LocationSlide[] = [
     description: 'Heavy weekday transit transactions linking tech parks directly to suburban residential clusters.',
     imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85',
     pills: [
-      { name: 'ITPB BANGALORE', top: '16%', right: '10%' },
-      { name: 'HOODI JUNCTION', top: '26%', left: '10%' },
-      { name: 'KADUGODI METRO', bottom: '26%', left: '12%' },
-      { name: 'PHOENIX MARKETCITY', bottom: '18%', right: '12%' },
+      { name: 'ITPB BANGALORE', top: '16%', right: '8%' },
+      { name: 'HOODI JUNCTION', top: '26%', left: '8%' },
+      { name: 'KADUGODI METRO', top: '50%', left: '10%' },
     ],
   },
   {
@@ -64,10 +61,9 @@ const LOCATION_SLIDES: LocationSlide[] = [
     description: 'Frequent association patterns linking heritage gardens with iconic South Bangalore darshinis.',
     imageUrl: 'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?auto=format&fit=crop&w=1200&q=85',
     pills: [
-      { name: 'LALBAGH GLASSHOUSE', top: '16%', left: '12%' },
-      { name: 'BASAVANAGUDI', top: '24%', right: '10%' },
-      { name: 'VV PURAM FOOD ST', bottom: '26%', left: '14%' },
-      { name: 'SOUTH END CIRCLE', bottom: '18%', right: '10%' },
+      { name: 'LALBAGH GLASSHOUSE', top: '16%', left: '8%' },
+      { name: 'BASAVANAGUDI', top: '26%', right: '8%' },
+      { name: 'SOUTH END CIRCLE', top: '50%', left: '10%' },
     ],
   },
   {
@@ -77,10 +73,9 @@ const LOCATION_SLIDES: LocationSlide[] = [
     description: 'Top education cluster showing strong weekend footfall associations with Sankey Tank & Orion Mall.',
     imageUrl: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=85',
     pills: [
-      { name: 'IISC BANGALORE', top: '16%', left: '10%' },
-      { name: 'SANKEY TANK', top: '24%', right: '12%' },
-      { name: 'SAMPIGE ROAD', bottom: '26%', left: '14%' },
-      { name: 'ORION MALL', bottom: '18%', right: '10%' },
+      { name: 'IISC BANGALORE', top: '16%', left: '8%' },
+      { name: 'SANKEY TANK', top: '26%', right: '8%' },
+      { name: 'ORION MALL', top: '50%', left: '10%' },
     ],
   },
 ];
@@ -161,7 +156,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
-              className="relative w-full max-w-[420px] aspect-[4/5] rounded-[90px] sm:rounded-[120px] overflow-hidden border-[8px] border-white shadow-2xl bg-[#191919] transition-all duration-500 group select-none"
+              className="relative w-full max-w-[420px] aspect-[4/5] rounded-[56px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-2xl bg-[#191919] transition-all duration-500 group select-none"
             >
               
               {/* Animated Carousel Image */}
@@ -180,25 +175,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div
                   key={`${currentSlide.id}-${idx}`}
                   style={{ top: loc.top, left: loc.left, right: loc.right, bottom: loc.bottom }}
-                  className="absolute z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-[#191919] uppercase tracking-wider border border-white/60 shadow-md flex items-center gap-1.5 animate-in fade-in duration-300"
+                  className="absolute z-10 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md text-[11px] font-bold text-[#191919] uppercase tracking-wider border border-white/80 shadow-md flex items-center gap-1.5 animate-in fade-in duration-300 select-none hover:scale-105 transition-transform"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25] shrink-0"></span>
                   <span>{loc.name}</span>
                 </div>
               ))}
 
               {/* Bottom Aperture Info Badge */}
-              <div className="absolute bottom-6 left-6 right-6 z-10 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-white/80 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#F02D25]">
+              <div className="absolute bottom-5 left-5 right-5 sm:bottom-6 sm:left-6 sm:right-6 z-10 p-4 sm:p-5 rounded-[22px] sm:rounded-[24px] bg-white/95 backdrop-blur-md border border-white/80 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#F02D25]">
                     {currentSlide.tag}
                   </span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                  <span className="flex h-2 w-2 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]"></span>
+                  </span>
                 </div>
-                <h4 className="font-display font-bold text-sm text-[#191919] leading-tight">
+                <h4 className="font-display font-bold text-sm sm:text-[15px] text-[#191919] leading-snug tracking-tight">
                   {currentSlide.title}
                 </h4>
-                <p className="text-[11px] text-[#77736D] mt-0.5 line-clamp-2">
+                <p className="text-[11px] sm:text-xs text-[#77736D] mt-1 leading-relaxed line-clamp-2">
                   {currentSlide.description}
                 </p>
               </div>
