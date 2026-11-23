@@ -290,7 +290,7 @@ export const App: React.FC = () => {
                         Map Explorer
                       </h4>
                       <p className="text-xs text-[#77736D] mt-1 leading-relaxed">
-                        65/35 interactive Leaflet map with red markers, popups & live radius search.
+                        65/35 interactive Leaflet map with category-classified markers, popups & live radius search.
                       </p>
                     </div>
                     <div className="mt-4 pt-3 border-t border-[#E3DFD7] flex items-center justify-between text-xs font-bold uppercase text-[#F02D25]">
@@ -389,7 +389,7 @@ export const App: React.FC = () => {
                   </div>
                   
                   <p className="text-xs sm:text-sm text-[#77736D] max-w-md font-normal leading-relaxed">
-                    Click any red marker on the map to focus that place, view details, and compute live Apriori association recommendations.
+                    Click any category marker on the map to focus that place, view details, and compute live Apriori association recommendations.
                   </p>
                 </div>
 

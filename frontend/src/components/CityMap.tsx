@@ -15,35 +15,48 @@ interface CityMapProps {
   onViewDetails: (place: Place) => void;
 }
 
-// Editorial Red Circular Marker with clean white outline
-const createCustomMarkerIcon = (isSelected: boolean) => {
-  const size = isSelected ? 36 : 26;
-  const stroke = isSelected ? 3 : 2;
+export const CATEGORY_COLORS: Record<string, string> = {
+  Healthcare: '#EF4444',
+  Transportation: '#3B82F6',
+  Tourism: '#10B981',
+  Shopping: '#F97316',
+  Education: '#6366F1',
+  Entertainment: '#8B5CF6',
+  Restaurants: '#F59E0B',
+  'Real Estate': '#06B6D4',
+};
+
+// Helper to create modern SVGs for map markers classified by category
+const createCustomMarkerIcon = (category: string, isSelected: boolean) => {
+  const color = CATEGORY_COLORS[category] || '#F02D25';
+  const size = isSelected ? 38 : 30;
+  const strokeWidth = isSelected ? 3 : 2;
 
   const html = `
     <div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center;">
       ${
         isSelected
-          ? `<div style="position: absolute; inset: -8px; border-radius: 9999px; background-color: #F02D25; opacity: 0.3; animation: pulseGlow 1.8s infinite;"></div>`
+          ? `<div style="position: absolute; inset: -6px; border-radius: 9999px; background-color: ${color}; opacity: 0.4; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>`
           : ''
       }
       <div style="
         width: ${size}px;
         height: ${size}px;
-        background-color: ${isSelected ? '#F02D25' : '#191919'};
-        border-radius: 50%;
+        background-color: ${color};
+        border-radius: 50% 50% 50% 0;
+        transform: rotate(-45deg);
         display: flex;
         align-items: center;
         justify-content: center;
-        border: ${stroke}px solid #FFFFFF;
-        box-shadow: 0 4px 12px rgba(23, 23, 23, 0.3);
+        border: ${strokeWidth}px solid white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
         cursor: pointer;
         transition: transform 0.2s ease;
       ">
         <div style="
           width: ${isSelected ? 10 : 8}px;
           height: ${isSelected ? 10 : 8}px;
-          background-color: ${isSelected ? '#FFFFFF' : '#F02D25'};
+          background-color: white;
           border-radius: 50%;
         "></div>
       </div>
@@ -52,23 +65,23 @@ const createCustomMarkerIcon = (isSelected: boolean) => {
 
   return L.divIcon({
     html,
-    className: 'editorial-custom-marker',
+    className: 'custom-city-marker',
     iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -size / 2],
+    iconAnchor: [size / 2, size],
+    popupAnchor: [0, -size],
   });
 };
 
 const userLocationIcon = L.divIcon({
   html: `
-    <div style="position: relative; width: 24px; height: 24px;">
-      <div style="position: absolute; inset: -4px; border-radius: 9999px; background-color: #F02D25; opacity: 0.35; animation: ping 2s infinite;"></div>
-      <div style="width: 24px; height: 24px; background-color: #F02D25; border: 3px solid white; border-radius: 9999px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>
+    <div style="position: relative; width: 22px; height: 22px;">
+      <div style="position: absolute; inset: -4px; border-radius: 9999px; background-color: #3B82F6; opacity: 0.4; animation: ping 2s infinite;"></div>
+      <div style="width: 22px; height: 22px; background-color: #3B82F6; border: 3px solid white; border-radius: 9999px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>
     </div>
   `,
   className: 'user-loc-marker',
-  iconSize: [24, 24],
-  iconAnchor: [12, 12],
+  iconSize: [22, 22],
+  iconAnchor: [11, 11],
 });
 
 // Map controller component to pan when place selected
@@ -127,10 +140,11 @@ export const CityMap: React.FC<CityMapProps> = ({
           </Marker>
         )}
 
-        {/* Bengaluru Place Markers */}
+        {/* Bengaluru Place Markers Classified by Category & Colors */}
         {places.map((place) => {
           const isSelected = selectedPlace?.place_id === place.place_id;
-          const markerIcon = createCustomMarkerIcon(isSelected);
+          const markerIcon = createCustomMarkerIcon(place.category, isSelected);
+          const categoryColor = CATEGORY_COLORS[place.category] || '#F02D25';
 
           return (
             <Marker
@@ -151,12 +165,15 @@ export const CityMap: React.FC<CityMapProps> = ({
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />
-                    <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white bg-[#191919]/80 backdrop-blur-xs">
+                    <div
+                      className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
+                      style={{ backgroundColor: categoryColor }}
+                    >
                       {place.category}
                     </div>
                     {place.rating && (
-                      <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[10px] font-bold text-white bg-[#F02D25] flex items-center gap-1 shadow-xs">
-                        <Star className="w-2.5 h-2.5 fill-white" />
+                      <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[10px] font-bold text-white bg-[#191919]/80 backdrop-blur-xs flex items-center gap-1 shadow-xs">
+                        <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
                         <span>{place.rating.toFixed(1)}</span>
                       </div>
                     )}
@@ -168,12 +185,12 @@ export const CityMap: React.FC<CityMapProps> = ({
                       {place.name}
                     </h3>
                     <p className="text-[#77736D] text-xs mt-1 line-clamp-1 flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5 text-[#F02D25] shrink-0" />
+                      <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: categoryColor }} />
                       <span>{place.locality}</span>
                     </p>
 
                     {place.distance_km !== undefined && (
-                      <div className="mt-1 text-[11px] font-bold text-[#F02D25]">
+                      <div className="mt-1 text-[11px] font-bold" style={{ color: categoryColor }}>
                         {place.distance_km} km away from your location
                       </div>
                     )}
@@ -217,20 +234,25 @@ export const CityMap: React.FC<CityMapProps> = ({
           className="w-11 h-11 rounded-2xl bg-white shadow-md hover:bg-[#F5F3EE] flex items-center justify-center text-[#191919] border border-[#E3DFD7] transition-all cursor-pointer"
           title="Locate Me in Bengaluru"
         >
-          <Navigation className="w-5 h-5 text-[#F02D25]" />
+          <Navigation className="w-5 h-5 text-[#3B82F6]" />
         </button>
       </div>
 
-      {/* Editorial Marker Legend */}
-      <div className="absolute top-4 left-4 z-[400] bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-[#E3DFD7] shadow-sm text-xs font-semibold text-[#191919] flex items-center gap-3">
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-[#F02D25] border-2 border-white shadow-xs"></span>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#191919]">City Node</span>
+      {/* Category Marker Classification Legend */}
+      <div className="absolute top-4 left-4 z-[400] bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-[#E3DFD7] shadow-sm text-xs font-semibold text-[#191919] hidden sm:flex items-center gap-2.5 flex-wrap max-w-[80%] select-none">
+        <div className="flex items-center gap-1.5 pr-2 border-r border-[#E3DFD7]">
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D]">
+            {places.length} Places
+          </span>
         </div>
-        <span className="text-[#E3DFD7]">|</span>
-        <span className="text-[11px] text-[#77736D]">
-          {places.length} Locations Active
-        </span>
+        <div className="flex items-center gap-2.5 flex-wrap">
+          {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
+            <div key={cat} className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" style={{ backgroundColor: color }}></span>
+              <span className="text-[11px] font-medium text-[#191919]">{cat}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
