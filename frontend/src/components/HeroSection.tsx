@@ -1,21 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 interface HeroSectionProps {
-  onSearch: (query: string) => void;
-  isSearching: boolean;
+  onSearch?: (query: string) => void;
+  isSearching?: boolean;
   onExploreMap: () => void;
-  onOpenAlgorithm: () => void;
+  onOpenAlgorithm?: () => void;
 }
-
-const PROMPT_CHIPS = [
-  "Metro stations near Indiranagar",
-  "Parks near Cubbon Park",
-  "Hospitals in Whitefield",
-  "Restaurants near MG Road",
-  "Colleges around Malleshwaram",
-  "EV Charging near Koramangala",
-];
 
 interface LocationSlide {
   id: string;
@@ -95,12 +86,8 @@ const LOCATION_SLIDES: LocationSlide[] = [
 ];
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
-  onSearch,
-  isSearching,
   onExploreMap,
-  onOpenAlgorithm,
 }) => {
-  const [query, setQuery] = useState('');
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -117,18 +104,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isPaused]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) {
-      onSearch(query.trim());
-    }
-  };
-
-  const handleChipClick = (chip: string) => {
-    setQuery(chip);
-    onSearch(chip);
-  };
 
   const currentSlide = LOCATION_SLIDES[activeSlide];
 
@@ -164,64 +139,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <strong className="text-[#191919] font-bold">bango</strong> is an intelligent urban discovery platform powered by the <strong className="text-[#191919] font-semibold">Apriori Association Rule Mining</strong> algorithm. Uncover hidden mobility patterns, transit connections, and curated smart city destinations across 8 urban domains.
             </p>
 
-            {/* Editorial "WHERE DO YOU WANT TO GO?" Search Bar */}
-            <div className="w-full max-w-xl bg-white rounded-2xl p-2.5 sm:p-3 border border-[#E3DFD7] shadow-lg mb-4">
-              <form onSubmit={handleSubmit} className="flex items-center gap-2">
-                <div className="pl-2 text-[#77736D]">
-                  <Search className="w-5 h-5 text-[#191919]" />
-                </div>
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Where do you want to explore in Bengaluru?"
-                  className="flex-1 bg-transparent px-2 py-2 text-sm sm:text-base text-[#191919] placeholder:text-[#77736D] outline-none font-medium"
-                />
-                <button
-                  type="submit"
-                  disabled={isSearching || !query.trim()}
-                  className="w-11 h-11 rounded-xl bg-[#F02D25] hover:bg-[#E9473D] text-white flex items-center justify-center transition-all shrink-0 shadow-sm disabled:opacity-40 disabled:hover:bg-[#F02D25] group cursor-pointer"
-                  title="Search Bengaluru"
-                >
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </form>
-
-              {/* Prompt Suggestions */}
-              <div className="mt-2.5 pt-2 border-t border-[#E3DFD7]/60 flex flex-wrap gap-1.5 items-center">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#77736D] mr-1">
-                  Try:
-                </span>
-                {PROMPT_CHIPS.slice(0, 4).map((chip, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => handleChipClick(chip)}
-                    className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#F5F3EE] hover:bg-[#ECE9E2] text-[#191919] transition-colors cursor-pointer"
-                  >
-                    {chip}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* CTAs */}
+            {/* Primary Action CTA */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={onExploreMap}
-                className="group flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer"
+                className="group flex items-center gap-2.5 px-7 py-4 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer"
               >
                 <span>Open Map Explorer</span>
                 <div className="w-6 h-6 rounded-full bg-[#F02D25] flex items-center justify-center text-white">
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </div>
-              </button>
-
-              <button
-                onClick={onOpenAlgorithm}
-                className="px-6 py-3.5 rounded-full bg-white hover:bg-[#ECE9E2] text-[#191919] text-xs font-bold uppercase tracking-wider border border-[#E3DFD7] transition-all shadow-xs cursor-pointer"
-              >
-                Inspect Apriori Engine
               </button>
             </div>
 

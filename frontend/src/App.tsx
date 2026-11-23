@@ -669,8 +669,8 @@ export const App: React.FC = () => {
 
         </main>
 
-        {/* 4. EDITORIAL FOOTER */}
-        <Footer onNavigate={(page) => setCurrentPage(page)} />
+        {/* 4. EDITORIAL FOOTER (HIDDEN ON FIRST / DISCOVER PAGE) */}
+        {currentPage !== 'discover' && <Footer onNavigate={(page) => setCurrentPage(page)} />}
 
       </div>
 
