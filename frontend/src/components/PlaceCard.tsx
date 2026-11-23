@@ -1,6 +1,6 @@
 import React from 'react';
 import { Place } from '../types';
-import { Star, MapPin, Bookmark, ExternalLink } from 'lucide-react';
+import { Star, MapPin, Bookmark, ArrowUpRight } from 'lucide-react';
 
 interface PlaceCardProps {
   place: Place;
@@ -11,17 +11,6 @@ interface PlaceCardProps {
   onViewDetails: (place: Place) => void;
 }
 
-const CATEGORY_TAG_COLORS: Record<string, string> = {
-  Healthcare: 'bg-red-50 text-red-600 border-red-200',
-  Transportation: 'bg-blue-50 text-blue-600 border-blue-200',
-  Tourism: 'bg-emerald-50 text-emerald-600 border-emerald-200',
-  Shopping: 'bg-orange-50 text-orange-600 border-orange-200',
-  Education: 'bg-indigo-50 text-indigo-600 border-indigo-200',
-  Entertainment: 'bg-purple-50 text-purple-600 border-purple-200',
-  Restaurants: 'bg-amber-50 text-amber-600 border-amber-200',
-  'Real Estate': 'bg-cyan-50 text-cyan-600 border-cyan-200',
-};
-
 export const PlaceCard: React.FC<PlaceCardProps> = ({
   place,
   isSelected = false,
@@ -30,19 +19,17 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
   onSave,
   onViewDetails,
 }) => {
-  const badgeStyle = CATEGORY_TAG_COLORS[place.category] || 'bg-slate-50 text-slate-600 border-slate-200';
-
   return (
     <div
       onClick={() => onSelect(place)}
-      className={`group relative bg-white rounded-2xl p-3 border transition-all duration-200 cursor-pointer shadow-2xs hover:shadow-md flex gap-3.5 ${
+      className={`group relative bg-white rounded-2xl p-3 border transition-all duration-200 cursor-pointer shadow-xs hover:shadow-md flex gap-3.5 ${
         isSelected
-          ? 'border-[#5681EB] ring-2 ring-[#5681EB]/20 bg-[#F8FAFC]'
-          : 'border-[#E8EBF0] hover:border-[#B9E2F1]'
+          ? 'border-[#F02D25] ring-2 ring-[#F02D25]/20 bg-[#F5F3EE]'
+          : 'border-[#E3DFD7] hover:border-[#F02D25]'
       }`}
     >
       {/* Thumbnail */}
-      <div className="relative w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100">
+      <div className="relative w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-[#ECE9E2]">
         <img
           src={place.image_url}
           alt={place.name}
@@ -50,8 +37,8 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
           loading="lazy"
         />
         {place.rating && (
-          <div className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
-            <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+          <div className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-[#191919]/80 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
+            <Star className="w-2.5 h-2.5 fill-[#F02D25] text-[#F02D25]" />
             <span>{place.rating.toFixed(1)}</span>
           </div>
         )}
@@ -61,7 +48,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
       <div className="flex-1 flex flex-col justify-between min-w-0">
         <div>
           <div className="flex items-center justify-between gap-2">
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${badgeStyle}`}>
+            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#ECE9E2] text-[#191919]">
               {place.category}
             </span>
 
@@ -72,7 +59,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
                 onSave(place);
               }}
               className={`p-1 rounded-lg transition-colors ${
-                isSaved ? 'text-[#3F6FDB]' : 'text-[#777F8B] hover:text-[#171B24]'
+                isSaved ? 'text-[#F02D25]' : 'text-[#77736D] hover:text-[#191919]'
               }`}
               title={isSaved ? 'Remove Bookmark' : 'Save Place'}
             >
@@ -80,19 +67,19 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
             </button>
           </div>
 
-          <h4 className="font-bold text-sm text-[#171B24] mt-1 line-clamp-1 group-hover:text-[#5681EB] transition-colors">
+          <h4 className="font-display font-bold text-sm text-[#191919] uppercase mt-1 line-clamp-1 group-hover:text-[#F02D25] transition-colors">
             {place.name}
           </h4>
 
-          <p className="text-xs text-[#777F8B] line-clamp-2 mt-0.5 leading-relaxed">
+          <p className="text-xs text-[#77736D] line-clamp-2 mt-0.5 leading-relaxed">
             {place.description}
           </p>
         </div>
 
         {/* Footer Meta */}
-        <div className="mt-2 pt-1.5 border-t border-[#E8EBF0]/60 flex items-center justify-between text-[11px] text-[#777F8B]">
+        <div className="mt-2 pt-1.5 border-t border-[#E3DFD7]/80 flex items-center justify-between text-[11px] text-[#77736D]">
           <div className="flex items-center gap-1 truncate">
-            <MapPin className="w-3 h-3 text-[#5681EB] shrink-0" />
+            <MapPin className="w-3 h-3 text-[#F02D25] shrink-0" />
             <span className="truncate">{place.locality}</span>
           </div>
 
@@ -102,10 +89,10 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
               e.stopPropagation();
               onViewDetails(place);
             }}
-            className="text-[11px] font-bold text-[#5681EB] hover:text-[#3F6FDB] flex items-center gap-0.5 shrink-0 ml-2"
+            className="text-[11px] font-bold uppercase tracking-wider text-[#191919] hover:text-[#F02D25] flex items-center gap-0.5"
           >
-            <span>Details</span>
-            <ExternalLink className="w-2.5 h-2.5" />
+            <span>View</span>
+            <ArrowUpRight className="w-3 h-3" />
           </button>
         </div>
       </div>

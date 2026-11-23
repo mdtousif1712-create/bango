@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Place, CategoryMeta, RecommendationItem } from './types';
 import {
   fetchCategories,
@@ -7,23 +7,26 @@ import {
   fetchRecommendations,
   performNaturalSearch,
 } from './services/api';
-import { Sidebar } from './components/Sidebar';
-import { Topbar } from './components/Topbar';
-import { TopBanner } from './components/TopBanner';
-import { CategoryFilters } from './components/CategoryFilters';
+import { Navbar } from './components/Navbar';
+import { HeroSection } from './components/HeroSection';
 import { CityMap } from './components/CityMap';
 import { SearchAssistant } from './components/SearchAssistant';
+import { CategoryFilters } from './components/CategoryFilters';
+import { CategoryGrid } from './components/CategoryGrid';
+import { TrendingSection } from './components/TrendingSection';
+import { RecommendationsSection } from './components/RecommendationsSection';
+import { HowItWorksSection } from './components/HowItWorksSection';
+import { SavedPlacesSection } from './components/SavedPlacesSection';
+import { Footer } from './components/Footer';
 import { PlaceCard } from './components/PlaceCard';
 import { RecommendationCard } from './components/RecommendationCard';
 import { PlaceDetailDrawer } from './components/PlaceDetailDrawer';
 import { AlgorithmModal } from './components/AlgorithmModal';
-import { Sparkles, MapPin, Bookmark, TrendingUp, AlertCircle, Compass } from 'lucide-react';
+import { Sparkles, MapPin, Bookmark, Compass, AlertCircle } from 'lucide-react';
 
 export const App: React.FC = () => {
   // Navigation & View state
-  const [activeTab, setActiveTab] = useState<string>('discover');
   const [rightPanelTab, setRightPanelTab] = useState<'recommendations' | 'places' | 'saved'>('recommendations');
-  const [showBanner, setShowBanner] = useState<boolean>(true);
   const [isAlgorithmModalOpen, setIsAlgorithmModalOpen] = useState<boolean>(false);
 
   // Data states
@@ -33,7 +36,7 @@ export const App: React.FC = () => {
   const [trendingPlaces, setTrendingPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [drawerPlace, setDrawerPlace] = useState<Place | null>(null);
-  
+
   // Apriori Recommendations state
   const [recommendations, setRecommendations] = useState<RecommendationItem[]>([]);
   const [recNotice, setRecNotice] = useState<string | null>(null);
@@ -107,7 +110,6 @@ export const App: React.FC = () => {
       const trending = await fetchTrendingPlaces(catName, 8);
       setTrendingPlaces(trending);
 
-      // If user filtered by category, pick top place in category for recommendations
       if (filtered.length > 0) {
         handleSelectPlace(filtered[0], false);
       }
@@ -153,7 +155,6 @@ export const App: React.FC = () => {
         setRecommendations(res.apriori_recommendations);
         setRightPanelTab('recommendations');
       } else if (res.matched_places.length > 0) {
-        // Query recommendations for first matched place
         handleSelectPlace(res.matched_places[0]);
       }
       setActiveSearchExplanation(res.explanation);
@@ -188,7 +189,6 @@ export const App: React.FC = () => {
         (pos) => {
           const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           setUserLocation(coords);
-          // Re-sort places by proximity
           if (selectedCategory) {
             handleCategorySelect(selectedCategory);
           }
@@ -203,45 +203,56 @@ export const App: React.FC = () => {
     }
   };
 
-  // Switch tabs from sidebar
-  const handleSidebarTabChange = (tabId: string) => {
-    setActiveTab(tabId);
-    if (tabId === 'saved') {
-      setRightPanelTab('saved');
-    } else if (tabId === 'recommendations') {
-      setRightPanelTab('recommendations');
-    } else if (tabId === 'explore') {
-      setRightPanelTab('places');
-    }
-  };
-
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#E7EBEF] p-2 md:p-3.5 antialiased font-sans">
-      {/* Outer App Rounded Container */}
-      <div className="flex flex-1 rounded-[24px] bg-white overflow-hidden shadow-xl border border-[#E8EBF0]">
-        {/* Left Vertical Slim Sidebar */}
-        <Sidebar
-          activeTab={activeTab}
-          setActiveTab={handleSidebarTabChange}
-          savedCount={savedPlaces.length}
-          onOpenAlgorithmModal={() => setIsAlgorithmModalOpen(true)}
-        />
+    <div className="min-h-screen w-full bg-[#F5F3EE] text-[#191919] font-sans antialiased selection:bg-[#F02D25] selection:text-white">
+      
+      {/* 1. EDITORIAL NAVBAR */}
+      <Navbar
+        savedCount={savedPlaces.length}
+        onOpenSaved={() => {
+          document.getElementById('saved-places')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
+      />
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          {/* Top Bar Navigation */}
-          <Topbar
-            currentCity="Bengaluru, India"
-            savedCount={savedPlaces.length}
-            onOpenSaved={() => setRightPanelTab('saved')}
-            onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
-          />
+      {/* 2. HERO SECTION WITH APERTURE / WINDOW MOTIF */}
+      <HeroSection
+        onSearch={handleNaturalSearch}
+        isSearching={isSearching}
+        onExploreMap={() => {
+          document.getElementById('map-explorer')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
+      />
 
-          {/* Split 2-Column Discovery Interface */}
-          <main className="flex-1 flex flex-col lg:flex-row overflow-hidden p-3.5 gap-3.5 bg-[#F8FAFC]">
-            {/* CENTRE SECTION: Interactive Leaflet Map (~53% desktop width) */}
-            <section className="flex-[53] flex flex-col min-h-[360px] lg:min-h-0 relative rounded-2xl overflow-hidden bg-white border border-[#E8EBF0] shadow-xs">
-              {/* The Map occupies the container */}
+      {/* 3. BENGALURU MAP EXPLORER (65 / 35 EDITORIAL SPLIT SECTION) */}
+      <section id="map-explorer" className="py-16 bg-[#ECE9E2] border-t border-[#E3DFD7]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Heading */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#77736D]">
+                  Interactive Geographical Exploration
+                </span>
+              </div>
+              <h2 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-[#191919] uppercase tracking-tight leading-tight">
+                Bengaluru Map Explorer
+              </h2>
+            </div>
+            
+            <p className="text-xs sm:text-sm text-[#77736D] max-w-md font-normal leading-relaxed">
+              Explore places on the map with red circular markers. Click any location to generate live Apriori association rules.
+            </p>
+          </div>
+
+          {/* 65 / 35 Responsive Grid Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            
+            {/* LEFT: 65% Interactive Leaflet Map (8 cols) */}
+            <div className="lg:col-span-8 flex flex-col min-h-[580px] lg:min-h-[640px] relative rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-lg bg-white">
               <div className="flex-1 w-full h-full relative">
                 <CityMap
                   places={places}
@@ -254,7 +265,7 @@ export const App: React.FC = () => {
                   onViewDetails={(p) => setDrawerPlace(p)}
                 />
 
-                {/* Floating AI Search Assistant placed at bottom of map */}
+                {/* Floating Search Assistant in the Map Container */}
                 <div className="absolute bottom-4 left-4 right-4 z-[400] max-w-xl mx-auto">
                   <SearchAssistant
                     onSearch={handleNaturalSearch}
@@ -262,23 +273,16 @@ export const App: React.FC = () => {
                   />
                 </div>
               </div>
-            </section>
+            </div>
 
-            {/* RIGHT DISCOVERY PANEL: (~47% desktop width) */}
-            <section className="flex-[47] flex flex-col min-h-0 rounded-2xl bg-white border border-[#E8EBF0] p-4 shadow-xs overflow-hidden">
-              {/* Top Promotional Banner (Dismissible) */}
-              {showBanner && (
-                <TopBanner
-                  onDismiss={() => setShowBanner(false)}
-                  onExploreClick={() => {
-                    handleCategorySelect('Tourism');
-                    setRightPanelTab('places');
-                  }}
-                />
-              )}
-
-              {/* Horizontal Category Filters */}
-              <div className="mb-3 shrink-0">
+            {/* RIGHT: 35% Editorial Discovery Panel (4 cols) */}
+            <div className="lg:col-span-4 flex flex-col min-h-[580px] lg:min-h-[640px] rounded-3xl bg-white border border-[#E3DFD7] p-5 shadow-lg overflow-hidden">
+              
+              {/* Category Filter Pills */}
+              <div className="mb-4 shrink-0">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] block mb-2">
+                  Filter by Domain
+                </span>
                 <CategoryFilters
                   categories={categories}
                   selectedCategory={selectedCategory}
@@ -286,13 +290,13 @@ export const App: React.FC = () => {
                 />
               </div>
 
-              {/* Search Result Feedback Bar */}
+              {/* Natural Search Explanation Bar */}
               {activeSearchExplanation && (
-                <div className="mb-3 px-3 py-2 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 flex items-center justify-between shrink-0">
-                  <span className="font-medium truncate">{activeSearchExplanation}</span>
+                <div className="mb-3 px-3.5 py-2.5 bg-[#F5F3EE] rounded-2xl border border-[#E3DFD7] text-xs text-[#191919] flex items-center justify-between shrink-0">
+                  <span className="font-semibold truncate">{activeSearchExplanation}</span>
                   <button
                     onClick={() => setActiveSearchExplanation(null)}
-                    className="text-emerald-700 hover:text-emerald-900 text-[11px] font-bold shrink-0 ml-2"
+                    className="text-[#F02D25] hover:underline text-[11px] font-bold shrink-0 ml-2 uppercase tracking-wider"
                   >
                     Clear
                   </button>
@@ -300,20 +304,20 @@ export const App: React.FC = () => {
               )}
 
               {/* Discovery View Tabs */}
-              <div className="flex items-center justify-between border-b border-[#E8EBF0] pb-2.5 mb-3 shrink-0">
-                <div className="flex items-center gap-1 bg-[#F1F5F9] p-1 rounded-xl">
+              <div className="flex items-center justify-between border-b border-[#E3DFD7] pb-3 mb-4 shrink-0">
+                <div className="flex items-center gap-1.5 bg-[#F5F3EE] p-1 rounded-2xl">
                   <button
                     onClick={() => setRightPanelTab('recommendations')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       rightPanelTab === 'recommendations'
-                        ? 'bg-white text-[#5681EB] shadow-xs'
-                        : 'text-[#777F8B] hover:text-[#171B24]'
+                        ? 'bg-[#191919] text-white shadow-xs'
+                        : 'text-[#77736D] hover:text-[#191919]'
                     }`}
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Recommendations</span>
+                    <Sparkles className="w-3.5 h-3.5 text-[#F02D25]" />
+                    <span>For You</span>
                     {recommendations.length > 0 && (
-                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#5681EB]/10 text-[#3F6FDB]">
+                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#F02D25] text-white">
                         {recommendations.length}
                       </span>
                     )}
@@ -321,31 +325,31 @@ export const App: React.FC = () => {
 
                   <button
                     onClick={() => setRightPanelTab('places')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       rightPanelTab === 'places'
-                        ? 'bg-white text-[#5681EB] shadow-xs'
-                        : 'text-[#777F8B] hover:text-[#171B24]'
+                        ? 'bg-[#191919] text-white shadow-xs'
+                        : 'text-[#77736D] hover:text-[#191919]'
                     }`}
                   >
                     <MapPin className="w-3.5 h-3.5" />
                     <span>Places</span>
-                    <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200/60 text-slate-700">
+                    <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#ECE9E2] text-[#191919]">
                       {places.length}
                     </span>
                   </button>
 
                   <button
                     onClick={() => setRightPanelTab('saved')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       rightPanelTab === 'saved'
-                        ? 'bg-white text-[#5681EB] shadow-xs'
-                        : 'text-[#777F8B] hover:text-[#171B24]'
+                        ? 'bg-[#191919] text-white shadow-xs'
+                        : 'text-[#77736D] hover:text-[#191919]'
                     }`}
                   >
                     <Bookmark className="w-3.5 h-3.5" />
                     <span>Saved</span>
                     {savedPlaces.length > 0 && (
-                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#5681EB] text-white">
+                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#F02D25] text-white">
                         {savedPlaces.length}
                       </span>
                     )}
@@ -353,95 +357,43 @@ export const App: React.FC = () => {
                 </div>
 
                 {selectedPlace && (
-                  <span className="text-[11px] text-[#777F8B] hidden sm:inline truncate max-w-[140px]">
-                    Focus: <strong className="text-[#171B24]">{selectedPlace.name}</strong>
+                  <span className="text-[11px] text-[#77736D] hidden sm:inline truncate max-w-[120px]">
+                    Focus: <strong className="text-[#191919] uppercase">{selectedPlace.name}</strong>
                   </span>
                 )}
               </div>
 
-              {/* Scrollable Cards Feed */}
-              <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+              {/* Scrollable Feed */}
+              <div className="flex-1 overflow-y-auto space-y-3.5 pr-1">
                 {/* 1. RECOMMENDATIONS TAB */}
                 {rightPanelTab === 'recommendations' && (
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-sm text-[#171B24]">
-                            For You in Bengaluru
-                          </h3>
-                          <span className="px-2 py-0.5 rounded-full bg-[#5681EB]/10 text-[#3F6FDB] text-[10px] font-bold">
-                            Apriori Mined
-                          </span>
-                        </div>
-                        {selectedPlace && (
-                          <span className="text-[11px] text-[#777F8B]">
-                            Based on {selectedPlace.name}
-                          </span>
-                        )}
+                  <div className="space-y-3.5">
+                    {recNotice && (
+                      <div className="p-3 bg-[#ECE9E2] rounded-2xl border border-[#E3DFD7] text-xs text-[#191919] flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 text-[#F02D25] shrink-0 mt-0.5" />
+                        <p className="leading-snug">{recNotice}</p>
                       </div>
+                    )}
 
-                      {/* Insufficient Association Notice Fallback */}
-                      {recNotice && (
-                        <div className="mb-3 p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-start gap-2">
-                          <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                          <p className="leading-snug">{recNotice}</p>
-                        </div>
-                      )}
-
-                      {isLoadingRecs ? (
-                        <div className="py-12 text-center text-xs text-[#777F8B]">
-                          Generating intelligent association rules...
-                        </div>
-                      ) : recommendations.length > 0 ? (
-                        <div className="space-y-3">
-                          {recommendations.map((rec, idx) => (
-                            <RecommendationCard
-                              key={idx}
-                              item={rec}
-                              isSelected={selectedPlace?.place_id === rec.place.place_id}
-                              isSaved={isPlaceSaved(rec.place.place_id)}
-                              onSelect={(p) => handleSelectPlace(p, false)}
-                              onSave={handleSavePlace}
-                              onViewDetails={(p) => setDrawerPlace(p)}
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="py-8 text-center text-xs text-[#777F8B] bg-slate-50 rounded-2xl border border-dashed border-[#E8EBF0]">
-                          Select a place on the map to view intelligent association recommendations.
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Trending Section */}
-                    {trendingPlaces.length > 0 && (
-                      <div className="pt-3 border-t border-[#E8EBF0]">
-                        <div className="flex items-center justify-between mb-2.5">
-                          <div className="flex items-center gap-1.5">
-                            <TrendingUp className="w-4 h-4 text-[#F59E0B]" />
-                            <h3 className="font-bold text-sm text-[#171B24]">
-                              Trending in Bengaluru
-                            </h3>
-                          </div>
-                          <span className="text-[10px] text-[#777F8B]">
-                            From mobility dataset counts
-                          </span>
-                        </div>
-
-                        <div className="space-y-2.5">
-                          {trendingPlaces.slice(0, 4).map((place) => (
-                            <PlaceCard
-                              key={place.place_id}
-                              place={place}
-                              isSelected={selectedPlace?.place_id === place.place_id}
-                              isSaved={isPlaceSaved(place.place_id)}
-                              onSelect={(p) => handleSelectPlace(p, false)}
-                              onSave={handleSavePlace}
-                              onViewDetails={(p) => setDrawerPlace(p)}
-                            />
-                          ))}
-                        </div>
+                    {isLoadingRecs ? (
+                      <div className="py-16 text-center text-xs text-[#77736D]">
+                        Computing Apriori association paths...
+                      </div>
+                    ) : recommendations.length > 0 ? (
+                      recommendations.map((rec, idx) => (
+                        <RecommendationCard
+                          key={idx}
+                          item={rec}
+                          isSelected={selectedPlace?.place_id === rec.place.place_id}
+                          isSaved={isPlaceSaved(rec.place.place_id)}
+                          onSelect={(p) => handleSelectPlace(p, false)}
+                          onSave={handleSavePlace}
+                          onViewDetails={(p) => setDrawerPlace(p)}
+                        />
+                      ))
+                    ) : (
+                      <div className="py-12 text-center text-xs text-[#77736D] bg-[#F5F3EE] rounded-2xl border border-dashed border-[#E3DFD7] p-4">
+                        Select a place on the map to view intelligent association recommendations.
                       </div>
                     )}
                   </div>
@@ -450,17 +402,8 @@ export const App: React.FC = () => {
                 {/* 2. PLACES TAB */}
                 {rightPanelTab === 'places' && (
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-bold text-sm text-[#171B24]">
-                        Bengaluru Places ({places.length})
-                      </h3>
-                      <span className="text-xs text-[#777F8B]">
-                        Domain: {selectedCategory}
-                      </span>
-                    </div>
-
                     {isLoadingPlaces ? (
-                      <div className="py-12 text-center text-xs text-[#777F8B]">
+                      <div className="py-16 text-center text-xs text-[#77736D]">
                         Loading Bengaluru smart city locations...
                       </div>
                     ) : places.length > 0 ? (
@@ -476,25 +419,16 @@ export const App: React.FC = () => {
                         />
                       ))
                     ) : (
-                      <div className="py-12 text-center text-xs text-[#777F8B]">
+                      <div className="py-12 text-center text-xs text-[#77736D] bg-[#F5F3EE] rounded-2xl">
                         No places found matching your filter.
                       </div>
                     )}
                   </div>
                 )}
 
-                {/* 3. SAVED PLACES TAB */}
+                {/* 3. SAVED TAB */}
                 {rightPanelTab === 'saved' && (
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <h3 className="font-bold text-sm text-[#171B24]">
-                        Saved Places ({savedPlaces.length})
-                      </h3>
-                      <span className="text-xs text-[#777F8B]">
-                        Stored in browser
-                      </span>
-                    </div>
-
                     {savedPlaces.length > 0 ? (
                       savedPlaces.map((place) => (
                         <PlaceCard
@@ -508,21 +442,68 @@ export const App: React.FC = () => {
                         />
                       ))
                     ) : (
-                      <div className="py-16 text-center text-xs text-[#777F8B] bg-slate-50 rounded-2xl border border-dashed border-[#E8EBF0] p-6">
-                        <Bookmark className="w-8 h-8 text-[#CBD5E1] mx-auto mb-2" />
-                        <p className="font-semibold text-[#171B24]">No saved places yet</p>
-                        <p className="text-[11px] text-[#777F8B] mt-1">
-                          Click the bookmark icon on any place card or marker to save your favorite destinations!
+                      <div className="py-16 text-center text-xs text-[#77736D] bg-[#F5F3EE] rounded-2xl border border-dashed border-[#E3DFD7] p-6">
+                        <Bookmark className="w-8 h-8 text-[#D1CCC4] mx-auto mb-2" />
+                        <p className="font-bold text-[#191919] uppercase">No saved places yet</p>
+                        <p className="text-[11px] text-[#77736D] mt-1">
+                          Click the bookmark icon on any card to save your favorite destinations!
                         </p>
                       </div>
                     )}
                   </div>
                 )}
               </div>
-            </section>
-          </main>
+
+            </div>
+
+          </div>
+
         </div>
-      </div>
+      </section>
+
+      {/* 4. TRENDING DESTINATIONS SECTION ("THE CITY IS TALKING") */}
+      <TrendingSection
+        places={trendingPlaces}
+        onSelectPlace={(p) => handleSelectPlace(p, false)}
+        onSavePlace={handleSavePlace}
+        isPlaceSaved={isPlaceSaved}
+        onViewDetails={(p) => setDrawerPlace(p)}
+      />
+
+      {/* 5. 8 SMART CITY DOMAINS SECTION ("ONE CITY. ENDLESS POSSIBILITIES") */}
+      <CategoryGrid
+        categories={categories}
+        onSelectCategory={handleCategorySelect}
+      />
+
+      {/* 6. INTELLIGENT APRIORI RECOMMENDATIONS SECTION ("DISCOVER WHAT CONNECTS") */}
+      <RecommendationsSection
+        recommendations={recommendations}
+        selectedPlace={selectedPlace}
+        onSelectPlace={(p) => handleSelectPlace(p, false)}
+        onSavePlace={handleSavePlace}
+        isPlaceSaved={isPlaceSaved}
+        onViewDetails={(p) => setDrawerPlace(p)}
+        onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
+        isLoading={isLoadingRecs}
+        notice={recNotice}
+      />
+
+      {/* 7. HOW IT WORKS DARK CONTRASTING SECTION */}
+      <HowItWorksSection
+        onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
+      />
+
+      {/* 8. SAVED PLACES SECTION */}
+      <SavedPlacesSection
+        savedPlaces={savedPlaces}
+        onSelectPlace={(p) => handleSelectPlace(p, false)}
+        onRemovePlace={handleSavePlace}
+        onViewDetails={(p) => setDrawerPlace(p)}
+      />
+
+      {/* 9. EDITORIAL FOOTER */}
+      <Footer />
 
       {/* Place Detail Side Drawer */}
       <PlaceDetailDrawer
@@ -530,9 +511,7 @@ export const App: React.FC = () => {
         onClose={() => setDrawerPlace(null)}
         onSavePlace={handleSavePlace}
         isSaved={drawerPlace ? isPlaceSaved(drawerPlace.place_id) : false}
-        onSelectPlace={(p) => {
-          handleSelectPlace(p, true);
-        }}
+        onSelectPlace={(p) => handleSelectPlace(p, true)}
         userLocation={userLocation}
       />
 

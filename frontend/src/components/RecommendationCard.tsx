@@ -1,6 +1,6 @@
 import React from 'react';
 import { RecommendationItem, Place } from '../types';
-import { Sparkles, Star, MapPin, Bookmark, ExternalLink, ArrowRight, TrendingUp } from 'lucide-react';
+import { Sparkles, Star, MapPin, Bookmark, ArrowUpRight, TrendingUp } from 'lucide-react';
 
 interface RecommendationCardProps {
   item: RecommendationItem;
@@ -19,37 +19,37 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
   onSave,
   onViewDetails,
 }) => {
-  const { place, confidence, lift, support, rule_explanation, recommendation_type } = item;
+  const { place, confidence, lift, rule_explanation, recommendation_type } = item;
   const isApriori = recommendation_type === 'association';
 
   return (
     <div
       onClick={() => onSelect(place)}
-      className={`group relative bg-white rounded-2xl p-3.5 border transition-all duration-200 cursor-pointer shadow-2xs hover:shadow-md ${
+      className={`group relative bg-white rounded-2xl p-3 border transition-all duration-200 cursor-pointer shadow-xs hover:shadow-md ${
         isSelected
-          ? 'border-[#5681EB] ring-2 ring-[#5681EB]/20 bg-[#F8FAFC]'
-          : 'border-[#E8EBF0] hover:border-[#B9E2F1]'
+          ? 'border-[#F02D25] ring-2 ring-[#F02D25]/20 bg-[#F5F3EE]'
+          : 'border-[#E3DFD7] hover:border-[#F02D25]'
       }`}
     >
       {/* Top Explanation Banner */}
-      <div className="mb-2.5 flex items-start gap-2 bg-[#F1F5F9]/80 rounded-xl p-2 border border-[#E8EBF0]">
-        <div className="w-5 h-5 rounded-md bg-[#5681EB]/10 text-[#5681EB] flex items-center justify-center shrink-0 mt-0.5">
+      <div className="mb-2.5 flex items-start gap-2 bg-[#ECE9E2] rounded-xl p-2 border border-[#E3DFD7]">
+        <div className="w-5 h-5 rounded-md bg-[#F02D25] text-white flex items-center justify-center shrink-0 mt-0.5">
           {isApriori ? <Sparkles className="w-3 h-3" /> : <TrendingUp className="w-3 h-3" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#3F6FDB]">
-              {isApriori ? 'Apriori Rule Recommendation' : 'Domain Recommendation'}
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#191919]">
+              {isApriori ? 'Apriori Recommendation' : 'Domain Pairing'}
             </span>
             {isApriori && (
-              <div className="flex items-center gap-1.5 shrink-0 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                <span>{(confidence * 100).toFixed(0)}% Conf</span>
-                <span>•</span>
+              <div className="flex items-center gap-1.5 shrink-0 text-[10px] font-bold text-[#F02D25] bg-white px-2 py-0.5 rounded-full border border-[#E3DFD7]">
+                <span>{(confidence * 100).toFixed(0)}% Match</span>
+                <span>&bull;</span>
                 <span>{lift.toFixed(1)}x Lift</span>
               </div>
             )}
           </div>
-          <p className="text-[11px] text-[#171B24] font-medium leading-tight mt-0.5 line-clamp-2">
+          <p className="text-[11px] text-[#191919] font-medium leading-tight mt-1 line-clamp-2">
             {rule_explanation}
           </p>
         </div>
@@ -58,7 +58,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       {/* Main Place Card Body */}
       <div className="flex gap-3">
         {/* Photo */}
-        <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-slate-100">
+        <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-[#ECE9E2]">
           <img
             src={place.image_url}
             alt={place.name}
@@ -66,8 +66,8 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
             loading="lazy"
           />
           {place.rating && (
-            <div className="absolute bottom-1 left-1 px-1.5 py-0.2 rounded-md bg-black/70 backdrop-blur-xs text-white text-[9px] font-bold flex items-center gap-0.5">
-              <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+            <div className="absolute bottom-1 left-1 px-1.5 py-0.2 rounded-md bg-[#191919]/80 backdrop-blur-xs text-white text-[9px] font-bold flex items-center gap-0.5">
+              <Star className="w-2.5 h-2.5 fill-[#F02D25] text-[#F02D25]" />
               <span>{place.rating.toFixed(1)}</span>
             </div>
           )}
@@ -77,7 +77,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
         <div className="flex-1 flex flex-col justify-between min-w-0">
           <div>
             <div className="flex items-center justify-between gap-1">
-              <span className="text-[10px] font-bold px-2 py-0.2 rounded-full bg-[#E7EBEF] text-[#171B24]">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#ECE9E2] text-[#191919]">
                 {place.category}
               </span>
               <button
@@ -87,7 +87,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
                   onSave(place);
                 }}
                 className={`p-1 rounded-lg transition-colors ${
-                  isSaved ? 'text-[#3F6FDB]' : 'text-[#777F8B] hover:text-[#171B24]'
+                  isSaved ? 'text-[#F02D25]' : 'text-[#77736D] hover:text-[#191919]'
                 }`}
                 title={isSaved ? 'Remove Bookmark' : 'Save Place'}
               >
@@ -95,24 +95,21 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
               </button>
             </div>
 
-            <h4 className="font-bold text-sm text-[#171B24] mt-1 line-clamp-1 group-hover:text-[#5681EB] transition-colors">
+            <h4 className="font-display font-bold text-sm text-[#191919] uppercase mt-1 line-clamp-1 group-hover:text-[#F02D25] transition-colors">
               {place.name}
             </h4>
 
-            <p className="text-[11px] text-[#777F8B] line-clamp-1 mt-0.5 flex items-center gap-1">
-              <MapPin className="w-2.5 h-2.5 text-[#5681EB] shrink-0" />
-              <span>{place.locality}</span>
+            <p className="text-[11px] text-[#77736D] line-clamp-1 mt-0.5">
+              {place.address}
             </p>
           </div>
 
-          <div className="mt-1 flex items-center justify-between">
-            {place.distance_km !== undefined ? (
-              <span className="text-[10px] font-semibold text-[#5681EB]">
-                {place.distance_km} km away
-              </span>
-            ) : (
-              <span className="text-[10px] text-[#777F8B]">Bengaluru</span>
-            )}
+          {/* Action Row */}
+          <div className="mt-1 pt-1 border-t border-[#E3DFD7]/80 flex items-center justify-between text-[11px] text-[#77736D]">
+            <div className="flex items-center gap-1 truncate">
+              <MapPin className="w-3 h-3 text-[#F02D25] shrink-0" />
+              <span className="truncate">{place.locality}</span>
+            </div>
 
             <button
               type="button"
@@ -120,10 +117,10 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
                 e.stopPropagation();
                 onViewDetails(place);
               }}
-              className="text-[11px] font-bold text-[#5681EB] hover:text-[#3F6FDB] flex items-center gap-0.5"
+              className="text-[11px] font-bold uppercase tracking-wider text-[#191919] hover:text-[#F02D25] flex items-center gap-0.5"
             >
               <span>Explore</span>
-              <ArrowRight className="w-3 h-3" />
+              <ArrowUpRight className="w-3 h-3" />
             </button>
           </div>
         </div>

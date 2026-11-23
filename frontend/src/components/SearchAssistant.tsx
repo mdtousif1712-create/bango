@@ -8,12 +8,11 @@ interface SearchAssistantProps {
 }
 
 const PROMPT_CHIPS = [
-  "Find hospitals near Whitefield",
-  "Show tourist attractions in Bengaluru",
-  "Suggest restaurants near MG Road",
-  "Find shopping malls near metro stations",
-  "Show colleges around Malleshwaram",
-  "Recommend entertainment places nearby"
+  "Hospitals near Whitefield",
+  "Parks near Cubbon Park",
+  "Restaurants near MG Road",
+  "Shopping near Metro",
+  "Colleges in Malleshwaram",
 ];
 
 export const SearchAssistant: React.FC<SearchAssistantProps> = ({
@@ -37,25 +36,25 @@ export const SearchAssistant: React.FC<SearchAssistantProps> = ({
   };
 
   return (
-    <div className="w-full bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-[#E8EBF0] shadow-lg transition-all duration-300">
+    <div className="w-full bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-[#E3DFD7] shadow-lg transition-all duration-300 font-sans">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-[#5681EB]/10 text-[#5681EB] flex items-center justify-center">
+          <div className="w-6 h-6 rounded-lg bg-[#F02D25] text-white flex items-center justify-center">
             <Sparkles className="w-3.5 h-3.5" />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-[#171B24]">
-              Where would you like to explore today?
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#191919] font-display">
+              Smart Natural Language Query
             </h3>
-            <p className="text-[11px] text-[#777F8B]">
-              Ask me anything about Bengaluru smart city places.
+            <p className="text-[11px] text-[#77736D]">
+              Apriori rule matching & domain parser
             </p>
           </div>
         </div>
 
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-[#777F8B] hover:text-[#171B24] text-[11px] font-medium"
+          className="text-[#77736D] hover:text-[#191919] text-[11px] font-bold uppercase tracking-wider cursor-pointer"
         >
           {isExpanded ? 'Minimize' : 'Expand'}
         </button>
@@ -63,22 +62,22 @@ export const SearchAssistant: React.FC<SearchAssistantProps> = ({
 
       {/* Search Input Form */}
       <form onSubmit={handleSubmit} className="relative mt-2 flex items-center">
-        <div className="absolute left-3 text-[#777F8B]">
+        <div className="absolute left-3 text-[#77736D]">
           <Search className="w-4 h-4" />
         </div>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Find good restaurants near Indiranagar, hospitals, metro..."
-          className="w-full pl-9 pr-24 py-2.5 rounded-xl border border-[#E8EBF0] focus:border-[#5681EB] focus:ring-2 focus:ring-[#5681EB]/10 outline-none text-xs text-[#171B24] placeholder:text-[#777F8B] bg-slate-50/50"
+          placeholder="Where do you want to explore in Bengaluru?"
+          className="w-full pl-9 pr-24 py-2.5 rounded-xl border border-[#E3DFD7] focus:border-[#F02D25] outline-none text-xs text-[#191919] placeholder:text-[#77736D] bg-[#F5F3EE]/60 font-medium"
         />
 
         {query && (
           <button
             type="button"
             onClick={() => setQuery('')}
-            className="absolute right-12 text-[#777F8B] hover:text-[#171B24] p-1"
+            className="absolute right-12 text-[#77736D] hover:text-[#191919] p-1"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -87,7 +86,7 @@ export const SearchAssistant: React.FC<SearchAssistantProps> = ({
         <button
           type="submit"
           disabled={isLoading || !query.trim()}
-          className="absolute right-1.5 px-3 py-1.5 rounded-lg bg-[#5681EB] hover:bg-[#3F6FDB] text-white text-xs font-semibold flex items-center gap-1 disabled:opacity-50 transition-all shadow-xs"
+          className="absolute right-1.5 px-3 py-1.5 rounded-lg bg-[#F02D25] hover:bg-[#E9473D] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1 disabled:opacity-50 transition-all shadow-xs cursor-pointer"
         >
           {isLoading ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -100,10 +99,10 @@ export const SearchAssistant: React.FC<SearchAssistantProps> = ({
         </button>
       </form>
 
-      {/* Suggested Prompt Chips */}
+      {/* Suggested Quick Prompt Chips */}
       {isExpanded && (
-        <div className="mt-3 flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-          <span className="text-[10px] font-semibold text-[#777F8B] uppercase tracking-wider shrink-0 mr-1">
+        <div className="mt-3 flex flex-wrap items-center gap-1.5 pt-2 border-t border-[#E3DFD7]/80">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#77736D] mr-1">
             Try:
           </span>
           {PROMPT_CHIPS.map((chip, idx) => (
@@ -111,7 +110,7 @@ export const SearchAssistant: React.FC<SearchAssistantProps> = ({
               key={idx}
               type="button"
               onClick={() => handleChipClick(chip)}
-              className="text-[11px] font-medium text-[#171B24] bg-[#E7EBEF]/50 hover:bg-[#B9E2F1]/50 hover:text-[#3F6FDB] px-2.5 py-1 rounded-lg shrink-0 border border-[#E8EBF0] transition-colors"
+              className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#F5F3EE] hover:bg-[#ECE9E2] text-[#191919] border border-[#E3DFD7]/60 transition-colors cursor-pointer"
             >
               {chip}
             </button>

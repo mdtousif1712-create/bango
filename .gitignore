@@ -50,3 +50,8 @@ backend/.env
 .idea/
 .DS_Store
 Thumbs.db
+
+# Media & Temp
+*.mp4
+temp_frames/
+
