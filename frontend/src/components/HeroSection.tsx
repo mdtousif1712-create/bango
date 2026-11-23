@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, ArrowRight, Sparkles, MapPin, Compass, ArrowUpRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, ArrowRight, ArrowUpRight } from 'lucide-react';
 
 interface HeroSectionProps {
   onSearch: (query: string) => void;
@@ -17,11 +17,81 @@ const PROMPT_CHIPS = [
   "EV Charging near Koramangala",
 ];
 
-const LOCALITIES = [
-  { name: 'INDIRANAGAR', top: '15%', left: '8%' },
-  { name: 'MG ROAD', top: '22%', right: '12%' },
-  { name: 'CUBBON PARK', bottom: '28%', left: '14%' },
-  { name: 'WHITEFIELD', bottom: '18%', right: '10%' },
+interface LocationSlide {
+  id: string;
+  tag: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  pills: { name: string; top?: string; bottom?: string; left?: string; right?: string }[];
+}
+
+const LOCATION_SLIDES: LocationSlide[] = [
+  {
+    id: 'cubbon',
+    tag: '1,250+ MOBILITY PATTERNS',
+    title: 'bango™ Apriori association engine',
+    description: 'Mining statistical co-occurrences across Namma Metro, tech hubs, parks, and healthcare.',
+    imageUrl: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=85',
+    pills: [
+      { name: 'INDIRANAGAR', top: '15%', left: '8%' },
+      { name: 'MG ROAD', top: '22%', right: '12%' },
+      { name: 'CUBBON PARK', bottom: '28%', left: '14%' },
+      { name: 'WHITEFIELD', bottom: '18%', right: '10%' },
+    ],
+  },
+  {
+    id: 'indiranagar',
+    tag: '89% HIGH CO-OCCURRENCE',
+    title: 'Indiranagar Gastronomy Hub',
+    description: 'Strong cross-domain linkage with Namma Metro Purple Line and commercial shopping corridors.',
+    imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=85',
+    pills: [
+      { name: '100FT ROAD', top: '16%', left: '10%' },
+      { name: 'DEFENCE COLONY', top: '24%', right: '10%' },
+      { name: 'INDIRANAGAR METRO', bottom: '26%', left: '12%' },
+      { name: 'DOMLUR FLYOVER', bottom: '16%', right: '14%' },
+    ],
+  },
+  {
+    id: 'whitefield',
+    tag: '4.2x LIFT FACTOR',
+    title: 'Whitefield Silicon Corridor',
+    description: 'Heavy weekday transit transactions linking tech parks directly to suburban residential clusters.',
+    imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85',
+    pills: [
+      { name: 'ITPB BANGALORE', top: '16%', right: '10%' },
+      { name: 'HOODI JUNCTION', top: '26%', left: '10%' },
+      { name: 'KADUGODI METRO', bottom: '26%', left: '12%' },
+      { name: 'PHOENIX MARKETCITY', bottom: '18%', right: '12%' },
+    ],
+  },
+  {
+    id: 'lalbagh',
+    tag: 'POPULAR CITIZEN CORRIDOR',
+    title: 'Lalbagh Botanical Heritage',
+    description: 'Frequent association patterns linking heritage gardens with iconic South Bangalore darshinis.',
+    imageUrl: 'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?auto=format&fit=crop&w=1200&q=85',
+    pills: [
+      { name: 'LALBAGH GLASSHOUSE', top: '16%', left: '12%' },
+      { name: 'BASAVANAGUDI', top: '24%', right: '10%' },
+      { name: 'VV PURAM FOOD ST', bottom: '26%', left: '14%' },
+      { name: 'SOUTH END CIRCLE', bottom: '18%', right: '10%' },
+    ],
+  },
+  {
+    id: 'malleshwaram',
+    tag: 'EDUCATION & CIVIC CLUSTER',
+    title: 'Malleshwaram Knowledge Hub',
+    description: 'Top education cluster showing strong weekend footfall associations with Sankey Tank & Orion Mall.',
+    imageUrl: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=85',
+    pills: [
+      { name: 'IISC BANGALORE', top: '16%', left: '10%' },
+      { name: 'SANKEY TANK', top: '24%', right: '12%' },
+      { name: 'SAMPIGE ROAD', bottom: '26%', left: '14%' },
+      { name: 'ORION MALL', bottom: '18%', right: '10%' },
+    ],
+  },
 ];
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
@@ -31,6 +101,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onOpenAlgorithm,
 }) => {
   const [query, setQuery] = useState('');
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Auto-rotating timer that changes slide every 4.5 seconds
+  useEffect(() => {
+    if (isPaused) return;
+
+    timerRef.current = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % LOCATION_SLIDES.length);
+    }, 4500);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isPaused]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +129,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     setQuery(chip);
     onSearch(chip);
   };
+
+  const currentSlide = LOCATION_SLIDES[activeSlide];
 
   return (
     <section className="relative w-full pt-6 pb-16 md:pt-10 md:pb-20 overflow-hidden">
@@ -139,28 +227,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           </div>
 
-          {/* Right: Airplane Window / Aperture Frame (5 cols) */}
-          <div className="lg:col-span-5 relative flex items-center justify-center">
+          {/* Right: Airplane Window Carousel + Segmented Pill Indicator (5 cols) */}
+          <div className="lg:col-span-5 relative flex flex-col items-center justify-center">
             
-            {/* The Signature Aperture / Curved Window Motif */}
-            <div className="relative w-full max-w-[420px] aspect-[4/5] rounded-[90px] sm:rounded-[120px] overflow-hidden border-[8px] border-white shadow-2xl bg-[#191919]">
+            {/* The Signature Aperture / Curved Window Card with Auto-Transition */}
+            <div
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              className="relative w-full max-w-[420px] aspect-[4/5] rounded-[90px] sm:rounded-[120px] overflow-hidden border-[8px] border-white shadow-2xl bg-[#191919] transition-all duration-500 group select-none"
+            >
               
-              {/* Bengaluru Imagery */}
-              <img
-                src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=85"
-                alt="bango Bengaluru Cubbon Park and Heritage"
-                className="w-full h-full object-cover filter contrast-[1.05]"
-              />
+              {/* Animated Carousel Image */}
+              <div className="relative w-full h-full overflow-hidden">
+                <img
+                  key={currentSlide.id}
+                  src={currentSlide.imageUrl}
+                  alt={currentSlide.title}
+                  className="w-full h-full object-cover filter contrast-[1.05] transition-all duration-700 animate-in fade-in zoom-in-95"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+              </div>
 
-              {/* Gradient Overlay for Editorial Depth */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-
-              {/* Floating Locality Tags inside the Aperture */}
-              {LOCALITIES.map((loc, idx) => (
+              {/* Dynamic Floating Locality Tags inside the Aperture */}
+              {currentSlide.pills.map((loc, idx) => (
                 <div
-                  key={idx}
+                  key={`${currentSlide.id}-${idx}`}
                   style={{ top: loc.top, left: loc.left, right: loc.right, bottom: loc.bottom }}
-                  className="absolute z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-[#191919] uppercase tracking-wider border border-white/60 shadow-md flex items-center gap-1.5"
+                  className="absolute z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-[#191919] uppercase tracking-wider border border-white/60 shadow-md flex items-center gap-1.5 animate-in fade-in duration-300"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25]"></span>
                   <span>{loc.name}</span>
@@ -168,21 +261,41 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               ))}
 
               {/* Bottom Aperture Info Badge */}
-              <div className="absolute bottom-6 left-6 right-6 z-10 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-white/80 shadow-lg">
+              <div className="absolute bottom-6 left-6 right-6 z-10 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-white/80 shadow-lg animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#F02D25]">
-                    1,250+ Mobility Patterns
+                    {currentSlide.tag}
                   </span>
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                 </div>
                 <h4 className="font-display font-bold text-sm text-[#191919] leading-tight">
-                  bango™ Apriori association engine
+                  {currentSlide.title}
                 </h4>
-                <p className="text-[11px] text-[#77736D] mt-0.5">
-                  Mining statistical co-occurrences across Namma Metro, tech hubs, parks, and healthcare.
+                <p className="text-[11px] text-[#77736D] mt-0.5 line-clamp-2">
+                  {currentSlide.description}
                 </p>
               </div>
 
+            </div>
+
+            {/* Custom Segmented Capsule Pagination Indicator (Matching User Reference Image) */}
+            <div className="flex items-center justify-center gap-2 mt-6 select-none z-10">
+              {LOCATION_SLIDES.map((_, idx) => {
+                const isActive = idx === activeSlide;
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setActiveSlide(idx)}
+                    className={`transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? 'w-12 h-2.5 rounded-full bg-[#F02D25] shadow-xs'
+                        : 'w-6 h-2 rounded-full bg-[#D8D4CC] hover:bg-[#B3ADA3]'
+                    }`}
+                    title={`Slide ${idx + 1}: ${LOCATION_SLIDES[idx].title}`}
+                  />
+                );
+              })}
             </div>
 
             {/* Decorative Ambient Background Ring */}
