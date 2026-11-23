@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Place } from '../types';
 import { Star, MapPin, Bookmark, ArrowUpRight, TrendingUp } from 'lucide-react';
 
@@ -32,15 +32,42 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   onNavigateToMap,
 }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
+  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const filteredPlaces =
     selectedFilter === 'All'
       ? places
       : places.filter((p) => p.category.toLowerCase() === selectedFilter.toLowerCase());
 
-  const featured = filteredPlaces[0] || places[0];
-  const secondary = filteredPlaces.slice(1, 3);
-  const tertiary = filteredPlaces.slice(3, 9);
+  // Top 5 destinations for the featured rotating hero card
+  const heroCarouselPlaces = filteredPlaces.slice(0, 5);
+  const activeIndex = activeFeaturedIndex % (heroCarouselPlaces.length || 1);
+  const featured = heroCarouselPlaces[activeIndex] || places[0];
+
+  // Auto-rotating timer that changes featured card every 4.5 seconds (matching discover page)
+  useEffect(() => {
+    if (isPaused || heroCarouselPlaces.length <= 1) return;
+
+    timerRef.current = setInterval(() => {
+      setActiveFeaturedIndex((prev) => (prev + 1) % heroCarouselPlaces.length);
+    }, 4500);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isPaused, heroCarouselPlaces.length]);
+
+  // Reset index when filter changes
+  useEffect(() => {
+    setActiveFeaturedIndex(0);
+  }, [selectedFilter]);
+
+  // Remaining places for secondary and tertiary grids
+  const otherPlaces = filteredPlaces.filter((p) => p.place_id !== featured?.place_id);
+  const secondary = otherPlaces.slice(0, 2);
+  const tertiary = otherPlaces.slice(2, 8);
 
   const handleCardClick = (place: Place) => {
     onSelectPlace(place);
@@ -94,70 +121,100 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
         {/* Varied Editorial Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* 1. Large Hero Card (7 cols) */}
+          {/* 1. Large Auto-Rotating Featured Hero Card (7 cols) */}
           {featured && (
-            <div
-              onClick={() => handleCardClick(featured)}
-              className="lg:col-span-7 group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[460px] flex flex-col justify-between"
-            >
-              {/* Photo with overlay */}
-              <div className="absolute inset-0 z-0">
-                <img
-                  src={featured.image_url}
-                  alt={featured.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-[0.85]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20"></div>
-              </div>
-
-              {/* Top Tags */}
-              <div className="relative z-10 p-6 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="px-3.5 py-1.5 rounded-full bg-white text-[#191919] text-xs font-extrabold uppercase tracking-wider shadow-sm">
-                    {featured.category}
-                  </span>
-                  <span className="px-3 py-1.5 rounded-full bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-                    <Star className="w-3.5 h-3.5 fill-white" />
-                    <span>{featured.rating ? featured.rating.toFixed(1) : '4.8'}</span>
-                  </span>
+            <div className="lg:col-span-7 flex flex-col justify-between">
+              <div
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                onClick={() => handleCardClick(featured)}
+                className="group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[460px] flex-1 flex flex-col justify-between select-none"
+              >
+                {/* Photo with overlay and smooth keyframe fade */}
+                <div className="absolute inset-0 z-0">
+                  <img
+                    key={featured.place_id}
+                    src={featured.image_url}
+                    alt={featured.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-[0.85] animate-in fade-in zoom-in-95"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20"></div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSavePlace(featured);
-                  }}
-                  className={`p-2.5 rounded-full backdrop-blur-md transition-all ${
-                    isPlaceSaved(featured.place_id)
-                      ? 'bg-[#F02D25] text-white'
-                      : 'bg-white/80 text-[#191919] hover:bg-white'
-                  }`}
-                  title={isPlaceSaved(featured.place_id) ? 'Saved' : 'Save Place'}
-                >
-                  <Bookmark className={`w-4 h-4 ${isPlaceSaved(featured.place_id) ? 'fill-current' : ''}`} />
-                </button>
-              </div>
-
-              {/* Bottom Info with Circular Arrow */}
-              <div className="relative z-10 p-6 sm:p-8 flex items-end justify-between gap-4">
-                <div className="max-w-xl">
-                  <div className="flex items-center gap-2 text-white/80 text-xs font-semibold mb-2">
-                    <MapPin className="w-4 h-4 text-[#F02D25]" />
-                    <span>{featured.locality} &bull; Central Bengaluru</span>
+                {/* Top Tags */}
+                <div className="relative z-10 p-6 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="px-3.5 py-1.5 rounded-full bg-white text-[#191919] text-xs font-extrabold uppercase tracking-wider shadow-sm">
+                      {featured.category}
+                    </span>
+                    <span className="px-3 py-1.5 rounded-full bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                      <Star className="w-3.5 h-3.5 fill-white" />
+                      <span>{featured.rating ? featured.rating.toFixed(1) : '4.8'}</span>
+                    </span>
                   </div>
-                  <h3 className="font-display font-bold text-2xl sm:text-4xl text-white tracking-tight leading-tight">
-                    {featured.name}
-                  </h3>
-                  <p className="text-white/80 text-xs sm:text-sm mt-2 line-clamp-2 font-normal">
-                    {featured.description}
-                  </p>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSavePlace(featured);
+                    }}
+                    className={`p-2.5 rounded-full backdrop-blur-md transition-all shadow-sm ${
+                      isPlaceSaved(featured.place_id)
+                        ? 'bg-[#F02D25] text-white'
+                        : 'bg-white/80 text-[#191919] hover:bg-white'
+                    }`}
+                    title={isPlaceSaved(featured.place_id) ? 'Saved' : 'Save Place'}
+                  >
+                    <Bookmark className={`w-4 h-4 ${isPlaceSaved(featured.place_id) ? 'fill-current' : ''}`} />
+                  </button>
                 </div>
 
-                <div className="w-12 h-12 rounded-full bg-[#F02D25] group-hover:bg-[#E9473D] text-white flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 shadow-lg">
-                  <ArrowUpRight className="w-6 h-6" />
+                {/* Bottom Info with Circular Arrow */}
+                <div className="relative z-10 p-6 sm:p-8 flex items-end justify-between gap-4">
+                  <div className="max-w-xl">
+                    <div className="flex items-center gap-2 text-white/80 text-xs font-semibold mb-2">
+                      <MapPin className="w-4 h-4 text-[#F02D25]" />
+                      <span>{featured.locality} &bull; Bengaluru</span>
+                    </div>
+                    <h3 className="font-display font-bold text-2xl sm:text-4xl text-white tracking-tight leading-tight">
+                      {featured.name}
+                    </h3>
+                    <p className="text-white/80 text-xs sm:text-sm mt-2 line-clamp-2 font-normal">
+                      {featured.description}
+                    </p>
+                  </div>
+
+                  <div className="w-12 h-12 rounded-full bg-[#F02D25] group-hover:bg-[#E9473D] text-white flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 shadow-lg">
+                    <ArrowUpRight className="w-6 h-6" />
+                  </div>
                 </div>
               </div>
+
+              {/* Segmented Capsule Pagination Indicator (Matching First Page) */}
+              {heroCarouselPlaces.length > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-4 select-none">
+                  {heroCarouselPlaces.map((place, idx) => {
+                    const isActive = idx === activeIndex;
+                    return (
+                      <button
+                        key={place.place_id}
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveFeaturedIndex(idx);
+                        }}
+                        className={`transition-all duration-300 cursor-pointer ${
+                          isActive
+                            ? 'w-10 sm:w-12 h-2.5 rounded-full bg-[#F02D25] shadow-xs'
+                            : 'w-5 sm:w-6 h-2 rounded-full bg-[#D8D4CC] hover:bg-[#B3ADA3]'
+                        }`}
+                        title={`Slide ${idx + 1}: ${place.name}`}
+                      />
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
