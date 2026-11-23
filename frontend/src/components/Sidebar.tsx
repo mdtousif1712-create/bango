@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           {/* Centered Circular Monogram Badge with Chunky Rounded Lettering */}
           <div className="w-11 h-11 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display font-bold text-lg lowercase tracking-tight transition-colors shrink-0 shadow-sm">
-            bg
+            bo
           </div>
 
           {/* Full Brand Name matching the atons™ puffy typography */}
@@ -349,7 +349,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="cursor-pointer flex items-center gap-3"
           >
             <div className="w-10 h-10 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-bold text-base lowercase tracking-tight">
-              bg
+              bo
             </div>
             <div className="flex flex-col">
               <div className="flex items-start">
