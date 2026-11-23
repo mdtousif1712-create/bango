@@ -18,7 +18,6 @@ import { TrendingSection } from './components/TrendingSection';
 import { RecommendationsSection } from './components/RecommendationsSection';
 import { HowItWorksSection } from './components/HowItWorksSection';
 import { SavedPlacesSection } from './components/SavedPlacesSection';
-import { Footer } from './components/Footer';
 import { PlaceCard } from './components/PlaceCard';
 import { RecommendationCard } from './components/RecommendationCard';
 import { PlaceDetailDrawer } from './components/PlaceDetailDrawer';
@@ -668,9 +667,6 @@ export const App: React.FC = () => {
           )}
 
         </main>
-
-        {/* 4. EDITORIAL FOOTER (HIDDEN ON FIRST / DISCOVER PAGE) */}
-        {currentPage !== 'discover' && <Footer onNavigate={(page) => setCurrentPage(page)} />}
 
       </div>
 
