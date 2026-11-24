@@ -14,7 +14,6 @@ const PAGE_NAMES: Record<PageId, string> = {
   map: 'Map Explorer',
   trending: 'Trending',
   domains: 'Domains',
-  'how-it-works': 'How It Works',
   saved: 'Saved Places',
 };
 

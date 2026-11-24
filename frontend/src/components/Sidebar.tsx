@@ -4,7 +4,6 @@ import {
   MapPin,
   TrendingUp,
   Layers,
-  HelpCircle,
   Sliders,
   Bookmark,
   ArrowUpRight,
@@ -17,7 +16,6 @@ export type PageId =
   | 'map'
   | 'trending'
   | 'domains'
-  | 'how-it-works'
   | 'saved';
 
 interface SidebarProps {
@@ -34,7 +32,6 @@ const NAV_ITEMS: { id: PageId; label: string; icon: React.FC<{ className?: strin
   { id: 'map', label: 'Map Explorer', icon: Map },
   { id: 'trending', label: 'Trending', icon: TrendingUp },
   { id: 'domains', label: 'Domains', icon: Layers },
-  { id: 'how-it-works', label: 'How It Works', icon: HelpCircle },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({

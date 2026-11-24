@@ -74,11 +74,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   8 Smart City Domains
                 </button>
               </li>
-              <li>
-                <button onClick={() => handleNav('how-it-works')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
-                  How It Works
-                </button>
-              </li>
             </ul>
           </div>
 

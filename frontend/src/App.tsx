@@ -15,7 +15,6 @@ import { SearchAssistant } from './components/SearchAssistant';
 import { CategoryFilters } from './components/CategoryFilters';
 import { CategoryGrid } from './components/CategoryGrid';
 import { TrendingSection } from './components/TrendingSection';
-import { HowItWorksSection } from './components/HowItWorksSection';
 import { SavedPlacesSection } from './components/SavedPlacesSection';
 import { PlaceCard } from './components/PlaceCard';
 import { RecommendationCard } from './components/RecommendationCard';
@@ -512,15 +511,7 @@ export const App: React.FC = () => {
             />
           )}
 
-          {/* PAGE 5: HOW IT WORKS */}
-          {currentPage === 'how-it-works' && (
-            <HowItWorksSection
-              onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
-              onNavigateToMap={() => setCurrentPage('map')}
-            />
-          )}
-
-          {/* PAGE 7: SAVED PLACES */}
+          {/* PAGE 5: SAVED PLACES */}
           {currentPage === 'saved' && (
             <SavedPlacesSection
               savedPlaces={savedPlaces}
