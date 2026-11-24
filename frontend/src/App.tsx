@@ -15,7 +15,6 @@ import { SearchAssistant } from './components/SearchAssistant';
 import { CategoryFilters } from './components/CategoryFilters';
 import { CategoryGrid } from './components/CategoryGrid';
 import { TrendingSection } from './components/TrendingSection';
-import { RecommendationsSection } from './components/RecommendationsSection';
 import { HowItWorksSection } from './components/HowItWorksSection';
 import { SavedPlacesSection } from './components/SavedPlacesSection';
 import { PlaceCard } from './components/PlaceCard';
@@ -513,24 +512,7 @@ export const App: React.FC = () => {
             />
           )}
 
-          {/* PAGE 5: RECOMMENDATIONS (APRIORI AI) */}
-          {currentPage === 'recommendations' && (
-            <RecommendationsSection
-              recommendations={recommendations}
-              selectedPlace={selectedPlace}
-              allPlaces={places}
-              onSelectPlace={(p) => handleSelectPlace(p, false)}
-              onSavePlace={handleSavePlace}
-              isPlaceSaved={isPlaceSaved}
-              onViewDetails={(p) => setDrawerPlace(p)}
-              onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
-              isLoading={isLoadingRecs}
-              notice={recNotice}
-              onNavigateToMap={() => setCurrentPage('map')}
-            />
-          )}
-
-          {/* PAGE 6: HOW IT WORKS */}
+          {/* PAGE 5: HOW IT WORKS */}
           {currentPage === 'how-it-works' && (
             <HowItWorksSection
               onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}

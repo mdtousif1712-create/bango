@@ -75,11 +75,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <button onClick={() => handleNav('recommendations')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
-                  Apriori Association Engine
-                </button>
-              </li>
-              <li>
                 <button onClick={() => handleNav('how-it-works')} className="hover:text-[#F02D25] transition-colors cursor-pointer">
                   How It Works
                 </button>

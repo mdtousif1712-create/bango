@@ -4,7 +4,6 @@ import {
   MapPin,
   TrendingUp,
   Layers,
-  Sparkles,
   HelpCircle,
   Sliders,
   Bookmark,
@@ -18,7 +17,6 @@ export type PageId =
   | 'map'
   | 'trending'
   | 'domains'
-  | 'recommendations'
   | 'how-it-works'
   | 'saved';
 
@@ -36,7 +34,6 @@ const NAV_ITEMS: { id: PageId; label: string; icon: React.FC<{ className?: strin
   { id: 'map', label: 'Map Explorer', icon: Map },
   { id: 'trending', label: 'Trending', icon: TrendingUp },
   { id: 'domains', label: 'Domains', icon: Layers },
-  { id: 'recommendations', label: 'Apriori AI', icon: Sparkles },
   { id: 'how-it-works', label: 'How It Works', icon: HelpCircle },
 ];
 
