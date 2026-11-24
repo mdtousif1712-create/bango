@@ -112,10 +112,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Left: Oversized Typography & Search (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             
-            <h1 className="font-display font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-[#191919] leading-[1.0] tracking-tight mb-6">
+            <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[68px] text-[#191919] leading-[1.05] tracking-tight mb-6">
               discover <br />
-              bengaluru <br />
-              <span className="text-[#F02D25]">differently.</span>
+              banglore <br />
+              <span className="text-[#F02D25]">like never before.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-[#77736D] max-w-xl leading-relaxed mb-8 font-normal">
