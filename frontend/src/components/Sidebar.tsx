@@ -4,7 +4,6 @@ import {
   MapPin,
   TrendingUp,
   Layers,
-  Sliders,
   Bookmark,
   ArrowUpRight,
   X,
@@ -22,7 +21,6 @@ interface SidebarProps {
   currentPage: PageId;
   onSelectPage: (page: PageId) => void;
   savedCount: number;
-  onOpenAlgorithm: () => void;
   isOpenMobile?: boolean;
   onCloseMobile?: () => void;
 }
@@ -38,7 +36,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentPage,
   onSelectPage,
   savedCount,
-  onOpenAlgorithm,
   isOpenMobile = false,
   onCloseMobile,
 }) => {
@@ -185,41 +182,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </span>
             </div>
           )}
-
-          {/* Algorithm Insights Button */}
-          <div className="relative group w-full flex justify-center">
-            <button
-              onClick={onOpenAlgorithm}
-              className={`flex items-center transition-all duration-200 shadow-2xs cursor-pointer ${
-                isHovered
-                  ? 'w-full justify-between px-3.5 py-2.5 rounded-2xl bg-white border border-[#E3DFD7] hover:bg-[#ECE9E2] text-xs font-bold uppercase tracking-wider text-[#191919]'
-                  : 'w-11 h-11 rounded-2xl bg-white border border-[#E3DFD7] justify-center hover:bg-[#ECE9E2] text-[#F02D25]'
-              }`}
-              title={!isHovered ? 'Algorithm Insights (Apriori Rules)' : undefined}
-            >
-              {isHovered ? (
-                <>
-                  <div className="flex items-center gap-2.5 shrink-0">
-                    <Sliders className="w-4 h-4 text-[#F02D25] group-hover:rotate-45 transition-transform shrink-0" />
-                    <span className="whitespace-nowrap font-bold">
-                      Algorithm Insights
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-extrabold text-[#F02D25] bg-[#F5F3EE] px-1.5 py-0.5 rounded-full shrink-0">
-                    ARM
-                  </span>
-                </>
-              ) : (
-                <Sliders className="w-4 h-4 text-[#F02D25] shrink-0" />
-              )}
-            </button>
-
-            {!isHovered && (
-              <div className="absolute left-[68px] top-1/2 -translate-y-1/2 bg-[#191919] text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-xl whitespace-nowrap shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
-                Algorithm Insights
-              </div>
-            )}
-          </div>
 
           {/* Saved Places Button */}
           <div className="relative group w-full flex justify-center">
@@ -403,22 +365,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] block px-3 mb-1">
             Urban Tools
           </span>
-
-          <button
-            onClick={() => {
-              onOpenAlgorithm();
-              if (onCloseMobile) onCloseMobile();
-            }}
-            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl bg-white border border-[#E3DFD7] text-xs font-bold uppercase tracking-wider text-[#191919]"
-          >
-            <div className="flex items-center gap-2.5">
-              <Sliders className="w-4 h-4 text-[#F02D25]" />
-              <span>Algorithm Insights</span>
-            </div>
-            <span className="text-[10px] font-extrabold text-[#F02D25] bg-[#F5F3EE] px-1.5 py-0.5 rounded-full">
-              ARM
-            </span>
-          </button>
 
           <button
             onClick={() => handleNavClick('saved')}

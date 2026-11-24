@@ -19,14 +19,11 @@ import { SavedPlacesSection } from './components/SavedPlacesSection';
 import { PlaceCard } from './components/PlaceCard';
 import { RecommendationCard } from './components/RecommendationCard';
 import { PlaceDetailDrawer } from './components/PlaceDetailDrawer';
-import { AlgorithmModal } from './components/AlgorithmModal';
 import {
   Sparkles,
   MapPin,
   Bookmark,
-  AlertCircle,
-  Sliders,
-  CheckCircle2
+  AlertCircle
 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -34,7 +31,6 @@ export const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageId>('discover');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [rightPanelTab, setRightPanelTab] = useState<'recommendations' | 'places' | 'saved'>('recommendations');
-  const [isAlgorithmModalOpen, setIsAlgorithmModalOpen] = useState<boolean>(false);
 
   // Data states
   const [categories, setCategories] = useState<CategoryMeta[]>([]);
@@ -223,7 +219,6 @@ export const App: React.FC = () => {
           setIsMobileMenuOpen(false);
         }}
         savedCount={savedPlaces.length}
-        onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
         isOpenMobile={isMobileMenuOpen}
         onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
@@ -248,7 +243,6 @@ export const App: React.FC = () => {
               onSearch={handleNaturalSearch}
               isSearching={isSearching}
               onExploreMap={() => setCurrentPage('map')}
-              onOpenAlgorithm={() => setIsAlgorithmModalOpen(true)}
             />
           )}
 
@@ -534,17 +528,6 @@ export const App: React.FC = () => {
         isSaved={drawerPlace ? isPlaceSaved(drawerPlace.place_id) : false}
         onSelectPlace={(p) => handleSelectPlace(p, true)}
         userLocation={userLocation}
-      />
-
-      {/* Apriori Algorithm Inspector Modal */}
-      <AlgorithmModal
-        isOpen={isAlgorithmModalOpen}
-        onClose={() => setIsAlgorithmModalOpen(false)}
-        onRetrained={() => {
-          if (selectedPlace) {
-            handleSelectPlace(selectedPlace, false);
-          }
-        }}
       />
     </div>
   );
