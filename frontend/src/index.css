@@ -2,8 +2,8 @@
 @import "leaflet/dist/leaflet.css";
 
 @theme {
-  --font-display: 'Fredoka', 'Comfortaa', -apple-system, sans-serif;
-  --font-heading: 'Fredoka', 'Comfortaa', sans-serif;
+  --font-display: 'DynaPuff', 'Sniglet', 'Baloo 2', 'Fredoka', 'Comfortaa', -apple-system, sans-serif;
+  --font-heading: 'DynaPuff', 'Sniglet', 'Baloo 2', 'Fredoka', 'Comfortaa', sans-serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --color-warm-bg: #F5F3EE;
@@ -43,8 +43,9 @@
   }
 
   h1, h2, h3, .font-display {
-    font-family: 'Fredoka', 'Comfortaa', -apple-system, sans-serif;
-    letter-spacing: -0.01em;
+    font-family: 'DynaPuff', 'Sniglet', 'Baloo 2', 'Fredoka', 'Comfortaa', -apple-system, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 700;
   }
 
   .font-heading {

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Compass,
-  MapPin,
   TrendingUp,
   Layers,
   Bookmark,
@@ -21,6 +20,7 @@ interface SidebarProps {
   currentPage: PageId;
   onSelectPage: (page: PageId) => void;
   savedCount: number;
+  onOpenAlgorithm?: () => void;
   isOpenMobile?: boolean;
   onCloseMobile?: () => void;
 }
@@ -61,7 +61,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       {/* Top Section: Brand & Nav Items */}
       <div className="flex flex-col w-full items-center">
-        
         {/* Brand Logo & Header */}
         <div
           onClick={() => handleNavClick('discover')}
@@ -168,9 +167,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Divider Between Nav and Urban Tools */}
-        <div className={`transition-all duration-300 border-b border-[#E3DFD7] ${
-          isHovered ? 'w-full my-5' : 'w-10 my-4'
-        }`}></div>
+        <div
+          className={`transition-all duration-300 border-b border-[#E3DFD7] ${
+            isHovered ? 'w-full my-5' : 'w-10 my-4'
+          }`}
+        ></div>
 
         {/* Urban Tools Section */}
         <div className="space-y-2 w-full flex flex-col items-center">
@@ -233,15 +234,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             )}
           </div>
         </div>
-
       </div>
 
       {/* Bottom Section: Explore City CTA & Coordinates */}
       <div className="flex flex-col w-full items-center">
         {/* Divider */}
-        <div className={`transition-all duration-300 border-b border-[#E3DFD7] ${
-          isHovered ? 'w-full mb-5' : 'w-10 mb-4'
-        }`}></div>
+        <div
+          className={`transition-all duration-300 border-b border-[#E3DFD7] ${
+            isHovered ? 'w-full mb-5' : 'w-10 mb-4'
+          }`}
+        ></div>
 
         {/* Explore City CTA Button */}
         <div className="relative group w-full flex justify-center mb-3">
@@ -275,7 +277,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
-        {/* Location Coordinates / Centered Dot */}
+        {/* Location Coordinates */}
         {isHovered ? (
           <div className="w-full px-1 text-[11px] text-[#77736D] space-y-1 animate-in fade-in duration-200">
             <div className="flex items-center gap-1.5 font-semibold text-[#191919]">
