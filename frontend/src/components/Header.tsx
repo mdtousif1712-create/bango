@@ -23,7 +23,8 @@ import {
   Search,
   CheckCircle2,
   ExternalLink,
-  LogOut
+  LogOut,
+  Users
 } from 'lucide-react';
 import { Place } from '../types';
 import { AuthUser } from '../services/auth';
@@ -35,6 +36,7 @@ export type PageId =
   | 'trending'
   | 'domains'
   | 'domain-detail'
+  | 'friends'
   | 'saved';
 
 export interface HeaderProps {
@@ -352,6 +354,17 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </div>
 
+            {/* Friends */}
+            <button
+              onClick={() => handleNavClick('friends')}
+              className={`px-3.5 xl:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${currentPage === 'friends'
+                ? 'text-[#F02D25] bg-[#F5F3EE]'
+                : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
+                }`}
+            >
+              Friends
+            </button>
+
           </nav>
 
         </div>
@@ -618,6 +631,7 @@ export const Header: React.FC<HeaderProps> = ({
                   { id: 'assistant', label: 'AI Assistant', icon: Search },
                   { id: 'trending', label: 'Trending', icon: TrendingUp },
                   { id: 'domains', label: 'Domains', icon: Layers },
+                  { id: 'friends', label: 'Friends', icon: Users },
                 ].map((item) => {
                   const Icon = item.icon;
                   const isActive = currentPage === item.id;

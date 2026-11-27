@@ -16,6 +16,7 @@ const PAGE_NAMES: Record<PageId, string> = {
   trending: 'Trending',
   domains: 'Domains',
   'domain-detail': 'Sector Detail',
+  friends: 'Friends',
   saved: 'Saved Places',
 };
 

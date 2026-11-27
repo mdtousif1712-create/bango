@@ -18,6 +18,7 @@ import { CategoryGrid } from './components/CategoryGrid';
 import { DomainDetailPage } from './components/DomainDetailPage';
 import { TrendingSection } from './components/TrendingSection';
 import { SavedPlacesSection } from './components/SavedPlacesSection';
+import { FriendsSection } from './components/FriendsSection';
 import { PlaceCard } from './components/PlaceCard';
 import { RecommendationCard } from './components/RecommendationCard';
 import { PlaceDetailDrawer } from './components/PlaceDetailDrawer';
@@ -45,6 +46,7 @@ const VALID_PAGES: PageId[] = [
   'trending',
   'domains',
   'domain-detail',
+  'friends',
   'saved',
 ];
 
@@ -66,6 +68,7 @@ const PAGE_TITLES: Record<PageId, string> = {
   trending: 'Trending Hotspots — Bango Bengaluru',
   domains: 'Explore Domains — Bango Bengaluru',
   'domain-detail': 'Sector Details — Bango Bengaluru',
+  friends: 'Friends & Circles — Bango Bengaluru',
   saved: 'Saved Places — Bango Bengaluru',
 };
 
@@ -848,6 +851,21 @@ export const App: React.FC = () => {
                                   onSavePlace={handleSavePlace}
                                   isPlaceSaved={isPlaceSaved}
                                   onBackToAllDomains={() => navigateToPage('domains')}
+                                />
+                              )}
+
+                              {/* PAGE 4.75: FRIENDS DISCOVERY & CIRCLES */}
+                              {currentPage === 'friends' && (
+                                <FriendsSection
+                                  places={places}
+                                  onSelectPlace={(place) => {
+                                    handleSelectPlace(place, true);
+                                  }}
+                                  onSavePlace={handleSavePlace}
+                                  isPlaceSaved={isPlaceSaved}
+                                  onViewDetails={(place) => setDrawerPlace(place)}
+                                  onNavigateToMap={() => navigateToPage('map')}
+                                  onShowToast={showToast}
                                 />
                               )}
 
