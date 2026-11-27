@@ -1139,11 +1139,11 @@ BENGALURU_PLACES: List[Dict] = [
         "popular_activity": "Cinema evening and dining"
     },
 
-    # ---------------- REAL ESTATE (10 places) ----------------
+    # ---------------- STARTUPS (10 places) ----------------
     {
         "place_id": "blr_re_01",
         "name": "Indiranagar Residential Hub",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Prime Residential & Commercial Enclave",
         "description": "Cosmopolitan, leafy prime residential locality characterized by heritage bungalows, quiet avenues, metro connectivity, and top cafes.",
         "address": "100 Feet Road and Defence Colony, Indiranagar, Bengaluru 560038",
@@ -1159,7 +1159,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_02",
         "name": "Koramangala Startup & Living District",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Urban Residential & Tech Cluster",
         "description": "Bengaluru's premier startup nexus offering modern apartment complexes, coworking campuses, neighborhood parks, and quick access to Hosur Road.",
         "address": "Blocks 3 to 7, Koramangala, Bengaluru, Karnataka 560034",
@@ -1175,7 +1175,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_03",
         "name": "Whitefield Tech & Living Corridor",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Gated Communities & IT Corridor",
         "description": "High-density suburban tech hub with luxury high-rise gated communities, international schools, hospitals, and Purple Line metro stations.",
         "address": "ITPL Main Road, Whitefield, Bengaluru, Karnataka 560066",
@@ -1191,7 +1191,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_04",
         "name": "Malleshwaram Heritage Neighborhood",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Traditional Residential Locality",
         "description": "Historic north-west residential area featuring ancient trees, temples, reputed educational institutions, cultural associations, and Green Line metro.",
         "address": "Margosa & Sampige Roads, Malleshwaram, Bengaluru 560003",
@@ -1207,7 +1207,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_05",
         "name": "Jayanagar Planned Suburb",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Planned Residential Sector",
         "description": "Celebrated as one of Asia's best-planned residential neighborhoods, organized in numbered blocks with expansive boulevards, parks, and hospitals.",
         "address": "Blocks 3, 4 and 9, Jayanagar, Bengaluru, Karnataka 560011",
@@ -1223,7 +1223,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_06",
         "name": "HSR Layout Smart Living Sector",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Modern Planned Tech Colony",
         "description": "Vibrant planned residential gateway between Koramangala and Electronic City, favored by unicorn founders, with wide tree-lined sectors and cycling tracks.",
         "address": "Sectors 1 to 7, HSR Layout, Bengaluru, Karnataka 560102",
@@ -1239,7 +1239,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_07",
         "name": "Yelahanka New Town Residential Belt",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "North Bengaluru Suburban Belt",
         "description": "Rapidly growing northern residential haven offering lakefront properties, direct Kempegowda International Airport connectivity, and top schools.",
         "address": "Yelahanka New Town, Bengaluru, Karnataka 560064",
@@ -1255,7 +1255,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_08",
         "name": "Rajajinagar Integrated Community",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Mixed-Use Urban Hub",
         "description": "Thriving mixed-use district anchored by Brigade Gateway, World Trade Center, Columbia Asia hospital, and Orion Mall with direct metro access.",
         "address": "Dr Rajkumar Rd, Rajajinagar, Bengaluru, Karnataka 560010",
@@ -1271,7 +1271,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_09",
         "name": "Sarjapur Road Emerging Corridor",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Residential High-Rise Belt",
         "description": "Fast-expanding educational and high-rise apartment corridor home to Wipro headquarters, top international schools, and sports clubs.",
         "address": "Sarjapur Main Road, Bengaluru, Karnataka 560035",
@@ -1287,7 +1287,7 @@ BENGALURU_PLACES: List[Dict] = [
     {
         "place_id": "blr_re_10",
         "name": "Hebbal Lakefront District",
-        "category": "Real Estate",
+        "category": "Startups",
         "subcategory": "Lakefront & Airport Corridor",
         "description": "Strategic northern gateway centered around the scenic Hebbal Lake and Flyover, featuring luxury high-rises and proximity to Aster CMI Hospital.",
         "address": "Hebbal Outer Ring Rd / Bellary Rd, Bengaluru, Karnataka 560024",

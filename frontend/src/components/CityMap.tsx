@@ -23,7 +23,7 @@ export const CATEGORY_COLORS: Record<string, string> = {
   Education: '#6366F1',
   Entertainment: '#8B5CF6',
   Restaurants: '#F59E0B',
-  'Real Estate': '#06B6D4',
+  Startups: '#06B6D4',
 };
 
 // Helper to create modern SVGs for map markers classified by category

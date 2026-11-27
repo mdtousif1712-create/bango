@@ -68,13 +68,13 @@ def run_tests():
     print(f"TEST 7 PASSED: Trending destinations retrieved from mobility frequencies (Top: {trending['trending'][0]['name']}).")
 
     # TEST 8: Missing association rules handled gracefully
-    res = urllib.request.urlopen(f"{BASE_URL}/recommendations/blr_re_10")
+    res = urllib.request.urlopen(f"{BASE_URL}/recommendations/blr_startup_10")
     missing_rec = json.loads(res.read().decode())
     assert "recommendations" in missing_rec
     print("TEST 8 PASSED: Edge cases and fallbacks handled gracefully with explanatory notices.")
 
     # TEST 9: Verify all eight categories
-    all_cats = ["Healthcare", "Transportation", "Tourism", "Shopping", "Education", "Entertainment", "Restaurants", "Real Estate"]
+    all_cats = ["Healthcare", "Transportation", "Tourism", "Shopping", "Education", "Entertainment", "Restaurants", "Startups"]
     for cat in all_cats:
         cat_encoded = urllib.parse.quote(cat)
         res = urllib.request.urlopen(f"{BASE_URL}/places?category={cat_encoded}&limit=5")

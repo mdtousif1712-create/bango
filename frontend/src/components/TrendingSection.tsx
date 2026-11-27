@@ -20,7 +20,7 @@ const CATEGORY_TABS = [
   'Shopping',
   'Education',
   'Entertainment',
-  'Real Estate',
+  'Startups',
 ];
 
 export const TrendingSection: React.FC<TrendingSectionProps> = ({

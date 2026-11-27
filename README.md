@@ -11,7 +11,7 @@
 ### Key Highlights
 - **Interactive OpenStreetMap of Bengaluru**: Real coordinates, custom domain markers, user geolocation, and floating place cards.
 - **Real Backend Apriori Algorithm**: Implemented with Python & `mlxtend.frequent_patterns.apriori` and `association_rules`. Rules calculate exact **Support**, **Confidence**, and **Lift** metrics (no hardcoded/simulated results).
-- **8 Smart City Domains**: Healthcare, Transportation, Tourism, Shopping, Education, Entertainment, Restaurants, and Real Estate.
+- **8 Smart City Domains**: Healthcare, Transportation, Tourism, Shopping, Education, Entertainment, Restaurants, and Startups.
 - **Natural Language Search Assistant**: Floating bottom search bar with prompt chips and rule-based query parser (extracting domain, locality, and entity).
 - **Citizen-Centric SaaS Experience**: Clean modern UI (#E7EBEF / #5681EB palette) inspired by premium discovery platforms. No administrator logins, panels, or complex management overhead.
 - **Transparency & Parameter Tuning**: Real-time modal displaying frequent itemsets and rules with sliders to retrain the algorithm on demand.
@@ -61,7 +61,7 @@ The recommendation system implements the 8-step Apriori pipeline:
 | **Education** | Indigo (`#6366F1`) | IISc, Christ University, RVCE, Central Library | Premier universities, colleges & libraries |
 | **Entertainment** | Purple (`#8B5CF6`) | PVR Superplex, Ranga Shankara, Play Arena | IMAX multiplexes, theatres & adventure parks |
 | **Restaurants** | Amber (`#F59E0B`) | Toit Brewpub, Vidyarthi Bhavan, MTR, Truffles | Craft breweries, heritage tiffins & cafes |
-| **Real Estate** | Cyan (`#06B6D4`) | Indiranagar, Koramangala, Whitefield, Hebbal | Planned living hubs, IT corridors & lake districts |
+| **Startups** | Cyan (`#06B6D4`) | Koramangala, HSR Layout, Indiranagar, WeWork | Innovation hubs, tech incubators, VC campuses & accelerators |
 
 ---
 

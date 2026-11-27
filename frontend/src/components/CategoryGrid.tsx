@@ -45,10 +45,10 @@ const DOMAIN_DETAILS: Record<string, { number: string; photo: string; subtitle: 
     photo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
     subtitle: 'Iconic filter coffee darshinis, Indiranagar gastropubs, VV Puram food street.',
   },
-  'Real Estate': {
+  Startups: {
     number: '08',
-    photo: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
-    subtitle: 'Manyata Tech Park, UB City luxury towers, Bagmane, residential townships.',
+    photo: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+    subtitle: 'Koramangala VC hubs, HSR Layout incubators, WeWork, unicorn tech campuses.',
   },
 };
 

@@ -69,12 +69,12 @@ CATEGORIES_META: List[Dict[str, Any]] = [
         "description": "Craft breweries, heritage South Indian tiffins, and diverse dining."
     },
     {
-        "id": "real_estate",
-        "name": "Real Estate",
-        "icon": "Building2",
+        "id": "startups",
+        "name": "Startups",
+        "icon": "Rocket",
         "color": "#06B6D4",
         "markerColor": "#06B6D4",
-        "description": "Planned residential sectors, IT corridors, and integrated communities with urban amenities."
+        "description": "Tech incubators, unicorn headquarters, co-working spaces, and innovation hubs across Silicon Valley of India."
     }
 ]
 

@@ -19,7 +19,7 @@ DOMAINS = {
     "Education": ["college", "colleges", "university", "universities", "school", "schools", "campus", "campuses", "institute", "institutes", "library", "libraries", "research", "iisc"],
     "Entertainment": ["entertainment", "cinema", "cinemas", "movie", "movies", "theatre", "theatres", "theater", "theaters", "imax", "amusement", "gaming", "bowling", "fun"],
     "Restaurants": ["restaurant", "restaurants", "food", "cafe", "cafes", "dining", "brewery", "breweries", "brewpub", "beer", "dosa", "dosas", "biryani", "meals", "coffee", "eat", "lunch", "dinner", "breakfast"],
-    "Real Estate": ["real estate", "living", "residential", "community", "communities", "apartment", "apartments", "housing", "flats", "flat", "society", "property", "properties", "locality", "hub"]
+    "Startups": ["startup", "startups", "incubator", "incubators", "coworking", "co-working", "accelerator", "accelerators", "tech park", "tech", "venture", "founder", "founders", "innovation", "unicorn", "wework", "bhive", "nsrcel"]
 }
 
 def parse_natural_query(query: str) -> Dict[str, Optional[str]]:

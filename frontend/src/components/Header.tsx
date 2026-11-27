@@ -17,6 +17,7 @@ import {
   Clapperboard,
   Utensils,
   Building2,
+  Rocket,
   Menu,
   X,
   Search,
@@ -54,7 +55,7 @@ const DOMAINS_LIST = [
   { name: 'Shopping', icon: ShoppingBag, desc: 'Commercial Street & malls' },
   { name: 'Education', icon: GraduationCap, desc: 'IISc, IIMB & universities' },
   { name: 'Entertainment', icon: Clapperboard, desc: 'Theatres, arenas & live clubs' },
-  { name: 'Real Estate', icon: Building2, desc: 'Tech parks & towers' },
+  { name: 'Startups', icon: Rocket, desc: 'Incubators & unicorn hubs' },
 ];
 
 export const Header: React.FC<HeaderProps> = ({
