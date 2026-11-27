@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  ArrowUpRight,
   MapPin,
   Star,
   Bookmark,
   ExternalLink,
-  Map,
   Sparkles,
   HeartPulse,
   Train,
@@ -14,8 +12,7 @@ import {
   GraduationCap,
   Clapperboard,
   Utensils,
-  Rocket,
-  Search
+  Rocket
 } from 'lucide-react';
 import { Place } from '../types';
 
@@ -120,7 +117,6 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
   domainName,
   places,
   onExploreOnMap,
-  onExploreDomainOnMap,
   onViewDetails,
   onSavePlace,
   isPlaceSaved,
@@ -132,86 +128,41 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
     ) || 'Healthcare';
 
   const meta = ALL_DOMAINS_META[canonicalDomain];
-  const DomainIcon = meta.icon;
 
   // Filter places belonging to this domain
   const domainPlaces = places.filter(
     (p) => p.category.toLowerCase() === canonicalDomain.toLowerCase()
   );
 
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredPlaces = domainPlaces.filter((p) => {
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    return (
-      p.name.toLowerCase().includes(q) ||
-      p.locality.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q)
-    );
-  });
-
   return (
     <div className="py-8 sm:py-12 bg-[#F5F3EE] min-h-[calc(100vh-80px)] font-sans antialiased">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* HERO DISPLAY SECTION (Matches Healthcare reference) */}
-        <div className="mb-10 sm:mb-14">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-            <div>
-              {/* Category Pill Tag */}
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: meta.color }}></span>
-                <span className="text-xs font-black uppercase tracking-widest text-[#77736D]">
-                  Bengaluru Smart City Sector &bull; {domainPlaces.length} Verified Locations
-                </span>
-              </div>
-
-              {/* Huge Bold Title (e.g. HEALTHCARE, TRANSPORTATION) */}
-              <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[#191919] uppercase leading-none">
-                {canonicalDomain}
-              </h1>
-
-              {/* Tagline / Subtitle */}
-              <p className="text-base sm:text-lg text-[#66635C] mt-4 max-w-3xl leading-relaxed font-medium">
-                {meta.tagline}. {meta.description}
-              </p>
+        <div className="mb-10 sm:mb-12">
+          <div>
+            {/* Category Pill Tag */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: meta.color }}></span>
+              <span className="text-xs font-black uppercase tracking-widest text-[#77736D]">
+                Bengaluru Smart City Sector &bull; {domainPlaces.length} Verified Locations
+              </span>
             </div>
 
-            {/* Action Buttons on right */}
-            <div className="flex flex-wrap items-center gap-3 shrink-0">
-              <button
-                onClick={() => onExploreDomainOnMap(canonicalDomain)}
-                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#191919] hover:bg-[#F02D25] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-md group"
-              >
-                <Map className="w-4 h-4 text-[#F02D25] group-hover:text-white transition-colors" />
-                <span>Explore All on Map</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </button>
-            </div>
-          </div>
+            {/* Huge Bold Title (e.g. HEALTHCARE, TRANSPORTATION) */}
+            <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[#191919] uppercase leading-none">
+              {canonicalDomain}
+            </h1>
 
-          {/* Quick Search filter bar */}
-          <div className="mt-8 pt-6 border-t border-[#E3DFD7] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="relative w-full sm:w-80">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Search ${canonicalDomain.toLowerCase()} locations...`}
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white border border-[#E3DFD7] focus:border-[#191919] focus:outline-hidden text-xs sm:text-sm text-[#191919] placeholder:text-[#77736D] transition-colors shadow-2xs"
-              />
-              <Search className="w-4 h-4 text-[#77736D] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-            </div>
-
-            <div className="text-xs font-bold text-[#77736D] uppercase tracking-wider self-start sm:self-auto">
-              Showing {filteredPlaces.length} of {domainPlaces.length} {canonicalDomain} destinations
-            </div>
+            {/* Tagline / Subtitle */}
+            <p className="text-base sm:text-lg text-[#66635C] mt-4 max-w-3xl leading-relaxed font-medium">
+              {meta.tagline}. {meta.description}
+            </p>
           </div>
         </div>
 
-        {/* 3. 4-COLUMN CARD GRID (Matches Image 1 reference with 01, 02, 03... numbering) */}
+        {/* 4-COLUMN CARD GRID (Matches Image 1 reference with 01, 02, 03... numbering) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
-          {filteredPlaces.map((place, index) => {
+          {domainPlaces.map((place, index) => {
             const formattedNumber = String(index + 1).padStart(2, '0');
             const isSaved = isPlaceSaved(place.place_id);
 
@@ -326,23 +277,6 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
             );
           })}
         </div>
-
-        {/* Empty state if search finds nothing */}
-        {filteredPlaces.length === 0 && (
-          <div className="py-20 text-center bg-white rounded-3xl border border-dashed border-[#E3DFD7] p-8 max-w-md mx-auto">
-            <Search className="w-8 h-8 text-[#D1CCC4] mx-auto mb-2" />
-            <h4 className="font-extrabold text-[#191919] text-sm uppercase">No locations match your search</h4>
-            <p className="text-xs text-[#77736D] mt-1">
-              Try adjusting your search query or clear the filter to view all {domainPlaces.length} destinations.
-            </p>
-            <button
-              onClick={() => setSearchQuery('')}
-              className="mt-4 px-4 py-2 rounded-xl bg-[#191919] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#F02D25] transition-colors cursor-pointer"
-            >
-              Clear Search
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
