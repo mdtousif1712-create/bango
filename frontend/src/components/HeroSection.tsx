@@ -72,18 +72,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         
         {/* 2-Column Editorial Hero Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-14 2xl:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10 2xl:gap-16 items-center">
           
-          {/* Left: Oversized Typography & Search (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col justify-center">
+          {/* Left: Oversized Typography & Search (6 cols) */}
+          <div className="lg:col-span-6 flex flex-col justify-center">
             
-            <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[76px] 2xl:text-[86px] text-[#191919] leading-[1.03] tracking-tight mb-5">
+            <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[58px] xl:text-[70px] 2xl:text-[80px] text-[#191919] leading-[1.03] tracking-tight mb-5">
               discover <br />
               banglore <br />
               <span className="text-[#F02D25]">like never before.</span>
             </h1>
 
-            <p className="text-sm sm:text-base xl:text-lg text-[#77736D] max-w-2xl leading-relaxed mb-6 sm:mb-7 font-normal">
+            <p className="text-sm sm:text-base xl:text-lg text-[#77736D] max-w-xl leading-relaxed mb-6 sm:mb-7 font-normal">
               <strong className="text-[#191919] font-bold">bango</strong> is an intelligent urban discovery platform powered by the <strong className="text-[#191919] font-semibold">Apriori Association Rule Mining</strong> algorithm. Uncover hidden mobility patterns, transit connections, and curated smart city destinations across 8 urban domains.
             </p>
 
@@ -122,24 +122,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           </div>
 
-          {/* Right: Arch Gallery of Trending Bengaluru Destinations (5 cols) */}
-          <div className="lg:col-span-5 relative flex flex-col items-center lg:items-end justify-center w-full min-w-0">
+          {/* Right: Arch Gallery of Trending Bengaluru Destinations (6 cols) */}
+          <div className="lg:col-span-6 relative flex flex-col items-center justify-center w-full min-w-0">
             <div className="relative w-full flex flex-col items-center">
               <ArchGallery
                 items={DISCOVER_GALLERY_ITEMS}
-                cardWidth={175}
-                cardHeight={250}
-                cornerRadius={22}
+                cardWidth={210}
+                cardHeight={300}
+                cornerRadius={26}
                 onSelect={() => onExploreMap()}
               />
-              <div className="flex items-center gap-2 mt-1 px-3.5 py-1.5 rounded-full bg-white/90 border border-[#E3DFD7] text-xs font-semibold text-[#77736D] shadow-xs select-none">
+              <div className="flex items-center gap-2 mt-2 px-4 py-1.5 rounded-full bg-white/95 border border-[#E3DFD7] text-xs font-semibold text-[#77736D] shadow-xs select-none">
                 <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
                 <span>Hover or click any destination to explore</span>
               </div>
             </div>
 
             {/* Decorative Ambient Background Ring */}
-            <div className="absolute -z-10 w-[480px] h-[480px] rounded-full border border-[#E3DFD7] -top-10 -right-10 pointer-events-none opacity-60"></div>
+            <div className="absolute -z-10 w-[540px] h-[540px] rounded-full border border-[#E3DFD7] -top-10 -right-10 pointer-events-none opacity-60"></div>
           </div>
 
         </div>

@@ -101,16 +101,16 @@ export const DEFAULT_ITEMS: GalleryItem[] = [
 ];
 
 const ROTATE_STEP = 6;
-const Y_STEP = 18;
+const Y_STEP = 22;
 const OVERLAP = 0.58;
 const HOVER_SCALE = 1.08;
-const HOVER_LIFT = 16;
+const HOVER_LIFT = 20;
 
 export function ArchGallery({
   items = DEFAULT_ITEMS,
-  cardWidth = 180,
-  cardHeight = 240,
-  cornerRadius = 18,
+  cardWidth = 216,
+  cardHeight = 288,
+  cornerRadius = 22,
   className = '',
   onSelect,
 }: ArchGalleryProps) {
@@ -195,22 +195,22 @@ export function ArchGallery({
 
               {/* Place Information Caption Overlay */}
               {(entry.title || entry.subtitle) && (
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3 sm:p-3.5 text-white flex flex-col justify-end">
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3.5 sm:p-4 text-white flex flex-col justify-end">
                   {entry.subtitle && (
-                    <span className="text-[10px] sm:text-[11px] font-bold text-[#F02D25] tracking-wide flex items-center gap-1 drop-shadow-xs">
-                      <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#F02D25] shrink-0" />
+                    <span className="text-[11px] sm:text-xs font-bold text-[#F02D25] tracking-wide flex items-center gap-1 drop-shadow-xs">
+                      <MapPin className="w-3 h-3 text-[#F02D25] shrink-0" />
                       <span className="truncate">{entry.subtitle}</span>
                     </span>
                   )}
 
                   {entry.title && (
-                    <h4 className="font-display font-bold text-xs sm:text-sm text-white leading-tight tracking-tight mt-0.5 line-clamp-1 drop-shadow-sm">
+                    <h4 className="font-display font-bold text-sm sm:text-base text-white leading-tight tracking-tight mt-0.5 line-clamp-1 drop-shadow-sm">
                       {entry.title}
                     </h4>
                   )}
 
                   {entry.description && (
-                    <p className={`text-[10px] text-white/80 line-clamp-2 mt-1 leading-snug transition-all duration-300 ${
+                    <p className={`text-[11px] text-white/85 line-clamp-2 mt-1 leading-snug transition-all duration-300 ${
                       isHovered ? 'opacity-100 max-h-12' : 'opacity-0 max-h-0 overflow-hidden'
                     }`}>
                       {entry.description}
