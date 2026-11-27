@@ -1,151 +1,88 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { ArrowUpRight } from 'lucide-react';
-import { Place } from '../types';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowUpRight, MapPin } from 'lucide-react';
 
 interface HeroSectionProps {
   onSearch?: (query: string) => void;
   isSearching?: boolean;
   onExploreMap: () => void;
   onOpenAlgorithm?: () => void;
-  trendingPlaces?: Place[];
 }
 
 interface LocationSlide {
   id: string;
-  tag: string;
-  title: string;
+  name: string;
+  locality: string;
+  category: string;
   description: string;
   imageUrl: string;
-  pills: { name: string; top?: string; bottom?: string; left?: string; right?: string }[];
 }
 
-// Curated authentic trending places in Bengaluru from the Apriori mobility dataset
-const DEFAULT_TRENDING_SLIDES: LocationSlide[] = [
+const LOCATION_SLIDES: LocationSlide[] = [
   {
-    id: 'cubbon-park',
-    tag: '1,250+ MOBILITY VISITS • TOURISM',
-    title: 'Cubbon Park Heritage Green',
-    description: 'Central Bengaluru landmark showing frequent Apriori associations with Namma Metro, Vidhana Soudha, and MG Road cafes.',
+    id: 'cubbon',
+    name: 'Cubbon Park',
+    locality: 'Central Bengaluru',
+    category: 'Heritage Park',
+    description: 'Historic 300-acre green lung in central Bengaluru featuring serene walking paths, bamboo groves, and Victorian architecture.',
     imageUrl: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=85',
-    pills: [
-      { name: 'CENTRAL BENGALURU', top: '14%', left: '7%' },
-      { name: 'MG ROAD METRO', top: '24%', right: '7%' },
-      { name: 'KASTURBA ROAD', top: '46%', left: '9%' },
-    ],
   },
   {
-    id: 'truffles-koramangala',
-    tag: 'HIGH CO-OCCURRENCE • RESTAURANTS',
-    title: 'Truffles Koramangala',
-    description: 'Extremely popular culinary hotspot in Koramangala 5th Block celebrated for gourmet burgers, pastas, and vibrant youth footfall.',
-    imageUrl: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=85',
-    pills: [
-      { name: 'KORAMANGALA 5TH BLOCK', top: '14%', left: '7%' },
-      { name: 'SONY SIGNAL', top: '24%', right: '7%' },
-      { name: 'JYOTI NIVAS ROAD', top: '46%', left: '9%' },
-    ],
+    id: 'bangalore-palace',
+    name: 'Bengaluru Palace',
+    locality: 'Vasanth Nagar',
+    category: 'Royal Heritage',
+    description: '19th-century Tudor-style royal palace with fortified towers, wood carvings, stained glass, and expansive gardens.',
+    imageUrl: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=1200&q=85',
   },
   {
-    id: 'koshys-cafe',
-    tag: 'HERITAGE CAFE • RESTAURANTS',
-    title: "Koshy's Parade Cafe",
-    description: 'Historic British-era culinary landmark on St. Marks Road, strongly associated with Central Bengaluru art and literature hubs.',
-    imageUrl: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=85',
-    pills: [
-      { name: 'ST. MARKS ROAD', top: '14%', left: '7%' },
-      { name: 'BRIGADE ROAD', top: '24%', right: '7%' },
-      { name: 'CHURCH STREET', top: '46%', left: '9%' },
-    ],
+    id: 'lalbagh',
+    name: 'Lalbagh Botanical Garden',
+    locality: 'Jayanagar / Mavalli',
+    category: 'Botanical Haven',
+    description: '240-acre world-renowned botanical sanctuary home to centuries-old trees and the iconic London Crystal Palace-inspired Glass House.',
+    imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=85',
   },
   {
-    id: 'ctr-malleshwaram',
-    tag: 'ICONIC BENNE DOSA • RESTAURANTS',
-    title: 'CTR (Shri Sagar)',
-    description: 'Legendary heritage breakfast haven in Malleshwaram renowned across Karnataka for its crispy butter benne masala dosa.',
-    imageUrl: 'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=1200&q=85',
-    pills: [
-      { name: 'MALLESHWARAM 7TH CROSS', top: '14%', left: '7%' },
-      { name: 'MARGOSA ROAD', top: '24%', right: '7%' },
-      { name: 'SANKEY TANK', top: '46%', left: '9%' },
-    ],
+    id: 'toit',
+    name: 'Toit Brewpub',
+    locality: 'Indiranagar',
+    category: 'Craft Brewery',
+    description: 'Iconic multi-level brewpub pioneering Bengaluru\'s craft beer revolution, famous for artisanal brews and wood-fired pizzas.',
+    imageUrl: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1200&q=85',
   },
   {
-    id: 'indiranagar-metro',
-    tag: 'TRANSIT & NIGHTLIFE • TRANSPORTATION',
-    title: 'Indiranagar Metro Station',
-    description: 'High-density Purple Line interchange with massive commuter interchange into 100 Feet Road boutiques and eateries.',
-    imageUrl: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1200&q=85',
-    pills: [
-      { name: 'INDIRANAGAR', top: '14%', left: '7%' },
-      { name: '100FT ROAD', top: '24%', right: '7%' },
-      { name: 'DEFENCE COLONY', top: '46%', left: '9%' },
-    ],
-  },
-  {
-    id: 'phoenix-marketcity',
-    tag: 'PREMIER LIFESTYLE • SHOPPING',
-    title: 'Phoenix Marketcity',
-    description: 'Major retail and entertainment center in Mahadevapura connecting Whitefield tech corridors with luxury shopping and dining.',
-    imageUrl: 'https://images.unsplash.com/photo-1567449303078-57ad995bd301?auto=format&fit=crop&w=1200&q=85',
-    pills: [
-      { name: 'WHITEFIELD', top: '14%', left: '7%' },
-      { name: 'MAHADEVAPURA', top: '24%', right: '7%' },
-      { name: 'ITPB LINK', top: '46%', left: '9%' },
-    ],
+    id: 'ub-city',
+    name: 'UB City',
+    locality: 'Central Bengaluru',
+    category: 'Luxury Lifestyle',
+    description: 'Premier luxury destination featuring high-end international designer fashion, open-air promenade dining, and striking architecture.',
+    imageUrl: 'https://images.unsplash.com/photo-1519567241046-7f570eee3ce6?auto=format&fit=crop&w=1200&q=85',
   },
 ];
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreMap,
-  trendingPlaces,
 }) => {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Compute slides directly from real trendingPlaces (no random locations)
-  const slides = useMemo<LocationSlide[]>(() => {
-    if (trendingPlaces && trendingPlaces.length >= 4) {
-      return trendingPlaces.slice(0, 8).map((p, idx) => {
-        const defaultSlide = DEFAULT_TRENDING_SLIDES[idx % DEFAULT_TRENDING_SLIDES.length];
-        const pills = [
-          { name: p.locality ? p.locality.toUpperCase() : 'BENGALURU', top: '14%', left: '7%' },
-          { name: p.category ? p.category.toUpperCase() : 'TRENDING', top: '24%', right: '7%' },
-          { name: p.subcategory ? p.subcategory.toUpperCase() : (p.popular_activity ? p.popular_activity.slice(0, 22).toUpperCase() : 'TOP DESTINATION'), top: '46%', left: '9%' },
-        ];
-
-        return {
-          id: p.place_id || `trending-${idx}`,
-          tag: p.popular_activity 
-            ? `${p.popular_activity.toUpperCase()} • ${p.category?.toUpperCase() || 'TRENDING'}`
-            : `${p.category?.toUpperCase() || 'TRENDING'} • TOP FOOTFALL`,
-          title: p.name,
-          description: p.description || defaultSlide.description,
-          imageUrl: p.image_url || defaultSlide.imageUrl,
-          pills,
-        };
-      });
-    }
-    return DEFAULT_TRENDING_SLIDES;
-  }, [trendingPlaces]);
-
   // Auto-rotating timer that changes slide every 4.5 seconds
   useEffect(() => {
-    if (isPaused || slides.length === 0) return;
+    if (isPaused) return;
 
     timerRef.current = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % slides.length);
+      setActiveSlide((prev) => (prev + 1) % LOCATION_SLIDES.length);
     }, 4500);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isPaused, slides.length]);
+  }, [isPaused]);
 
-  const currentSlide = slides[activeSlide % slides.length] || DEFAULT_TRENDING_SLIDES[0];
-  const nextSlide1 = slides[(activeSlide + 1) % slides.length] || DEFAULT_TRENDING_SLIDES[1];
-  const nextSlide2 = slides[(activeSlide + 2) % slides.length] || DEFAULT_TRENDING_SLIDES[2];
-  const nextSlide3 = slides[(activeSlide + 3) % slides.length] || DEFAULT_TRENDING_SLIDES[3];
+  const currentSlide = LOCATION_SLIDES[activeSlide];
+  const nextSlide1 = LOCATION_SLIDES[(activeSlide + 1) % LOCATION_SLIDES.length];
+  const nextSlide2 = LOCATION_SLIDES[(activeSlide + 2) % LOCATION_SLIDES.length];
 
   return (
     <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-6 sm:py-8 md:py-10 overflow-hidden">
@@ -182,101 +119,77 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           </div>
 
-          {/* Right: Layered 4-Card Stepped Cascade Deck + Centered Segmented Indicator (5 cols) */}
+          {/* Right: Layered Airplane Window Card Deck + Centered Segmented Indicator (5 cols) */}
           <div className="lg:col-span-5 relative flex flex-col items-center lg:items-end justify-center">
             
-            {/* Card Deck Wrapper - balanced sizing and padding so bottom pills remain visible */}
-            <div className="relative w-full max-w-[325px] sm:max-w-[355px] xl:max-w-[380px] flex flex-col items-center pr-8 sm:pr-10 pb-6">
+            {/* Card Deck Wrapper (pr-7 balances the sideways peeking cards) */}
+            <div className="relative w-full max-w-[340px] sm:max-w-[370px] xl:max-w-[400px] 2xl:max-w-[425px] flex flex-col items-center pr-6 sm:pr-8">
               
-              {/* The 4-Card Stepped Cascade Deck (50% thinner borders, stepped down & right) */}
+              {/* The 3-Tier Layered Card Deck Stack with Sideways Shadows */}
               <div
-                className="relative w-full aspect-[4/4.7] select-none cursor-pointer"
+                className="relative w-full aspect-[4/4.8] select-none"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
-                onClick={() => setActiveSlide((prev) => (prev + 1) % slides.length)}
-                title="Click to view next trending place"
               >
-                {/* 4th Card in Deck (Layer 4 - Deepest upcoming +3, stepped offset down & right) */}
+                {/* 3rd Card in Deck (Deepest Layer, Upcoming +2 - Sideways Offset to Right, Same Size) */}
                 <div
-                  key={`deck-card-4-${nextSlide3.id}`}
-                  className="absolute inset-0 z-10 rounded-[38px] sm:rounded-[44px] overflow-hidden border-[3px] border-white shadow-[6px_8px_16px_rgba(0,0,0,0.18)] bg-[#191919] transition-all duration-500 ease-out origin-center translate-x-[27px] sm:translate-x-[36px] translate-y-[21px] sm:translate-y-[27px] filter brightness-70 pointer-events-none"
-                >
-                  <img
-                    src={nextSlide3.imageUrl}
-                    alt={nextSlide3.title}
-                    className="w-full h-full object-cover filter contrast-[1.05]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20"></div>
-                </div>
-
-                {/* 3rd Card in Deck (Layer 3 - Upcoming +2, stepped offset down & right) */}
-                <div
-                  key={`deck-card-3-${nextSlide2.id}`}
-                  className="absolute inset-0 z-20 rounded-[38px] sm:rounded-[44px] overflow-hidden border-[3px] border-white shadow-[6px_8px_20px_rgba(0,0,0,0.22)] bg-[#191919] transition-all duration-500 ease-out origin-center translate-x-[18px] sm:translate-x-[24px] translate-y-[14px] sm:translate-y-[18px] filter brightness-80 pointer-events-none"
+                  key={`deck-back-${nextSlide2.id}`}
+                  className="absolute inset-0 z-10 rounded-[52px] sm:rounded-[64px] overflow-hidden border-[8px] border-white/70 shadow-[22px_0_36px_-4px_rgba(0,0,0,0.28)] bg-[#191919] transition-all duration-700 ease-out translate-x-6 sm:translate-x-7 translate-y-0 filter brightness-75 pointer-events-none"
                 >
                   <img
                     src={nextSlide2.imageUrl}
-                    alt={nextSlide2.title}
+                    alt={nextSlide2.name}
                     className="w-full h-full object-cover filter contrast-[1.05]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/20"></div>
                 </div>
 
-                {/* 2nd Card in Deck (Layer 2 - Upcoming +1, stepped offset down & right) */}
+                {/* 2nd Card in Deck (Middle Layer, Upcoming +1 - Sideways Offset to Right, Same Size) */}
                 <div
-                  key={`deck-card-2-${nextSlide1.id}`}
-                  className="absolute inset-0 z-30 rounded-[38px] sm:rounded-[44px] overflow-hidden border-[3px] border-white shadow-[6px_8px_22px_rgba(0,0,0,0.26)] bg-[#191919] transition-all duration-500 ease-out origin-center translate-x-[9px] sm:translate-x-[12px] translate-y-[7px] sm:translate-y-[9px] filter brightness-90 pointer-events-none"
+                  key={`deck-mid-${nextSlide1.id}`}
+                  className="absolute inset-0 z-20 rounded-[52px] sm:rounded-[64px] overflow-hidden border-[8px] border-white/85 shadow-[15px_0_28px_-4px_rgba(0,0,0,0.32)] bg-[#191919] transition-all duration-700 ease-out translate-x-3 sm:translate-x-3.5 translate-y-0 filter brightness-90 pointer-events-none"
                 >
                   <img
                     src={nextSlide1.imageUrl}
-                    alt={nextSlide1.title}
+                    alt={nextSlide1.name}
                     className="w-full h-full object-cover filter contrast-[1.05]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
                 </div>
 
-                {/* 1st Card in Deck (Layer 1 - Active Front Card with 50% thinner border [4px]) */}
+                {/* 1st Card in Deck (Active Front Card with Lateral Sideways Shadows, Same Size) */}
                 <div
-                  key={`deck-card-front-${currentSlide.id}`}
-                  className="relative z-40 w-full h-full rounded-[38px] sm:rounded-[44px] overflow-hidden border-[4px] border-white shadow-[8px_10px_28px_rgba(0,0,0,0.30)] bg-[#191919] transition-all duration-500 group select-none"
+                  className="relative z-30 w-full h-full rounded-[52px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-[10px_0_28px_-4px_rgba(0,0,0,0.32),-6px_0_20px_-4px_rgba(0,0,0,0.1)] bg-[#191919] transition-all duration-500 group select-none cursor-pointer"
+                  onClick={() => setActiveSlide((prev) => (prev + 1) % LOCATION_SLIDES.length)}
+                  title="Click to explore next trending place"
                 >
-                  {/* Active Card Image */}
+                  {/* Carousel Image */}
                   <div className="relative w-full h-full overflow-hidden">
                     <img
+                      key={currentSlide.id}
                       src={currentSlide.imageUrl}
-                      alt={currentSlide.title}
-                      className="w-full h-full object-cover filter contrast-[1.05] transition-transform duration-700 group-hover:scale-105"
+                      alt={currentSlide.name}
+                      className="w-full h-full object-cover filter contrast-[1.05] transition-all duration-700 animate-in fade-in zoom-in-95"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
                   </div>
 
-                  {/* Dynamic Floating Locality Tags inside the Front Card */}
-                  {currentSlide.pills.map((loc, idx) => (
-                    <div
-                      key={`${currentSlide.id}-${idx}`}
-                      style={{ top: loc.top, left: loc.left, right: loc.right, bottom: loc.bottom }}
-                      className="absolute z-10 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-white/95 backdrop-blur-md text-[9px] sm:text-[10px] font-bold text-[#191919] uppercase tracking-wider border border-white/80 shadow-md flex items-center gap-1.5 animate-in fade-in duration-300 select-none hover:scale-105 transition-transform"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25] shrink-0"></span>
-                      <span>{loc.name}</span>
-                    </div>
-                  ))}
-
-                  {/* Bottom Aperture Info Badge */}
-                  <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-10 p-3 sm:p-3.5 rounded-[18px] sm:rounded-[20px] bg-white/95 backdrop-blur-md border border-white/80 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[8.5px] sm:text-[9.5px] font-extrabold uppercase tracking-widest text-[#F02D25] truncate max-w-[200px]">
-                        {currentSlide.tag}
+                  {/* Bottom Info Badge - Place Name & Non-Technical Description */}
+                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 z-10 p-3.5 sm:p-4 rounded-[22px] bg-white/95 backdrop-blur-md border border-white/80 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-[#F02D25] tracking-wide flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-[#F02D25] shrink-0" />
+                        <span>{currentSlide.locality}</span>
                       </span>
-                      <span className="flex h-2 w-2 relative shrink-0">
+                      <span className="flex h-2 w-2 relative">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]"></span>
                       </span>
                     </div>
-                    <h4 className="font-display font-bold text-xs sm:text-[13px] text-[#191919] leading-snug tracking-tight truncate">
-                      {currentSlide.title}
+                    <h4 className="font-display font-bold text-sm sm:text-base text-[#191919] leading-snug tracking-tight">
+                      {currentSlide.name}
                     </h4>
-                    <p className="text-[9.5px] sm:text-[10.5px] text-[#77736D] mt-0.5 leading-relaxed line-clamp-2">
+                    <p className="text-[11px] sm:text-xs text-[#66625C] mt-1 leading-relaxed line-clamp-2">
                       {currentSlide.description}
                     </p>
                   </div>
@@ -286,23 +199,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
 
               {/* Custom Segmented Capsule Pagination Indicator (Visible above fold & centered) */}
-              <div className="w-full flex items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-5 select-none z-30">
-                {slides.map((slide, idx) => {
-                  const isActive = idx === (activeSlide % slides.length);
+              <div className="w-full flex items-center justify-center gap-2 sm:gap-2.5 mt-5 sm:mt-6 select-none z-30">
+                {LOCATION_SLIDES.map((_, idx) => {
+                  const isActive = idx === activeSlide;
                   return (
                     <button
-                      key={slide.id || idx}
+                      key={idx}
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveSlide(idx);
-                      }}
+                      onClick={() => setActiveSlide(idx)}
                       className={`transition-all duration-300 cursor-pointer ${
                         isActive
-                          ? 'w-9 sm:w-11 h-2 sm:h-2.5 rounded-full bg-[#F02D25] shadow-xs'
-                          : 'w-4 sm:w-5 h-1.5 sm:h-2 rounded-full bg-[#D8D4CC] hover:bg-[#B3ADA3]'
+                          ? 'w-11 h-2.5 rounded-full bg-[#F02D25] shadow-xs'
+                          : 'w-5 h-2 rounded-full bg-[#D8D4CC] hover:bg-[#B3ADA3]'
                       }`}
-                      title={`Slide ${idx + 1}: ${slide.title}`}
+                      title={`Slide ${idx + 1}: ${LOCATION_SLIDES[idx].name}`}
                     />
                   );
                 })}
@@ -311,7 +221,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Decorative Ambient Background Ring */}
-            <div className="absolute -z-10 w-[460px] h-[460px] rounded-full border border-[#E3DFD7] -top-10 -right-10 pointer-events-none opacity-60"></div>
+            <div className="absolute -z-10 w-[480px] h-[480px] rounded-full border border-[#E3DFD7] -top-10 -right-10 pointer-events-none opacity-60"></div>
           </div>
 
         </div>
