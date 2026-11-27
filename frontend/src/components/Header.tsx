@@ -34,11 +34,14 @@ export type PageId =
   | 'assistant'
   | 'trending'
   | 'domains'
+  | 'domain-detail'
   | 'saved';
 
 export interface HeaderProps {
   currentPage: PageId;
+  currentDomain?: string | null;
   onSelectPage: (page: PageId) => void;
+  onSelectDomainPage?: (domainName: string) => void;
   savedCount: number;
   savedPlaces?: Place[];
   onSelectCategory?: (category: string) => void;
@@ -61,7 +64,9 @@ const DOMAINS_LIST = [
 
 export const Header: React.FC<HeaderProps> = ({
   currentPage,
+  currentDomain,
   onSelectPage,
+  onSelectDomainPage,
   savedCount,
   savedPlaces = [],
   onSelectCategory,
@@ -97,10 +102,14 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   const handleDomainClick = (domainName: string) => {
-    if (onSelectCategory) {
+    if (onSelectDomainPage) {
+      onSelectDomainPage(domainName);
+    } else if (onSelectCategory) {
       onSelectCategory(domainName);
+      handleNavClick('map');
     }
-    handleNavClick('map');
+    setActiveDropdown(null);
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -266,7 +275,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <button
                 onClick={() => handleNavClick('domains')}
-                className={`flex items-center gap-1.5 px-3.5 xl:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${currentPage === 'domains'
+                className={`flex items-center gap-1.5 px-3.5 xl:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${currentPage === 'domains' || currentPage === 'domain-detail'
                   ? 'text-[#F02D25] bg-[#F5F3EE]'
                   : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
                   }`}
@@ -286,24 +295,40 @@ export const Header: React.FC<HeaderProps> = ({
                       8 Smart City Sectors
                     </span>
                     <span className="text-[11px] text-[#66635C] font-bold">
-                      Click to filter on Map
+                      Click to view sector page
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     {DOMAINS_LIST.map((domain) => {
                       const DomainIcon = domain.icon;
+                      const isSelected =
+                        currentPage === 'domain-detail' &&
+                        currentDomain?.toLowerCase() === domain.name.toLowerCase();
+
                       return (
                         <div
                           key={domain.name}
                           onClick={() => handleDomainClick(domain.name)}
-                          className="p-2.5 sm:p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3"
+                          className={`p-2.5 sm:p-3 rounded-xl cursor-pointer transition-colors group flex items-start gap-3 border ${
+                            isSelected
+                              ? 'bg-[#F5F3EE] border-[#F02D25]'
+                              : 'border-transparent hover:bg-[#F5F3EE] hover:border-[#E3DFD7]'
+                          }`}
                         >
-                          <div className="w-9 h-9 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors mt-0.5">
-                            <DomainIcon className="w-4.5 h-4.5 text-[#191919] group-hover:text-white transition-colors" />
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors mt-0.5 ${
+                            isSelected
+                              ? 'bg-[#191919] text-white'
+                              : 'bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919]'
+                          }`}>
+                            <DomainIcon className="w-4.5 h-4.5 transition-colors" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <h4 className="text-xs sm:text-sm font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors truncate leading-snug">
+                            <h4 className={`text-xs sm:text-sm font-extrabold transition-colors truncate leading-snug ${
+                              isSelected
+                                ? 'text-[#F02D25]'
+                                : 'text-[#191919] group-hover:text-[#F02D25]'
+                            }`}>
                               {domain.name}
                             </h4>
                             <p className="text-[11px] text-[#66635C] font-medium leading-tight truncate mt-0.5">

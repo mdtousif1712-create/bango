@@ -5,6 +5,7 @@ import { CategoryMeta } from '../types';
 interface CategoryGridProps {
   categories: CategoryMeta[];
   onSelectCategory: (categoryName: string) => void;
+  onSelectDomainPage?: (domainName: string) => void;
   onNavigateToMap?: () => void;
 }
 
@@ -55,11 +56,24 @@ const DOMAIN_DETAILS: Record<string, { number: string; photo: string; subtitle: 
 export const CategoryGrid: React.FC<CategoryGridProps> = ({
   categories,
   onSelectCategory,
+  onSelectDomainPage,
   onNavigateToMap,
 }) => {
   const filteredCategories = categories.filter((c) => c.id !== 'all');
 
   const handleCategoryClick = (categoryName: string) => {
+    if (onSelectDomainPage) {
+      onSelectDomainPage(categoryName);
+    } else {
+      onSelectCategory(categoryName);
+      if (onNavigateToMap) {
+        onNavigateToMap();
+      }
+    }
+  };
+
+  const handleExploreOnMap = (e: React.MouseEvent, categoryName: string) => {
+    e.stopPropagation();
     onSelectCategory(categoryName);
     if (onNavigateToMap) {
       onNavigateToMap();
@@ -141,7 +155,10 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[#E3DFD7] flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#F02D25]">
+                  <div
+                    onClick={(e) => handleExploreOnMap(e, cat.name)}
+                    className="mt-4 pt-3 border-t border-[#E3DFD7] flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#F02D25] hover:text-[#191919] transition-colors"
+                  >
                     <span>Explore on Map</span>
                     <span className="text-[#77736D] group-hover:text-[#191919]">&rarr;</span>
                   </div>

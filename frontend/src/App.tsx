@@ -15,6 +15,7 @@ import { CityMap } from './components/CityMap';
 import { MapAssistantPage } from './components/MapAssistantPage';
 import { CategoryFilters } from './components/CategoryFilters';
 import { CategoryGrid } from './components/CategoryGrid';
+import { DomainDetailPage } from './components/DomainDetailPage';
 import { TrendingSection } from './components/TrendingSection';
 import { SavedPlacesSection } from './components/SavedPlacesSection';
 import { PlaceCard } from './components/PlaceCard';
@@ -37,7 +38,26 @@ interface ToastData {
   type: 'saved' | 'removed';
 }
 
-const VALID_PAGES: PageId[] = ['discover', 'map', 'assistant', 'trending', 'domains', 'saved'];
+const VALID_PAGES: PageId[] = [
+  'discover',
+  'map',
+  'assistant',
+  'trending',
+  'domains',
+  'domain-detail',
+  'saved',
+];
+
+const DOMAIN_SLUGS: Record<string, string> = {
+  healthcare: 'Healthcare',
+  transportation: 'Transportation',
+  tourism: 'Tourism',
+  shopping: 'Shopping',
+  education: 'Education',
+  entertainment: 'Entertainment',
+  restaurants: 'Restaurants',
+  startups: 'Startups',
+};
 
 const PAGE_TITLES: Record<PageId, string> = {
   discover: 'Bango — Smart City Discovery & Apriori Intelligence',
@@ -45,46 +65,87 @@ const PAGE_TITLES: Record<PageId, string> = {
   assistant: 'AI Search Assistant — Bango Bengaluru',
   trending: 'Trending Hotspots — Bango Bengaluru',
   domains: 'Explore Domains — Bango Bengaluru',
+  'domain-detail': 'Sector Details — Bango Bengaluru',
   saved: 'Saved Places — Bango Bengaluru',
 };
 
-const getInitialPage = (): PageId => {
-  if (typeof window === 'undefined') return 'discover';
+interface InitialRoute {
+  page: PageId;
+  domain: string | null;
+}
 
-  // 1. From Pathname (e.g. /map, /assistant, /trending)
+const getInitialRoute = (): InitialRoute => {
+  if (typeof window === 'undefined') return { page: 'discover', domain: null };
+
   const path = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
-  if (VALID_PAGES.includes(path as PageId)) {
-    return path as PageId;
+  const segments = path.split('/').filter(Boolean);
+
+  // 1. Check /domains/:slug or /domain/:slug
+  if (segments[0] === 'domains' || segments[0] === 'domain') {
+    if (segments[1] && DOMAIN_SLUGS[segments[1]]) {
+      return { page: 'domain-detail', domain: DOMAIN_SLUGS[segments[1]] };
+    }
+    return { page: 'domains', domain: null };
   }
 
-  // 2. From Hash (e.g. #/map, #map)
+  // 2. Direct slug: /healthcare etc.
+  if (segments[0] && DOMAIN_SLUGS[segments[0]]) {
+    return { page: 'domain-detail', domain: DOMAIN_SLUGS[segments[0]] };
+  }
+
+  // 3. Known page routes
+  if (segments[0] && VALID_PAGES.includes(segments[0] as PageId)) {
+    return { page: segments[0] as PageId, domain: null };
+  }
+
+  // 4. Hash fallback (#/domains/healthcare or #/map)
   const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
-  if (VALID_PAGES.includes(hash as PageId)) {
-    return hash as PageId;
+  const hashSegments = hash.split('/').filter(Boolean);
+  if (hashSegments[0] === 'domains' || hashSegments[0] === 'domain') {
+    if (hashSegments[1] && DOMAIN_SLUGS[hashSegments[1]]) {
+      return { page: 'domain-detail', domain: DOMAIN_SLUGS[hashSegments[1]] };
+    }
+    return { page: 'domains', domain: null };
+  }
+  if (hashSegments[0] && DOMAIN_SLUGS[hashSegments[0]]) {
+    return { page: 'domain-detail', domain: DOMAIN_SLUGS[hashSegments[0]] };
+  }
+  if (hashSegments[0] && VALID_PAGES.includes(hashSegments[0] as PageId)) {
+    return { page: hashSegments[0] as PageId, domain: null };
   }
 
-  // 3. From Query Param (e.g. ?page=map)
-  const query = new URLSearchParams(window.location.search).get('page')?.toLowerCase();
-  if (query && VALID_PAGES.includes(query as PageId)) {
-    return query as PageId;
+  // 5. Query param (?domain=healthcare or ?page=map)
+  const queryDomain = new URLSearchParams(window.location.search).get('domain')?.toLowerCase();
+  if (queryDomain && DOMAIN_SLUGS[queryDomain]) {
+    return { page: 'domain-detail', domain: DOMAIN_SLUGS[queryDomain] };
+  }
+  const queryPage = new URLSearchParams(window.location.search).get('page')?.toLowerCase();
+  if (queryPage && VALID_PAGES.includes(queryPage as PageId)) {
+    return { page: queryPage as PageId, domain: null };
   }
 
-  // 4. From Session Storage (fallback if host stripped path on refresh)
+  // 6. Session storage fallback
   try {
-    const saved = sessionStorage.getItem('blr_active_page') as PageId;
-    if (saved && VALID_PAGES.includes(saved)) {
-      return saved;
+    const savedPage = sessionStorage.getItem('blr_active_page') as PageId;
+    const savedDomain = sessionStorage.getItem('blr_active_domain');
+    if (savedPage === 'domain-detail' && savedDomain) {
+      return { page: 'domain-detail', domain: savedDomain };
+    }
+    if (savedPage && VALID_PAGES.includes(savedPage)) {
+      return { page: savedPage, domain: null };
     }
   } catch (e) {
     // ignore
   }
 
-  return 'discover';
+  return { page: 'discover', domain: null };
 };
 
 export const App: React.FC = () => {
   // Page Routing & Navigation (URL synced & persistent across refresh)
-  const [currentPage, setCurrentPage] = useState<PageId>(getInitialPage);
+  const initialRoute = getInitialRoute();
+  const [currentPage, setCurrentPage] = useState<PageId>(initialRoute.page);
+  const [selectedDomain, setSelectedDomain] = useState<string>(initialRoute.domain || 'Healthcare');
   const [rightPanelTab, setRightPanelTab] = useState<'recommendations' | 'places' | 'saved'>('recommendations');
 
   // Data states
@@ -184,19 +245,20 @@ export const App: React.FC = () => {
 
   // Centralized page navigation handler with HTML5 History API integration
   const navigateToPage = (targetPage: PageId, replace: boolean = false) => {
-    if (targetPage === currentPage) return;
+    if (targetPage === currentPage && targetPage !== 'domain-detail') return;
 
     const targetPath = targetPage === 'discover' ? '/' : `/${targetPage}`;
     if (replace) {
-      window.history.replaceState({ page: targetPage }, '', targetPath);
+      window.history.replaceState({ page: targetPage, domain: null }, '', targetPath);
     } else {
-      window.history.pushState({ page: targetPage }, '', targetPath);
+      window.history.pushState({ page: targetPage, domain: null }, '', targetPath);
     }
 
     document.title = PAGE_TITLES[targetPage] || 'Bango — Smart City Discovery';
 
     try {
       sessionStorage.setItem('blr_active_page', targetPage);
+      sessionStorage.removeItem('blr_active_domain');
     } catch (e) {
       // ignore
     }
@@ -204,21 +266,51 @@ export const App: React.FC = () => {
     setCurrentPage(targetPage);
   };
 
+  // Dedicated navigation to an individual domain page (Healthcare, Transportation, etc.)
+  const navigateToDomainPage = (domainName: string, replace: boolean = false) => {
+    const slug = domainName.toLowerCase();
+    const targetPath = `/domains/${slug}`;
+
+    if (replace) {
+      window.history.replaceState({ page: 'domain-detail', domain: domainName }, '', targetPath);
+    } else {
+      window.history.pushState({ page: 'domain-detail', domain: domainName }, '', targetPath);
+    }
+
+    document.title = `${domainName} — Bango Bengaluru Domains`;
+
+    try {
+      sessionStorage.setItem('blr_active_page', 'domain-detail');
+      sessionStorage.setItem('blr_active_domain', domainName);
+    } catch (e) {
+      // ignore
+    }
+
+    setSelectedDomain(domainName);
+    setCurrentPage('domain-detail');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Sync initial URL, History state & Title on mount
   useEffect(() => {
-    const initial = getInitialPage();
-    const targetPath = initial === 'discover' ? '/' : `/${initial}`;
-
-    document.title = PAGE_TITLES[initial] || 'Bango — Smart City Discovery';
+    const route = getInitialRoute();
+    let targetPath = route.page === 'discover' ? '/' : `/${route.page}`;
+    if (route.page === 'domain-detail' && route.domain) {
+      targetPath = `/domains/${route.domain.toLowerCase()}`;
+      document.title = `${route.domain} — Bango Bengaluru Domains`;
+    } else {
+      document.title = PAGE_TITLES[route.page] || 'Bango — Smart City Discovery';
+    }
 
     if (window.location.pathname !== targetPath && !window.location.pathname.startsWith('/api')) {
-      window.history.replaceState({ page: initial }, '', targetPath);
-    } else if (!window.history.state || window.history.state.page !== initial) {
-      window.history.replaceState({ page: initial }, '', window.location.pathname || targetPath);
+      window.history.replaceState({ page: route.page, domain: route.domain }, '', targetPath);
+    } else if (!window.history.state || window.history.state.page !== route.page) {
+      window.history.replaceState({ page: route.page, domain: route.domain }, '', window.location.pathname || targetPath);
     }
 
     try {
-      sessionStorage.setItem('blr_active_page', initial);
+      sessionStorage.setItem('blr_active_page', route.page);
+      if (route.domain) sessionStorage.setItem('blr_active_domain', route.domain);
     } catch (e) {
       // ignore
     }
@@ -228,15 +320,33 @@ export const App: React.FC = () => {
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       const statePage = event.state?.page;
-      const targetPage: PageId = (statePage && VALID_PAGES.includes(statePage))
-        ? statePage
-        : getInitialPage();
+      const stateDomain = event.state?.domain;
 
-      document.title = PAGE_TITLES[targetPage] || 'Bango — Smart City Discovery';
+      let targetPage: PageId = 'discover';
+      let targetDomain: string | null = null;
+
+      if (statePage && VALID_PAGES.includes(statePage)) {
+        targetPage = statePage;
+        targetDomain = stateDomain || null;
+      } else {
+        const route = getInitialRoute();
+        targetPage = route.page;
+        targetDomain = route.domain;
+      }
+
+      if (targetDomain) {
+        setSelectedDomain(targetDomain);
+      }
+
+      document.title = targetPage === 'domain-detail' && targetDomain
+        ? `${targetDomain} — Bango Bengaluru Domains`
+        : PAGE_TITLES[targetPage] || 'Bango — Smart City Discovery';
+
       setCurrentPage(targetPage);
 
       try {
         sessionStorage.setItem('blr_active_page', targetPage);
+        if (targetDomain) sessionStorage.setItem('blr_active_domain', targetDomain);
       } catch (e) {
         // ignore
       }
@@ -436,7 +546,9 @@ export const App: React.FC = () => {
       {/* 1. PERSISTENT NAVIGATION HEADER */}
       <Header
         currentPage={currentPage}
+        currentDomain={selectedDomain}
         onSelectPage={(page) => navigateToPage(page)}
+        onSelectDomainPage={(domain) => navigateToDomainPage(domain)}
         savedCount={savedPlaces.length}
         savedPlaces={savedPlaces}
         onSelectCategory={(cat) => {
@@ -706,7 +818,7 @@ export const App: React.FC = () => {
                                 />
                               )}
 
-                              {/* PAGE 4: DOMAINS */}
+                              {/* PAGE 4: DOMAINS (ALL 8 SECTORS OVERVIEW) */}
                               {currentPage === 'domains' && (
                                 <CategoryGrid
                                   categories={categories}
@@ -714,7 +826,28 @@ export const App: React.FC = () => {
                                     handleCategorySelect(catName);
                                     navigateToPage('map');
                                   }}
+                                  onSelectDomainPage={(domainName) => navigateToDomainPage(domainName)}
                                   onNavigateToMap={() => navigateToPage('map')}
+                                />
+                              )}
+
+                              {/* PAGE 4.5: INDIVIDUAL DOMAIN PAGE (Healthcare, Tourism, etc.) */}
+                              {currentPage === 'domain-detail' && (
+                                <DomainDetailPage
+                                  domainName={selectedDomain}
+                                  places={places}
+                                  onSelectDomain={(d) => navigateToDomainPage(d)}
+                                  onExploreOnMap={(place) => {
+                                    handleSelectPlace(place, true);
+                                  }}
+                                  onExploreDomainOnMap={(domain) => {
+                                    handleCategorySelect(domain);
+                                    navigateToPage('map');
+                                  }}
+                                  onViewDetails={(place) => setDrawerPlace(place)}
+                                  onSavePlace={handleSavePlace}
+                                  isPlaceSaved={isPlaceSaved}
+                                  onBackToAllDomains={() => navigateToPage('domains')}
                                 />
                               )}
 

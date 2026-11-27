@@ -15,6 +15,7 @@ const PAGE_NAMES: Record<PageId, string> = {
   assistant: 'AI Assistant',
   trending: 'Trending',
   domains: 'Domains',
+  'domain-detail': 'Sector Detail',
   saved: 'Saved Places',
 };
 
