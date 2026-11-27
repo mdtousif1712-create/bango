@@ -168,10 +168,10 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </button>
 
-            {/* Map Flyout Dropdown (Bold, Bigger, Black Icons, No Rounded Shadows) */}
+            {/* Map Flyout Dropdown (Bold, Bigger, Black Icons, Subtle Clean Border, No Black Outlines) */}
             {activeDropdown === 'map' && (
-              <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
-                <div className="px-1 pb-3 border-b-2 border-[#191919] mb-3 flex items-center justify-between">
+              <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-2xl border border-[#E3DFD7] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                <div className="px-1 pb-3 border-b border-[#E3DFD7] mb-3 flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
                     Geographical Exploration
                   </span>
@@ -247,10 +247,10 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </button>
 
-            {/* Trending Flyout Dropdown (Bold, Bigger, Black Icons, No Rounded Shadows) */}
+            {/* Trending Flyout Dropdown (Bold, Bigger, Black Icons, Subtle Clean Border, No Black Outlines) */}
             {activeDropdown === 'trending' && (
-              <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
-                <div className="px-1 pb-3 border-b-2 border-[#191919] mb-3 flex items-center justify-between">
+              <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-2xl border border-[#E3DFD7] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                <div className="px-1 pb-3 border-b border-[#E3DFD7] mb-3 flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
                     Footfall Analytics
                   </span>
@@ -326,10 +326,10 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </button>
 
-            {/* Domains Flyout Dropdown (Bold, Bigger, Black Icons, No Rounded Shadows) */}
+            {/* Domains Flyout Dropdown (Bold, Bigger, Black Icons, Subtle Clean Border, No Black Outlines) */}
             {activeDropdown === 'domains' && (
-              <div className="absolute top-full -left-20 mt-2 w-[540px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
-                <div className="px-1 pb-3 border-b-2 border-[#191919] mb-3.5 flex items-center justify-between">
+              <div className="absolute top-full -left-20 mt-2 w-[540px] bg-white rounded-2xl border border-[#E3DFD7] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                <div className="px-1 pb-3 border-b border-[#E3DFD7] mb-3.5 flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
                     8 Smart City Sectors
                   </span>
@@ -404,10 +404,10 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </button>
 
-            {/* Saved Places Flyout Preview (Bold, Bigger, Black Icons, No Rounded Shadows) */}
+            {/* Saved Places Flyout Preview (Bold, Bigger, Black Icons, Subtle Clean Border, No Black Outlines) */}
             {activeDropdown === 'saved' && (
-              <div className="absolute top-full right-0 mt-2 w-[360px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
-                <div className="px-1 pb-3 border-b-2 border-[#191919] mb-3 flex items-center justify-between">
+              <div className="absolute top-full right-0 mt-2 w-[360px] bg-white rounded-2xl border border-[#E3DFD7] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                <div className="px-1 pb-3 border-b border-[#E3DFD7] mb-3 flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
                     Saved Collection
                   </span>
@@ -481,7 +481,7 @@ export const Header: React.FC<HeaderProps> = ({
               onMouseEnter={() => handleMouseEnter('profile')}
               onMouseLeave={handleMouseLeave}
             >
-              <div className="w-9 h-9 rounded-full bg-[#191919] border-2 border-[#191919] hover:border-[#F02D25] flex items-center justify-center font-bold text-xs text-white cursor-pointer transition-colors overflow-hidden">
+              <div className="w-9 h-9 rounded-full bg-[#191919] border border-[#E3DFD7] hover:border-[#F02D25] flex items-center justify-center font-bold text-xs text-white cursor-pointer transition-colors overflow-hidden">
                 {user.picture ? (
                   <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
                 ) : (
@@ -489,10 +489,10 @@ export const Header: React.FC<HeaderProps> = ({
                 )}
               </div>
 
-              {/* Profile Flyout Dropdown (Bold, Bigger, Black Icons, No Rounded Shadows) */}
+              {/* Profile Flyout Dropdown (Bold, Bigger, Black Icons, Subtle Clean Border, No Black Outlines) */}
               {activeDropdown === 'profile' && (
-                <div className="absolute top-full right-0 mt-2 w-[340px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
-                  <div className="flex items-center gap-3 p-1 border-b-2 border-[#191919] pb-3 mb-3">
+                <div className="absolute top-full right-0 mt-2 w-[340px] bg-white rounded-2xl border border-[#E3DFD7] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                  <div className="flex items-center gap-3 p-1 border-b border-[#E3DFD7] pb-3 mb-3">
                     <div className="w-11 h-11 rounded-full bg-[#191919] text-white flex items-center justify-center font-extrabold text-sm overflow-hidden shrink-0">
                       {user.picture ? (
                         <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
@@ -546,7 +546,7 @@ export const Header: React.FC<HeaderProps> = ({
           ) : (
             <button
               onClick={onOpenAuthModal}
-              className="flex items-center gap-2 px-3.5 py-2.5 rounded-full border-2 border-[#191919] bg-white text-xs sm:text-sm font-extrabold text-[#191919] hover:bg-[#F5F3EE] transition-all cursor-pointer shrink-0"
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-full border border-[#E3DFD7] hover:border-[#191919] bg-white text-xs sm:text-sm font-extrabold text-[#191919] hover:bg-[#F5F3EE] transition-all cursor-pointer shrink-0"
               title="Sign in with Google"
             >
               <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
