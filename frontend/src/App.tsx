@@ -298,19 +298,9 @@ export const App: React.FC = () => {
                 bengaluru map explorer.
               </h2>
               <span className="hidden md:inline text-xs sm:text-sm text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
-                Click any marker on the map to focus & compute live recommendations
+                Explore destinations, transit hubs, and curated smart city locations across Bengaluru
               </span>
             </div>
-
-            {selectedPlace && (
-              <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 bg-white rounded-full border border-[#E3DFD7] text-xs shrink-0 shadow-xs">
-                <span className="text-[#77736D] text-[11px] uppercase font-bold">Active:</span>
-                <span className="font-bold text-[#191919] text-sm">{selectedPlace.name}</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F5F3EE] text-[#F02D25] font-extrabold uppercase">
-                  {selectedPlace.category}
-                </span>
-              </div>
-            )}
           </div>
 
           {/* 65 / 35 Responsive Grid Layout - Locked to remaining screen height (flex-1 min-h-0) */}
@@ -417,12 +407,6 @@ export const App: React.FC = () => {
                     )}
                   </button>
                 </div>
-
-                {selectedPlace && (
-                  <span className="text-[10px] text-[#77736D] hidden xl:inline truncate max-w-[120px]">
-                    Focus: <strong className="text-[#191919] uppercase">{selectedPlace.name}</strong>
-                  </span>
-                )}
               </div>
 
               {/* 4. INDEPENDENT SCROLLABLE FEED OF PLACES / RECOMMENDATIONS */}

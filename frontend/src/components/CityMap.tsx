@@ -27,18 +27,13 @@ export const CATEGORY_COLORS: Record<string, string> = {
 };
 
 // Helper to create modern SVGs for map markers classified by category
-const createCustomMarkerIcon = (category: string, isSelected: boolean) => {
+const createCustomMarkerIcon = (category: string) => {
   const color = CATEGORY_COLORS[category] || '#F02D25';
-  const size = isSelected ? 38 : 30;
-  const strokeWidth = isSelected ? 3 : 2;
+  const size = 30;
+  const strokeWidth = 2;
 
   const html = `
     <div style="position: relative; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center;">
-      ${
-        isSelected
-          ? `<div style="position: absolute; inset: -6px; border-radius: 9999px; background-color: ${color}; opacity: 0.4; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>`
-          : ''
-      }
       <div style="
         width: ${size}px;
         height: ${size}px;
@@ -54,8 +49,8 @@ const createCustomMarkerIcon = (category: string, isSelected: boolean) => {
         transition: transform 0.2s ease;
       ">
         <div style="
-          width: ${isSelected ? 10 : 8}px;
-          height: ${isSelected ? 10 : 8}px;
+          width: 8px;
+          height: 8px;
           background-color: white;
           border-radius: 50%;
         "></div>
@@ -84,19 +79,17 @@ const userLocationIcon = L.divIcon({
   iconAnchor: [11, 11],
 });
 
-// Map controller component to pan when place selected
-const MapController: React.FC<{ selectedPlace: Place | null; userLocation: { lat: number; lng: number } | null }> = ({
-  selectedPlace,
+// Map controller component for user geolocation pan only (no auto-zoom focus factor)
+const MapController: React.FC<{ userLocation: { lat: number; lng: number } | null }> = ({
+  userLocation,
 }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (selectedPlace) {
-      map.flyTo([selectedPlace.latitude, selectedPlace.longitude], 14, {
-        duration: 1.2,
-      });
+    if (userLocation) {
+      map.panTo([userLocation.lat, userLocation.lng]);
     }
-  }, [selectedPlace, map]);
+  }, [userLocation, map]);
 
   return null;
 };
@@ -129,7 +122,7 @@ export const CityMap: React.FC<CityMapProps> = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <MapController selectedPlace={selectedPlace} userLocation={userLocation} />
+        <MapController userLocation={userLocation} />
 
         {/* User Location Marker */}
         {userLocation && (
@@ -142,8 +135,7 @@ export const CityMap: React.FC<CityMapProps> = ({
 
         {/* Bengaluru Place Markers Classified by Category & Colors */}
         {places.map((place) => {
-          const isSelected = selectedPlace?.place_id === place.place_id;
-          const markerIcon = createCustomMarkerIcon(place.category, isSelected);
+          const markerIcon = createCustomMarkerIcon(place.category);
           const categoryColor = CATEGORY_COLORS[place.category] || '#F02D25';
 
           return (
