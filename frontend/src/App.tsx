@@ -290,22 +290,22 @@ export const App: React.FC = () => {
       {currentPage === 'map' && (
         <div className="w-full h-[calc(100vh-80px)] bg-[#ECE9E2] flex flex-col px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-3.5 overflow-hidden">
           
-          {/* Compact Top Heading Bar (shrink-0) */}
-          <div className="flex items-center justify-between gap-4 mb-2.5 sm:mb-3 shrink-0">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25] shrink-0"></span>
-              <h2 className="font-display font-bold text-xl sm:text-2xl text-[#191919] tracking-tight leading-none whitespace-nowrap">
+          {/* Top Heading Bar (shrink-0) */}
+          <div className="flex items-center justify-between gap-4 mb-2 sm:mb-2.5 shrink-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#F02D25] shrink-0"></span>
+              <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-[#191919] tracking-tight leading-none whitespace-nowrap">
                 bengaluru map explorer.
               </h2>
-              <span className="hidden md:inline text-xs text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
-                Click any marker on the map to focus & compute live Apriori association recommendations
+              <span className="hidden md:inline text-xs sm:text-sm text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
+                Click any marker on the map to focus & compute live recommendations
               </span>
             </div>
 
             {selectedPlace && (
-              <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-[#E3DFD7] text-xs shrink-0 shadow-xs">
+              <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 bg-white rounded-full border border-[#E3DFD7] text-xs shrink-0 shadow-xs">
                 <span className="text-[#77736D] text-[11px] uppercase font-bold">Active:</span>
-                <span className="font-bold text-[#191919]">{selectedPlace.name}</span>
+                <span className="font-bold text-[#191919] text-sm">{selectedPlace.name}</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F5F3EE] text-[#F02D25] font-extrabold uppercase">
                   {selectedPlace.category}
                 </span>
