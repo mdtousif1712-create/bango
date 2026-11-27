@@ -101,10 +101,10 @@ export const DEFAULT_ITEMS: GalleryItem[] = [
 ];
 
 const ROTATE_STEP = 6;
-const Y_STEP = 22;
-const OVERLAP = 0.58;
+const Y_STEP = 20;
+const OVERLAP = 0.50;
 const HOVER_SCALE = 1.08;
-const HOVER_LIFT = 20;
+const HOVER_LIFT = 18;
 
 export function ArchGallery({
   items = DEFAULT_ITEMS,
