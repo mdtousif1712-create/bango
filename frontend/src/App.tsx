@@ -12,7 +12,6 @@ import { GoogleAuthModal } from './components/GoogleAuthModal';
 import { AuthUser, getStoredUser, clearStoredUser, syncUserSavedPlaces } from './services/auth';
 import { HeroSection } from './components/HeroSection';
 import { CityMap } from './components/CityMap';
-import { SearchAssistant } from './components/SearchAssistant';
 import { CategoryFilters } from './components/CategoryFilters';
 import { CategoryGrid } from './components/CategoryGrid';
 import { TrendingSection } from './components/TrendingSection';
@@ -330,14 +329,6 @@ export const App: React.FC = () => {
                   onLocateMe={handleLocateMe}
                   onViewDetails={(p) => setDrawerPlace(p)}
                 />
-
-                {/* Floating Search Assistant in the Map Container */}
-                <div className="absolute bottom-4 left-4 right-4 z-[400] max-w-xl mx-auto">
-                  <SearchAssistant
-                    onSearch={handleNaturalSearch}
-                    isLoading={isSearching}
-                  />
-                </div>
               </div>
             </div>
 
