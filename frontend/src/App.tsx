@@ -230,7 +230,7 @@ export const App: React.FC = () => {
 
           {/* PAGE 2: MAP EXPLORER */}
           {currentPage === 'map' && (
-            <div className="py-10 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
+            <div className="pt-24 sm:pt-28 pb-16 bg-[#ECE9E2] min-h-screen">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Heading */}
