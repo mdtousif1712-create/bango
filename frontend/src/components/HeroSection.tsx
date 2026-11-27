@@ -103,22 +103,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const currentSlide = LOCATION_SLIDES[activeSlide];
 
   return (
-    <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-10 md:py-14 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-10 md:py-16 overflow-hidden">
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         
         {/* 2-Column Editorial Hero Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 2xl:gap-24 items-center">
           
           {/* Left: Oversized Typography & Search (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             
-            <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[68px] text-[#191919] leading-[1.05] tracking-tight mb-6">
+            <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] xl:text-[84px] 2xl:text-[94px] text-[#191919] leading-[1.03] tracking-tight mb-6">
               discover <br />
               banglore <br />
               <span className="text-[#F02D25]">like never before.</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-[#77736D] max-w-xl leading-relaxed mb-8 font-normal">
+            <p className="text-base sm:text-lg xl:text-xl text-[#77736D] max-w-2xl leading-relaxed mb-8 font-normal">
               <strong className="text-[#191919] font-bold">bango</strong> is an intelligent urban discovery platform powered by the <strong className="text-[#191919] font-semibold">Apriori Association Rule Mining</strong> algorithm. Uncover hidden mobility patterns, transit connections, and curated smart city destinations across 8 urban domains.
             </p>
 
@@ -138,13 +138,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Right: Airplane Window Carousel + Segmented Pill Indicator (5 cols) */}
-          <div className="lg:col-span-5 relative flex flex-col items-center justify-center">
+          <div className="lg:col-span-5 relative flex flex-col items-center lg:items-end justify-center">
             
             {/* The Signature Aperture / Curved Window Card with Auto-Transition */}
             <div
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
-              className="relative w-full max-w-[420px] aspect-[4/5] rounded-[56px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-2xl bg-[#191919] transition-all duration-500 group select-none"
+              className="relative w-full max-w-[420px] sm:max-w-[460px] xl:max-w-[500px] 2xl:max-w-[540px] aspect-[4/5] rounded-[56px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-2xl bg-[#191919] transition-all duration-500 group select-none"
             >
               
               {/* Animated Carousel Image */}

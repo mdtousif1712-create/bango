@@ -282,8 +282,8 @@ return (
 
       {/* PAGE 2: MAP EXPLORER */}
       {currentPage === 'map' && (
-        <div className="py-10 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="py-8 sm:py-10 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
+          <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
 
             {/* Heading */}
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -308,7 +308,7 @@ return (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
               {/* LEFT: 65% Interactive Leaflet Map (8 cols) */}
-              <div className="lg:col-span-8 flex flex-col min-h-[580px] lg:min-h-[660px] relative rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-lg bg-white">
+              <div className="lg:col-span-8 flex flex-col min-h-[600px] lg:min-h-[700px] xl:min-h-[760px] relative rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-lg bg-white">
                 <div className="flex-1 w-full h-full relative">
                   <CityMap
                     places={places}
@@ -332,7 +332,7 @@ return (
               </div>
 
               {/* RIGHT: 35% Editorial Discovery Panel (4 cols) */}
-              <div className="lg:col-span-4 flex flex-col min-h-[580px] lg:min-h-[660px] rounded-3xl bg-white border border-[#E3DFD7] p-5 shadow-lg overflow-hidden">
+              <div className="lg:col-span-4 flex flex-col min-h-[600px] lg:min-h-[700px] xl:min-h-[760px] rounded-3xl bg-white border border-[#E3DFD7] p-5 shadow-lg overflow-hidden">
 
                 {/* Category Filter Pills */}
                 <div className="mb-4 shrink-0">

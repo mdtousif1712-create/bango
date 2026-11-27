@@ -27,7 +27,7 @@ const DOMAIN_DETAILS: Record<string, { number: string; photo: string; subtitle: 
   },
   Shopping: {
     number: '04',
-    photo: 'https://images.unsplash.com/photo-1567449303078-57ad995bd302?auto=format&fit=crop&w=800&q=80',
+    photo: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80',
     subtitle: 'Commercial Street, Orion Mall, Phoenix Marketcity, Brigade Road.',
   },
   Education: {
@@ -67,11 +67,11 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
   };
 
   return (
-    <section className="py-10 md:py-12 bg-[#F5F3EE] min-h-[calc(100vh-80px)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-8 sm:py-12 bg-[#F5F3EE] min-h-[calc(100vh-80px)]">
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
@@ -91,7 +91,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
         </div>
 
         {/* 8-Card Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 gap-6 xl:gap-8">
           {filteredCategories.map((cat) => {
             const meta = DOMAIN_DETAILS[cat.name] || {
               number: '01',
@@ -106,12 +106,16 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
                 className="group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
               >
                 {/* Photo with zoom on hover */}
-                <div className="relative h-48 w-full overflow-hidden bg-[#ECE9E2]">
+                <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-[#ECE9E2]">
                   <img
                     src={meta.photo}
                     alt={cat.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   
