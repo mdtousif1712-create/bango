@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import get_database
 from app.services.apriori_engine import apriori_engine
-from app.api import categories, places, recommendations, discover, search
+from app.api import categories, places, recommendations, discover, search, auth
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -63,6 +63,7 @@ app.include_router(places.router, prefix="/api", tags=["Places"])
 app.include_router(recommendations.router, prefix="/api", tags=["Recommendations"])
 app.include_router(discover.router, prefix="/api", tags=["Discover & Analytics"])
 app.include_router(search.router, prefix="/api", tags=["Search"])
+app.include_router(auth.router, prefix="/api", tags=["Authentication"])
 
 if __name__ == "__main__":
     import uvicorn

@@ -8,6 +8,8 @@ import {
   performNaturalSearch,
 } from './services/api';
 import { Header, PageId } from './components/Header';
+import { GoogleAuthModal } from './components/GoogleAuthModal';
+import { AuthUser, getStoredUser, clearStoredUser, syncUserSavedPlaces } from './services/auth';
 import { HeroSection } from './components/HeroSection';
 import { CityMap } from './components/CityMap';
 import { SearchAssistant } from './components/SearchAssistant';
@@ -44,6 +46,8 @@ export const App: React.FC = () => {
   const [activeSearchExplanation, setActiveSearchExplanation] = useState<string | null>(null);
 
   // User location & saved places
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(getStoredUser);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [savedPlaces, setSavedPlaces] = useState<Place[]>(() => {
     try {
@@ -63,10 +67,32 @@ export const App: React.FC = () => {
   useEffect(() => {
     try {
       localStorage.setItem('blr_saved_places', JSON.stringify(savedPlaces));
+      if (currentUser?.email) {
+        syncUserSavedPlaces(currentUser.email, savedPlaces.map((p) => p.place_id));
+      }
     } catch (e) {
       console.error('Failed to save to localStorage:', e);
     }
-  }, [savedPlaces]);
+  }, [savedPlaces, currentUser]);
+
+  const handleLoginSuccess = (user: AuthUser) => {
+    setCurrentUser(user);
+    if (user.saved_places && user.saved_places.length > 0 && places.length > 0) {
+      const userCloudPlaces = places.filter((p) => user.saved_places?.includes(p.place_id));
+      if (userCloudPlaces.length > 0) {
+        setSavedPlaces((prev) => {
+          const existingIds = new Set(prev.map((p) => p.place_id));
+          const newItems = userCloudPlaces.filter((p) => !existingIds.has(p.place_id));
+          return [...prev, ...newItems];
+        });
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    clearStoredUser();
+    setCurrentUser(null);
+  };
 
   // Initial Data Load
   useEffect(() => {
@@ -220,6 +246,9 @@ export const App: React.FC = () => {
           setCurrentPage('map');
         }}
         onSelectPlace={(p) => handleSelectPlace(p, true)}
+        user={currentUser}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onLogout={handleLogout}
       />
 
       {/* 2. DEDICATED PAGE VIEWS */}
@@ -514,6 +543,13 @@ export const App: React.FC = () => {
         isSaved={drawerPlace ? isPlaceSaved(drawerPlace.place_id) : false}
         onSelectPlace={(p) => handleSelectPlace(p, true)}
         userLocation={userLocation}
+      />
+
+      {/* Google Authentication Modal */}
+      <GoogleAuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
     </div>
   );
