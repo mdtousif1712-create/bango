@@ -12,6 +12,7 @@ import { GoogleAuthModal } from './components/GoogleAuthModal';
 import { AuthUser, getStoredUser, clearStoredUser, syncUserSavedPlaces } from './services/auth';
 import { HeroSection } from './components/HeroSection';
 import { CityMap } from './components/CityMap';
+import { MapAssistantPage } from './components/MapAssistantPage';
 import { CategoryFilters } from './components/CategoryFilters';
 import { CategoryGrid } from './components/CategoryGrid';
 import { TrendingSection } from './components/TrendingSection';
@@ -550,6 +551,20 @@ export const App: React.FC = () => {
 
           </div>
         </div>
+      )}
+
+      {/* PAGE: NATURAL SEARCH ASSISTANT WITH FULL MAP & BOTTOM CHATBOT */}
+      {currentPage === 'assistant' && (
+        <MapAssistantPage
+          places={places}
+          selectedPlace={selectedPlace}
+          onSelectPlace={(p) => handleSelectPlace(p, false)}
+          onSavePlace={handleSavePlace}
+          isPlaceSaved={isPlaceSaved}
+          userLocation={userLocation}
+          onLocateMe={handleLocateMe}
+          onViewDetails={(p) => setDrawerPlace(p)}
+        />
       )}
 
       {/* PAGE 3: TRENDING */}

@@ -12,6 +12,7 @@ interface MobileHeaderProps {
 const PAGE_NAMES: Record<PageId, string> = {
   discover: 'Discover',
   map: 'Map Explorer',
+  assistant: 'AI Assistant',
   trending: 'Trending',
   domains: 'Domains',
   saved: 'Saved Places',

@@ -31,6 +31,7 @@ import { AuthUser } from '../services/auth';
 export type PageId =
   | 'discover'
   | 'map'
+  | 'assistant'
   | 'trending'
   | 'domains'
   | 'saved';
@@ -157,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <button
                 onClick={() => handleNavClick('map')}
-                className={`flex items-center gap-1.5 px-3.5 xl:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${currentPage === 'map'
+                className={`flex items-center gap-1.5 px-3.5 xl:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${currentPage === 'map' || currentPage === 'assistant'
                   ? 'text-[#F02D25] bg-[#F5F3EE]'
                   : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
                   }`}
@@ -181,13 +182,23 @@ export const Header: React.FC<HeaderProps> = ({
                   <div className="space-y-1.5">
                     <div
                       onClick={() => handleNavClick('map')}
-                      className="p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3.5"
+                      className={`p-3 rounded-xl cursor-pointer transition-colors group flex items-start gap-3.5 ${
+                        currentPage === 'map' ? 'bg-[#F5F3EE]' : 'hover:bg-[#F5F3EE]'
+                      }`}
                     >
-                      <div className="w-11 h-11 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
-                        <Map className="w-5 h-5 text-[#191919] group-hover:text-white transition-colors" />
+                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                        currentPage === 'map'
+                          ? 'bg-[#191919] text-white'
+                          : 'bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919]'
+                      }`}>
+                        <Map className={`w-5 h-5 transition-colors ${
+                          currentPage === 'map' ? 'text-white' : 'text-[#191919] group-hover:text-white'
+                        }`} />
                       </div>
                       <div>
-                        <h4 className="text-sm sm:text-[15px] font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors leading-snug whitespace-nowrap">
+                        <h4 className={`text-sm sm:text-[15px] font-extrabold transition-colors leading-snug whitespace-nowrap ${
+                          currentPage === 'map' ? 'text-[#F02D25]' : 'text-[#191919] group-hover:text-[#F02D25]'
+                        }`}>
                           Interactive 65/35 City Map
                         </h4>
                         <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
@@ -197,14 +208,24 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
 
                     <div
-                      onClick={() => handleNavClick('map')}
-                      className="p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3.5"
+                      onClick={() => handleNavClick('assistant')}
+                      className={`p-3 rounded-xl cursor-pointer transition-colors group flex items-start gap-3.5 ${
+                        currentPage === 'assistant' ? 'bg-[#F5F3EE]' : 'hover:bg-[#F5F3EE]'
+                      }`}
                     >
-                      <div className="w-11 h-11 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
-                        <Search className="w-5 h-5 text-[#191919] group-hover:text-white transition-colors" />
+                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                        currentPage === 'assistant'
+                          ? 'bg-[#191919] text-white'
+                          : 'bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919]'
+                      }`}>
+                        <Search className={`w-5 h-5 transition-colors ${
+                          currentPage === 'assistant' ? 'text-white' : 'text-[#191919] group-hover:text-white'
+                        }`} />
                       </div>
                       <div>
-                        <h4 className="text-sm sm:text-[15px] font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors leading-snug whitespace-nowrap">
+                        <h4 className={`text-sm sm:text-[15px] font-extrabold transition-colors leading-snug whitespace-nowrap ${
+                          currentPage === 'assistant' ? 'text-[#F02D25]' : 'text-[#191919] group-hover:text-[#F02D25]'
+                        }`}>
                           Natural Search Assistant
                         </h4>
                         <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
@@ -635,6 +656,7 @@ export const Header: React.FC<HeaderProps> = ({
                 {[
                   { id: 'discover', label: 'Discover', icon: Compass },
                   { id: 'map', label: 'Map Explorer', icon: Map },
+                  { id: 'assistant', label: 'AI Assistant', icon: Search },
                   { id: 'trending', label: 'Trending', icon: TrendingUp },
                   { id: 'domains', label: 'Domains', icon: Layers },
                 ].map((item) => {
