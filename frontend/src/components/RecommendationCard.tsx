@@ -1,6 +1,6 @@
 import React from 'react';
 import { RecommendationItem, Place } from '../types';
-import { Sparkles, Star, MapPin, Bookmark, ArrowUpRight, TrendingUp } from 'lucide-react';
+import { Star, MapPin, Bookmark, ArrowUpRight } from 'lucide-react';
 
 interface RecommendationCardProps {
   item: RecommendationItem;
@@ -19,8 +19,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
   onSave,
   onViewDetails,
 }) => {
-  const { place, confidence, lift, rule_explanation, recommendation_type } = item;
-  const isApriori = recommendation_type === 'association';
+  const { place } = item;
 
   return (
     <div
@@ -31,30 +30,6 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
           : 'border-[#E3DFD7] hover:border-[#F02D25]'
       }`}
     >
-      {/* Top Explanation Banner */}
-      <div className="mb-2.5 flex items-start gap-2 bg-[#ECE9E2] rounded-xl p-2 border border-[#E3DFD7]">
-        <div className="w-5 h-5 rounded-md bg-[#F02D25] text-white flex items-center justify-center shrink-0 mt-0.5">
-          {isApriori ? <Sparkles className="w-3 h-3" /> : <TrendingUp className="w-3 h-3" />}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#191919]">
-              {isApriori ? 'Apriori Recommendation' : 'Domain Pairing'}
-            </span>
-            {isApriori && (
-              <div className="flex items-center gap-1.5 shrink-0 text-[10px] font-bold text-[#F02D25] bg-white px-2 py-0.5 rounded-full border border-[#E3DFD7]">
-                <span>{(confidence * 100).toFixed(0)}% Match</span>
-                <span>&bull;</span>
-                <span>{lift.toFixed(1)}x Lift</span>
-              </div>
-            )}
-          </div>
-          <p className="text-[11px] text-[#191919] font-medium leading-tight mt-1 line-clamp-2">
-            {rule_explanation}
-          </p>
-        </div>
-      </div>
-
       {/* Main Place Card Body */}
       <div className="flex gap-3">
         {/* Photo */}
