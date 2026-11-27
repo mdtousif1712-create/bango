@@ -107,3 +107,20 @@
 .marker-pulse {
   animation: pulseGlow 2s infinite;
 }
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-subtle-float {
+  animation: subtleFloat 3.2s ease-in-out infinite;
+}
+
+.animate-subtle-float-delayed {
+  animation: subtleFloat 3.2s ease-in-out infinite 0.8s;
+}

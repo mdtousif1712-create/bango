@@ -5,6 +5,7 @@ interface HeroSectionProps {
   onSearch?: (query: string) => void;
   isSearching?: boolean;
   onExploreMap: () => void;
+  onPlanDay?: () => void;
   onOpenAlgorithm?: () => void;
 }
 
@@ -62,6 +63,7 @@ const LOCATION_SLIDES: LocationSlide[] = [
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreMap,
+  onPlanDay,
 }) => {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -104,15 +106,45 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <strong className="text-[#191919] font-bold">bango</strong> is an intelligent urban discovery platform powered by the <strong className="text-[#191919] font-semibold">Apriori Association Rule Mining</strong> algorithm. Uncover hidden mobility patterns, transit connections, and curated smart city destinations across 8 urban domains.
             </p>
 
-            {/* Primary Action CTA */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            {/* Primary Action CTA Buttons */}
+            <div className="flex flex-wrap items-center gap-3.5 sm:gap-4 pt-2">
+              {/* Elongated Button 1: Open Map Explorer */}
               <button
                 onClick={onExploreMap}
-                className="group flex items-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer"
+                className="group relative flex items-center justify-between gap-4 sm:gap-6 px-7 sm:px-9 py-4 sm:py-4.5 min-w-[220px] sm:min-w-[250px] rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs sm:text-[13px] font-bold uppercase tracking-wider transition-all duration-300 ease-out shadow-md hover:shadow-xl hover:shadow-black/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer overflow-hidden animate-subtle-float"
+                title="Open Bengaluru Map Explorer"
               >
-                <span>Open Map Explorer</span>
-                <div className="w-6 h-6 rounded-full bg-[#F02D25] flex items-center justify-center text-white">
-                  <ArrowUpRight className="w-3.5 h-3.5" />
+                {/* Shimmer Light Sweep on Hover */}
+                <span className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                </span>
+
+                <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">
+                  Open Map Explorer
+                </span>
+
+                <div className="relative z-10 w-7 h-7 rounded-full bg-[#F02D25] group-hover:bg-[#E0261E] group-hover:scale-110 group-hover:shadow-[0_0_12px_rgba(240,45,37,0.55)] flex items-center justify-center text-white shrink-0 transition-all duration-300">
+                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-45 group-hover:scale-110" />
+                </div>
+              </button>
+
+              {/* Replica Elongated Button 2: Plan Ur Day */}
+              <button
+                onClick={onPlanDay || onExploreMap}
+                className="group relative flex items-center justify-between gap-4 sm:gap-6 px-7 sm:px-9 py-4 sm:py-4.5 min-w-[220px] sm:min-w-[250px] rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs sm:text-[13px] font-bold uppercase tracking-wider transition-all duration-300 ease-out shadow-md hover:shadow-xl hover:shadow-black/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer overflow-hidden animate-subtle-float-delayed"
+                title="Plan your smart city day in Bengaluru"
+              >
+                {/* Shimmer Light Sweep on Hover */}
+                <span className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                </span>
+
+                <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">
+                  Plan Ur Day
+                </span>
+
+                <div className="relative z-10 w-7 h-7 rounded-full bg-[#F02D25] group-hover:bg-[#E0261E] group-hover:scale-110 group-hover:shadow-[0_0_12px_rgba(240,45,37,0.55)] flex items-center justify-center text-white shrink-0 transition-all duration-300">
+                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-45 group-hover:scale-110" />
                 </div>
               </button>
             </div>

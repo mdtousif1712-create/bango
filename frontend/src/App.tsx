@@ -208,6 +208,11 @@ export const App: React.FC = () => {
     }
   };
 
+  // Plan Your Day Itinerary Search
+  const handlePlanYourDay = () => {
+    handleNaturalSearch('Curated full day smart city itinerary: morning heritage walk & filter coffee, afternoon lakeside stroll, evening craft brewery & dining');
+  };
+
   // Save / Bookmark Place
   const handleSavePlace = (place: Place) => {
     // If user has not signed in with Google, prompt sign-in popup!
@@ -278,6 +283,7 @@ export const App: React.FC = () => {
             onSearch={handleNaturalSearch}
             isSearching={isSearching}
             onExploreMap={() => setCurrentPage('map')}
+            onPlanDay={handlePlanYourDay}
           />
         )}
 
