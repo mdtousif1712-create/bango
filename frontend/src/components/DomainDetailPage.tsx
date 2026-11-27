@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   ArrowUpRight,
-  ArrowLeft,
   MapPin,
   Star,
   Bookmark,
@@ -108,25 +107,23 @@ export const ALL_DOMAINS_META: Record<string, DomainMetaInfo> = {
 interface DomainDetailPageProps {
   domainName: string;
   places: Place[];
-  onSelectDomain: (domain: string) => void;
+  onSelectDomain?: (domain: string) => void;
   onExploreOnMap: (place: Place) => void;
   onExploreDomainOnMap: (domain: string) => void;
   onViewDetails: (place: Place) => void;
   onSavePlace: (place: Place) => void;
   isPlaceSaved: (placeId: string) => boolean;
-  onBackToAllDomains: () => void;
+  onBackToAllDomains?: () => void;
 }
 
 export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
   domainName,
   places,
-  onSelectDomain,
   onExploreOnMap,
   onExploreDomainOnMap,
   onViewDetails,
   onSavePlace,
   isPlaceSaved,
-  onBackToAllDomains,
 }) => {
   // Normalize domain matching (case-insensitive)
   const canonicalDomain =
@@ -157,45 +154,7 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
   return (
     <div className="py-8 sm:py-12 bg-[#F5F3EE] min-h-[calc(100vh-80px)] font-sans antialiased">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
-        {/* 1. TOP BREADCRUMB & DOMAIN SWITCHER STRIP */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-[#E3DFD7]">
-          {/* Back link */}
-          <button
-            onClick={onBackToAllDomains}
-            className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#77736D] hover:text-[#191919] transition-colors cursor-pointer w-fit group"
-          >
-            <div className="w-7 h-7 rounded-full bg-white border border-[#E3DFD7] flex items-center justify-center group-hover:bg-[#191919] group-hover:text-white transition-colors">
-              <ArrowLeft className="w-3.5 h-3.5" />
-            </div>
-            <span>All 8 Domains</span>
-          </button>
-
-          {/* Quick Switcher Pills for all 8 Domains */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-            {Object.keys(ALL_DOMAINS_META).map((dName) => {
-              const dMeta = ALL_DOMAINS_META[dName];
-              const IconComp = dMeta.icon;
-              const isActive = dName.toLowerCase() === canonicalDomain.toLowerCase();
-
-              return (
-                <button
-                  key={dName}
-                  onClick={() => onSelectDomain(dName)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer border ${
-                    isActive
-                      ? 'bg-[#191919] text-white border-[#191919] shadow-sm'
-                      : 'bg-white text-[#77736D] border-[#E3DFD7] hover:text-[#191919] hover:border-[#191919]'
-                  }`}
-                >
-                  <IconComp className="w-3.5 h-3.5" style={{ color: isActive ? '#F02D25' : dMeta.color }} />
-                  <span>{dName}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 2. HERO DISPLAY SECTION (Exact match to the Healthcare reference) */}
+        {/* HERO DISPLAY SECTION (Matches Healthcare reference) */}
         <div className="mb-10 sm:mb-14">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div>
