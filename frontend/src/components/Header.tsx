@@ -134,84 +134,17 @@ export const Header: React.FC<HeaderProps> = ({
         {/* ================= CENTER: NAVIGATION LINKS WITH HOVER DROPDOWNS (Dribbble Style) ================= */}
         <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
 
-          {/* 1. DISCOVER ITEM + DROPDOWN */}
-          <div
-            className="relative"
-            onMouseEnter={() => handleMouseEnter('discover')}
-            onMouseLeave={handleMouseLeave}
+          {/* 1. DISCOVER ITEM (Direct Navigation, No Dropdown) */}
+          <button
+            onClick={() => handleNavClick('discover')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              currentPage === 'discover'
+                ? 'text-[#F02D25] bg-[#F5F3EE]'
+                : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
+            }`}
           >
-            <button
-              onClick={() => handleNavClick('discover')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                currentPage === 'discover'
-                  ? 'text-[#F02D25] bg-[#F5F3EE]'
-                  : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
-              }`}
-            >
-              <span>Discover</span>
-              <ChevronDown
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  activeDropdown === 'discover' ? 'rotate-180 text-[#F02D25]' : 'text-[#77736D]'
-                }`}
-              />
-            </button>
-
-            {/* Discover Flyout Dropdown */}
-            {activeDropdown === 'discover' && (
-              <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl border border-[#E3DFD7] shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-3 py-2 border-b border-[#E3DFD7] mb-2">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D]">
-                    Smart City Intelligence
-                  </span>
-                </div>
-
-                <div className="space-y-1">
-                  <div
-                    onClick={() => handleNavClick('discover')}
-                    className="p-2.5 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#F5F3EE] group-hover:bg-[#191919] group-hover:text-white text-[#F02D25] flex items-center justify-center shrink-0 transition-colors">
-                      <Sparkles className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-[#191919] group-hover:text-[#F02D25] transition-colors">
-                        Apriori AI Mining Engine
-                      </h4>
-                      <p className="text-[11px] text-[#77736D] leading-snug mt-0.5">
-                        Mining associative patterns across Bengaluru mobility transactions
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    onClick={() => handleNavClick('discover')}
-                    className="p-2.5 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#F5F3EE] group-hover:bg-[#191919] group-hover:text-white text-[#F02D25] flex items-center justify-center shrink-0 transition-colors">
-                      <Compass className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-[#191919] group-hover:text-[#F02D25] transition-colors">
-                        Featured Aperture Corridors
-                      </h4>
-                      <p className="text-[11px] text-[#77736D] leading-snug mt-0.5">
-                        Indiranagar, Whitefield, Cubbon Park, Lalbagh & Malleshwaram
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-2 mt-2 border-t border-[#E3DFD7]">
-                  <button
-                    onClick={() => handleNavClick('discover')}
-                    className="w-full text-center py-2 text-xs font-bold text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
-                  >
-                    Open Discover Home &rarr;
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+            Discover
+          </button>
 
           {/* 2. MAP EXPLORER ITEM + DROPDOWN */}
           <div
