@@ -101,6 +101,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   }, [isPaused]);
 
   const currentSlide = LOCATION_SLIDES[activeSlide];
+  const nextSlide1 = LOCATION_SLIDES[(activeSlide + 1) % LOCATION_SLIDES.length];
+  const nextSlide2 = LOCATION_SLIDES[(activeSlide + 2) % LOCATION_SLIDES.length];
 
   return (
     <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-10 md:py-16 overflow-hidden">
@@ -137,78 +139,116 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           </div>
 
-          {/* Right: Airplane Window Carousel + Segmented Pill Indicator (5 cols) */}
+          {/* Right: Layered Airplane Window Card Deck + Centered Segmented Indicator (5 cols) */}
           <div className="lg:col-span-5 relative flex flex-col items-center lg:items-end justify-center">
             
-            {/* The Signature Aperture / Curved Window Card with Auto-Transition */}
-            <div
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
-              className="relative w-full max-w-[420px] sm:max-w-[460px] xl:max-w-[500px] 2xl:max-w-[540px] aspect-[4/5] rounded-[56px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-2xl bg-[#191919] transition-all duration-500 group select-none"
-            >
+            {/* Card Deck Wrapper that strictly centers the pagination below */}
+            <div className="relative w-full max-w-[420px] sm:max-w-[460px] xl:max-w-[500px] 2xl:max-w-[540px] flex flex-col items-center">
               
-              {/* Animated Carousel Image */}
-              <div className="relative w-full h-full overflow-hidden">
-                <img
-                  key={currentSlide.id}
-                  src={currentSlide.imageUrl}
-                  alt={currentSlide.title}
-                  className="w-full h-full object-cover filter contrast-[1.05] transition-all duration-700 animate-in fade-in zoom-in-95"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
-              </div>
-
-              {/* Dynamic Floating Locality Tags inside the Aperture */}
-              {currentSlide.pills.map((loc, idx) => (
+              {/* The 3-Tier Layered Card Deck Stack with Upcoming Card Shadows */}
+              <div
+                className="relative w-full aspect-[4/5] select-none"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+              >
+                {/* 3rd Card in Deck (Deepest Layer, Upcoming +2) */}
                 <div
-                  key={`${currentSlide.id}-${idx}`}
-                  style={{ top: loc.top, left: loc.left, right: loc.right, bottom: loc.bottom }}
-                  className="absolute z-10 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md text-[11px] font-bold text-[#191919] uppercase tracking-wider border border-white/80 shadow-md flex items-center gap-1.5 animate-in fade-in duration-300 select-none hover:scale-105 transition-transform"
+                  key={`deck-back-${nextSlide2.id}`}
+                  className="absolute inset-0 z-10 rounded-[56px] sm:rounded-[64px] overflow-hidden border-[6px] border-white/60 shadow-[0_20px_45px_-10px_rgba(0,0,0,0.3)] bg-[#191919] transition-all duration-700 ease-out origin-bottom scale-[0.88] translate-y-7 sm:translate-y-8 filter brightness-75 pointer-events-none"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25] shrink-0"></span>
-                  <span>{loc.name}</span>
+                  <img
+                    src={nextSlide2.imageUrl}
+                    alt={nextSlide2.title}
+                    className="w-full h-full object-cover filter contrast-[1.05]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/20"></div>
                 </div>
-              ))}
 
-              {/* Bottom Aperture Info Badge */}
-              <div className="absolute bottom-5 left-5 right-5 sm:bottom-6 sm:left-6 sm:right-6 z-10 p-4 sm:p-5 rounded-[22px] sm:rounded-[24px] bg-white/95 backdrop-blur-md border border-white/80 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#F02D25]">
-                    {currentSlide.tag}
-                  </span>
-                  <span className="flex h-2 w-2 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]"></span>
-                  </span>
+                {/* 2nd Card in Deck (Middle Layer, Upcoming +1) */}
+                <div
+                  key={`deck-mid-${nextSlide1.id}`}
+                  className="absolute inset-0 z-20 rounded-[56px] sm:rounded-[64px] overflow-hidden border-[7px] border-white/85 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.38)] bg-[#191919] transition-all duration-700 ease-out origin-bottom scale-[0.94] translate-y-3.5 sm:translate-y-4 filter brightness-90 pointer-events-none"
+                >
+                  <img
+                    src={nextSlide1.imageUrl}
+                    alt={nextSlide1.title}
+                    className="w-full h-full object-cover filter contrast-[1.05]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
                 </div>
-                <h4 className="font-display font-bold text-sm sm:text-[15px] text-[#191919] leading-snug tracking-tight">
-                  {currentSlide.title}
-                </h4>
-                <p className="text-[11px] sm:text-xs text-[#77736D] mt-1 leading-relaxed line-clamp-2">
-                  {currentSlide.description}
-                </p>
+
+                {/* 1st Card in Deck (Active Front Aperture Window Card) */}
+                <div
+                  className="relative z-30 w-full h-full rounded-[56px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-[0_30px_60px_-15px_rgba(0,0,0,0.45)] bg-[#191919] transition-all duration-500 group select-none cursor-pointer"
+                  onClick={() => setActiveSlide((prev) => (prev + 1) % LOCATION_SLIDES.length)}
+                  title="Click to advance location"
+                >
+                  {/* Animated Carousel Image */}
+                  <div className="relative w-full h-full overflow-hidden">
+                    <img
+                      key={currentSlide.id}
+                      src={currentSlide.imageUrl}
+                      alt={currentSlide.title}
+                      className="w-full h-full object-cover filter contrast-[1.05] transition-all duration-700 animate-in fade-in zoom-in-95"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+                  </div>
+
+                  {/* Dynamic Floating Locality Tags inside the Aperture */}
+                  {currentSlide.pills.map((loc, idx) => (
+                    <div
+                      key={`${currentSlide.id}-${idx}`}
+                      style={{ top: loc.top, left: loc.left, right: loc.right, bottom: loc.bottom }}
+                      className="absolute z-10 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md text-[11px] font-bold text-[#191919] uppercase tracking-wider border border-white/80 shadow-md flex items-center gap-1.5 animate-in fade-in duration-300 select-none hover:scale-105 transition-transform"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25] shrink-0"></span>
+                      <span>{loc.name}</span>
+                    </div>
+                  ))}
+
+                  {/* Bottom Aperture Info Badge */}
+                  <div className="absolute bottom-5 left-5 right-5 sm:bottom-6 sm:left-6 sm:right-6 z-10 p-4 sm:p-5 rounded-[22px] sm:rounded-[24px] bg-white/95 backdrop-blur-md border border-white/80 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#F02D25]">
+                        {currentSlide.tag}
+                      </span>
+                      <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]"></span>
+                      </span>
+                    </div>
+                    <h4 className="font-display font-bold text-sm sm:text-[15px] text-[#191919] leading-snug tracking-tight">
+                      {currentSlide.title}
+                    </h4>
+                    <p className="text-[11px] sm:text-xs text-[#77736D] mt-1 leading-relaxed line-clamp-2">
+                      {currentSlide.description}
+                    </p>
+                  </div>
+
+                </div>
+
               </div>
 
-            </div>
+              {/* Custom Segmented Capsule Pagination Indicator (EXACTLY Centered Under Location Card) */}
+              <div className="w-full flex items-center justify-center gap-2 sm:gap-2.5 mt-9 sm:mt-11 select-none z-30">
+                {LOCATION_SLIDES.map((_, idx) => {
+                  const isActive = idx === activeSlide;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setActiveSlide(idx)}
+                      className={`transition-all duration-300 cursor-pointer ${
+                        isActive
+                          ? 'w-12 h-2.5 rounded-full bg-[#F02D25] shadow-xs'
+                          : 'w-6 h-2 rounded-full bg-[#D8D4CC] hover:bg-[#B3ADA3]'
+                      }`}
+                      title={`Slide ${idx + 1}: ${LOCATION_SLIDES[idx].title}`}
+                    />
+                  );
+                })}
+              </div>
 
-            {/* Custom Segmented Capsule Pagination Indicator (Matching User Reference Image) */}
-            <div className="flex items-center justify-center gap-2 mt-6 select-none z-10">
-              {LOCATION_SLIDES.map((_, idx) => {
-                const isActive = idx === activeSlide;
-                return (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setActiveSlide(idx)}
-                    className={`transition-all duration-300 cursor-pointer ${
-                      isActive
-                        ? 'w-12 h-2.5 rounded-full bg-[#F02D25] shadow-xs'
-                        : 'w-6 h-2 rounded-full bg-[#D8D4CC] hover:bg-[#B3ADA3]'
-                    }`}
-                    title={`Slide ${idx + 1}: ${LOCATION_SLIDES[idx].title}`}
-                  />
-                );
-              })}
             </div>
 
             {/* Decorative Ambient Background Ring */}
