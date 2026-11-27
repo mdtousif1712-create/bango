@@ -90,6 +90,37 @@
   background-color: #ECE9E2 !important;
 }
 
+/* Modern Leaflet Zoom Control Styling */
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar,
+.leaflet-bar {
+  border: 1px solid #E3DFD7 !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+.leaflet-touch .leaflet-bar a,
+.leaflet-bar a {
+  background-color: #FFFFFF !important;
+  color: #191919 !important;
+  border-bottom: 1px solid #E3DFD7 !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  transition: all 0.15s ease;
+}
+.leaflet-touch .leaflet-bar a:hover,
+.leaflet-bar a:hover {
+  background-color: #F5F3EE !important;
+  color: #F02D25 !important;
+}
+.leaflet-touch .leaflet-bar a:last-child,
+.leaflet-bar a:last-child {
+  border-bottom: none !important;
+}
+
 /* Editorial pill button and aperture styling */
 .editorial-window {
   border-radius: 120px 120px 24px 24px;
