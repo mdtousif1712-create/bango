@@ -7,8 +7,7 @@ import {
   fetchRecommendations,
   performNaturalSearch,
 } from './services/api';
-import { Sidebar, PageId } from './components/Sidebar';
-import { MobileHeader } from './components/MobileHeader';
+import { Header, PageId } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { CityMap } from './components/CityMap';
 import { SearchAssistant } from './components/SearchAssistant';
@@ -29,7 +28,6 @@ import {
 export const App: React.FC = () => {
   // Page Routing & Navigation
   const [currentPage, setCurrentPage] = useState<PageId>('discover');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [rightPanelTab, setRightPanelTab] = useState<'recommendations' | 'places' | 'saved'>('recommendations');
 
   // Data states
@@ -209,33 +207,17 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#F5F3EE] text-[#191919] font-sans antialiased flex flex-col lg:flex-row selection:bg-[#F02D25] selection:text-white">
+    <div className="min-h-screen w-full bg-[#F5F3EE] text-[#191919] font-sans antialiased flex flex-col selection:bg-[#F02D25] selection:text-white">
 
-      {/* 1. THEMATIC PERSISTENT SIDEBAR */}
-      <Sidebar
+      {/* 1. PERSISTENT NAVIGATION HEADER (Relocated from Sidebar) */}
+      <Header
         currentPage={currentPage}
-        onSelectPage={(page) => {
-          setCurrentPage(page);
-          setIsMobileMenuOpen(false);
-        }}
+        onSelectPage={(page) => setCurrentPage(page)}
         savedCount={savedPlaces.length}
-        isOpenMobile={isMobileMenuOpen}
-        onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
-      {/* 2. MAIN CONTENT AREA */}
-      <div className="flex-1 min-w-0 flex flex-col min-h-screen">
-
-        {/* Mobile Top Navigation Header */}
-        <MobileHeader
-          currentPage={currentPage}
-          savedCount={savedPlaces.length}
-          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
-          onOpenSaved={() => setCurrentPage('saved')}
-        />
-
-        {/* 3. DEDICATED PAGE VIEWS (SWITCHED VIA SIDEBAR) */}
-        <main className="flex-1">
+      {/* 2. DEDICATED PAGE VIEWS */}
+      <main className="flex-1 min-w-0 w-full">
 
           {/* PAGE 1: DISCOVER */}
           {currentPage === 'discover' && (
@@ -517,8 +499,6 @@ export const App: React.FC = () => {
           )}
 
         </main>
-
-      </div>
 
       {/* Place Detail Side Drawer */}
       <PlaceDetailDrawer
