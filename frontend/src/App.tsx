@@ -48,6 +48,7 @@ export const App: React.FC = () => {
   // User location & saved places
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(getStoredUser);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [pendingSavePlace, setPendingSavePlace] = useState<Place | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [savedPlaces, setSavedPlaces] = useState<Place[]>(() => {
     try {
@@ -77,21 +78,30 @@ export const App: React.FC = () => {
 
   const handleLoginSuccess = (user: AuthUser) => {
     setCurrentUser(user);
-    if (user.saved_places && user.saved_places.length > 0 && places.length > 0) {
-      const userCloudPlaces = places.filter((p) => user.saved_places?.includes(p.place_id));
-      if (userCloudPlaces.length > 0) {
-        setSavedPlaces((prev) => {
-          const existingIds = new Set(prev.map((p) => p.place_id));
-          const newItems = userCloudPlaces.filter((p) => !existingIds.has(p.place_id));
-          return [...prev, ...newItems];
-        });
+    setSavedPlaces((prev) => {
+      let updated = [...prev];
+      if (user.saved_places && user.saved_places.length > 0 && places.length > 0) {
+        const userCloudPlaces = places.filter((p) => user.saved_places?.includes(p.place_id));
+        const existingIds = new Set(updated.map((p) => p.place_id));
+        const newItems = userCloudPlaces.filter((p) => !existingIds.has(p.place_id));
+        updated = [...updated, ...newItems];
       }
-    }
+      if (pendingSavePlace) {
+        if (!updated.some((p) => p.place_id === pendingSavePlace.place_id)) {
+          updated.push(pendingSavePlace);
+        }
+        setPendingSavePlace(null);
+      }
+      return updated;
+    });
   };
 
   const handleLogout = () => {
     clearStoredUser();
     setCurrentUser(null);
+    if (currentPage === 'saved') {
+      setCurrentPage('discover');
+    }
   };
 
   // Initial Data Load
@@ -199,6 +209,13 @@ export const App: React.FC = () => {
 
   // Save / Bookmark Place
   const handleSavePlace = (place: Place) => {
+    // If user has not signed in with Google, prompt sign-in popup!
+    if (!currentUser) {
+      setPendingSavePlace(place);
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     setSavedPlaces((prev) => {
       const exists = prev.some((p) => p.place_id === place.place_id);
       if (exists) {
@@ -548,8 +565,12 @@ export const App: React.FC = () => {
       {/* Google Authentication Modal */}
       <GoogleAuthModal
         isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
+        onClose={() => {
+          setIsAuthModalOpen(false);
+          setPendingSavePlace(null);
+        }}
         onLoginSuccess={handleLoginSuccess}
+        pendingPlaceName={pendingSavePlace?.name}
       />
     </div>
   );

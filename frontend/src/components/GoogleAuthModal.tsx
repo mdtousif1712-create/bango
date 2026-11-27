@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, CheckCircle2, ShieldCheck, Sparkles, Loader2 } from 'lucide-react';
+import { X, CheckCircle2, ShieldCheck, Sparkles, Loader2, Bookmark } from 'lucide-react';
 import { authenticateWithGoogle, AuthUser } from '../services/auth';
 
 interface GoogleAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess: (user: AuthUser) => void;
+  pendingPlaceName?: string;
 }
 
 export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
+  pendingPlaceName,
 }) => {
   const [emailInput, setEmailInput] = useState('tousif@gmail.com');
   const [nameInput, setNameInput] = useState('MD Tousif');
@@ -131,9 +133,16 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
           <h3 className="font-display font-bold text-2xl lowercase tracking-tight text-[#191919]">
             sign in with google
           </h3>
-          <p className="text-xs text-[#77736D] mt-1.5 max-w-xs mx-auto leading-relaxed">
-            Sync your saved destinations across devices and unlock customized Apriori urban recommendations.
-          </p>
+          {pendingPlaceName ? (
+            <div className="mt-2.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 inline-flex items-center gap-1.5 text-xs font-bold text-[#F02D25]">
+              <Bookmark className="w-3.5 h-3.5 fill-current" />
+              <span>Sign in to bookmark &ldquo;{pendingPlaceName}&rdquo;</span>
+            </div>
+          ) : (
+            <p className="text-xs text-[#77736D] mt-1.5 max-w-xs mx-auto leading-relaxed">
+              Sync your saved destinations across devices and unlock customized Apriori urban recommendations.
+            </p>
+          )}
         </div>
 
         {errorMsg && (
