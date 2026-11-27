@@ -105,30 +105,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const nextSlide2 = LOCATION_SLIDES[(activeSlide + 2) % LOCATION_SLIDES.length];
 
   return (
-    <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-10 md:py-16 overflow-hidden">
+    <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-6 sm:py-8 md:py-10 overflow-hidden">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         
         {/* 2-Column Editorial Hero Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 2xl:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-14 2xl:gap-20 items-center">
           
           {/* Left: Oversized Typography & Search (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             
-            <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[70px] xl:text-[84px] 2xl:text-[94px] text-[#191919] leading-[1.03] tracking-tight mb-6">
+            <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[76px] 2xl:text-[86px] text-[#191919] leading-[1.03] tracking-tight mb-5">
               discover <br />
               banglore <br />
               <span className="text-[#F02D25]">like never before.</span>
             </h1>
 
-            <p className="text-base sm:text-lg xl:text-xl text-[#77736D] max-w-2xl leading-relaxed mb-8 font-normal">
+            <p className="text-sm sm:text-base xl:text-lg text-[#77736D] max-w-2xl leading-relaxed mb-6 sm:mb-7 font-normal">
               <strong className="text-[#191919] font-bold">bango</strong> is an intelligent urban discovery platform powered by the <strong className="text-[#191919] font-semibold">Apriori Association Rule Mining</strong> algorithm. Uncover hidden mobility patterns, transit connections, and curated smart city destinations across 8 urban domains.
             </p>
 
             {/* Primary Action CTA */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <button
                 onClick={onExploreMap}
-                className="group flex items-center gap-2.5 px-7 py-4 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer"
+                className="group flex items-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full bg-[#191919] hover:bg-[#2A2A2A] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md cursor-pointer"
               >
                 <span>Open Map Explorer</span>
                 <div className="w-6 h-6 rounded-full bg-[#F02D25] flex items-center justify-center text-white">
@@ -142,19 +142,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Right: Layered Airplane Window Card Deck + Centered Segmented Indicator (5 cols) */}
           <div className="lg:col-span-5 relative flex flex-col items-center lg:items-end justify-center">
             
-            {/* Card Deck Wrapper that strictly centers the pagination below */}
-            <div className="relative w-full max-w-[420px] sm:max-w-[460px] xl:max-w-[500px] 2xl:max-w-[540px] flex flex-col items-center">
+            {/* Card Deck Wrapper (pr-7 balances the sideways peeking cards) */}
+            <div className="relative w-full max-w-[340px] sm:max-w-[370px] xl:max-w-[400px] 2xl:max-w-[425px] flex flex-col items-center pr-6 sm:pr-8">
               
-              {/* The 3-Tier Layered Card Deck Stack with Upcoming Card Shadows */}
+              {/* The 3-Tier Layered Card Deck Stack with Sideways Shadows */}
               <div
-                className="relative w-full aspect-[4/5] select-none"
+                className="relative w-full aspect-[4/4.8] select-none"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
               >
-                {/* 3rd Card in Deck (Deepest Layer, Upcoming +2) */}
+                {/* 3rd Card in Deck (Deepest Layer, Upcoming +2 - Sideways Offset to Right) */}
                 <div
                   key={`deck-back-${nextSlide2.id}`}
-                  className="absolute inset-0 z-10 rounded-[56px] sm:rounded-[64px] overflow-hidden border-[6px] border-white/60 shadow-[0_20px_45px_-10px_rgba(0,0,0,0.3)] bg-[#191919] transition-all duration-700 ease-out origin-bottom scale-[0.88] translate-y-7 sm:translate-y-8 filter brightness-75 pointer-events-none"
+                  className="absolute inset-0 z-10 rounded-[48px] sm:rounded-[56px] overflow-hidden border-[6px] border-white/60 shadow-[22px_0_38px_-5px_rgba(0,0,0,0.28)] bg-[#191919] transition-all duration-700 ease-out origin-center scale-[0.92] translate-x-6 sm:translate-x-7 translate-y-0 filter brightness-75 pointer-events-none"
                 >
                   <img
                     src={nextSlide2.imageUrl}
@@ -164,10 +164,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/20"></div>
                 </div>
 
-                {/* 2nd Card in Deck (Middle Layer, Upcoming +1) */}
+                {/* 2nd Card in Deck (Middle Layer, Upcoming +1 - Sideways Offset to Right) */}
                 <div
                   key={`deck-mid-${nextSlide1.id}`}
-                  className="absolute inset-0 z-20 rounded-[56px] sm:rounded-[64px] overflow-hidden border-[7px] border-white/85 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.38)] bg-[#191919] transition-all duration-700 ease-out origin-bottom scale-[0.94] translate-y-3.5 sm:translate-y-4 filter brightness-90 pointer-events-none"
+                  className="absolute inset-0 z-20 rounded-[50px] sm:rounded-[60px] overflow-hidden border-[7px] border-white/85 shadow-[15px_0_30px_-5px_rgba(0,0,0,0.32)] bg-[#191919] transition-all duration-700 ease-out origin-center scale-[0.96] translate-x-3 sm:translate-x-3.5 translate-y-0 filter brightness-90 pointer-events-none"
                 >
                   <img
                     src={nextSlide1.imageUrl}
@@ -177,9 +177,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
                 </div>
 
-                {/* 1st Card in Deck (Active Front Aperture Window Card) */}
+                {/* 1st Card in Deck (Active Front Aperture Window Card with Lateral Sideways Shadows) */}
                 <div
-                  className="relative z-30 w-full h-full rounded-[56px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-[0_30px_60px_-15px_rgba(0,0,0,0.45)] bg-[#191919] transition-all duration-500 group select-none cursor-pointer"
+                  className="relative z-30 w-full h-full rounded-[52px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-[10px_0_30px_-5px_rgba(0,0,0,0.35),-8px_0_25px_-5px_rgba(0,0,0,0.12)] bg-[#191919] transition-all duration-500 group select-none cursor-pointer"
                   onClick={() => setActiveSlide((prev) => (prev + 1) % LOCATION_SLIDES.length)}
                   title="Click to advance location"
                 >
@@ -199,7 +199,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <div
                       key={`${currentSlide.id}-${idx}`}
                       style={{ top: loc.top, left: loc.left, right: loc.right, bottom: loc.bottom }}
-                      className="absolute z-10 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md text-[11px] font-bold text-[#191919] uppercase tracking-wider border border-white/80 shadow-md flex items-center gap-1.5 animate-in fade-in duration-300 select-none hover:scale-105 transition-transform"
+                      className="absolute z-10 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/95 backdrop-blur-md text-[10px] sm:text-[11px] font-bold text-[#191919] uppercase tracking-wider border border-white/80 shadow-md flex items-center gap-1.5 animate-in fade-in duration-300 select-none hover:scale-105 transition-transform"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25] shrink-0"></span>
                       <span>{loc.name}</span>
@@ -207,9 +207,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   ))}
 
                   {/* Bottom Aperture Info Badge */}
-                  <div className="absolute bottom-5 left-5 right-5 sm:bottom-6 sm:left-6 sm:right-6 z-10 p-4 sm:p-5 rounded-[22px] sm:rounded-[24px] bg-white/95 backdrop-blur-md border border-white/80 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#F02D25]">
+                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 z-10 p-3.5 sm:p-4 rounded-[20px] sm:rounded-[22px] bg-white/95 backdrop-blur-md border border-white/80 shadow-xl animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#F02D25]">
                         {currentSlide.tag}
                       </span>
                       <span className="flex h-2 w-2 relative">
@@ -217,10 +217,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]"></span>
                       </span>
                     </div>
-                    <h4 className="font-display font-bold text-sm sm:text-[15px] text-[#191919] leading-snug tracking-tight">
+                    <h4 className="font-display font-bold text-xs sm:text-[14px] text-[#191919] leading-snug tracking-tight">
                       {currentSlide.title}
                     </h4>
-                    <p className="text-[11px] sm:text-xs text-[#77736D] mt-1 leading-relaxed line-clamp-2">
+                    <p className="text-[10px] sm:text-[11px] text-[#77736D] mt-0.5 leading-relaxed line-clamp-2">
                       {currentSlide.description}
                     </p>
                   </div>
@@ -229,8 +229,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
               </div>
 
-              {/* Custom Segmented Capsule Pagination Indicator (EXACTLY Centered Under Location Card) */}
-              <div className="w-full flex items-center justify-center gap-2 sm:gap-2.5 mt-9 sm:mt-11 select-none z-30">
+              {/* Custom Segmented Capsule Pagination Indicator (Visible above fold & centered) */}
+              <div className="w-full flex items-center justify-center gap-2 sm:gap-2.5 mt-5 sm:mt-6 select-none z-30">
                 {LOCATION_SLIDES.map((_, idx) => {
                   const isActive = idx === activeSlide;
                   return (
@@ -240,8 +240,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       onClick={() => setActiveSlide(idx)}
                       className={`transition-all duration-300 cursor-pointer ${
                         isActive
-                          ? 'w-12 h-2.5 rounded-full bg-[#F02D25] shadow-xs'
-                          : 'w-6 h-2 rounded-full bg-[#D8D4CC] hover:bg-[#B3ADA3]'
+                          ? 'w-11 h-2.5 rounded-full bg-[#F02D25] shadow-xs'
+                          : 'w-5 h-2 rounded-full bg-[#D8D4CC] hover:bg-[#B3ADA3]'
                       }`}
                       title={`Slide ${idx + 1}: ${LOCATION_SLIDES[idx].title}`}
                     />
