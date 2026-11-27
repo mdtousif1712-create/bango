@@ -209,11 +209,17 @@ export const App: React.FC = () => {
   return (
     <div className="min-h-screen w-full bg-[#F5F3EE] text-[#191919] font-sans antialiased flex flex-col selection:bg-[#F02D25] selection:text-white">
 
-      {/* 1. PERSISTENT NAVIGATION HEADER (Relocated from Sidebar) */}
+      {/* 1. PERSISTENT NAVIGATION HEADER */}
       <Header
         currentPage={currentPage}
         onSelectPage={(page) => setCurrentPage(page)}
         savedCount={savedPlaces.length}
+        savedPlaces={savedPlaces}
+        onSelectCategory={(cat) => {
+          handleCategorySelect(cat);
+          setCurrentPage('map');
+        }}
+        onSelectPlace={(p) => handleSelectPlace(p, true)}
       />
 
       {/* 2. DEDICATED PAGE VIEWS */}
@@ -230,7 +236,7 @@ export const App: React.FC = () => {
 
           {/* PAGE 2: MAP EXPLORER */}
           {currentPage === 'map' && (
-            <div className="pt-24 sm:pt-28 pb-16 bg-[#ECE9E2] min-h-screen">
+            <div className="py-10 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Heading */}
