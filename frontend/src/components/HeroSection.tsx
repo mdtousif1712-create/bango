@@ -32,8 +32,8 @@ const LOCATION_SLIDES: LocationSlide[] = [
     name: 'Bengaluru Palace',
     locality: 'Vasanth Nagar',
     category: 'Royal Heritage',
-    description: '19th-century Tudor-style royal palace with fortified towers, wood carvings, stained glass, and expansive gardens.',
-    imageUrl: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=1200&q=85',
+    description: '19th-century Tudor-style royal palace with fortified towers, stained glass, and expansive gardens in Vasanth Nagar.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/80/Bangalore_Palace_exteriors.jpg',
   },
   {
     id: 'lalbagh',
@@ -171,7 +171,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <img
                     src={nextSlide2.imageUrl}
                     alt={nextSlide2.name}
-                    className="w-full h-full object-cover filter contrast-[1.05]"
+                    className="absolute inset-0 w-full h-full object-cover filter contrast-[1.05]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/20"></div>
                 </div>
@@ -184,24 +184,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <img
                     src={nextSlide1.imageUrl}
                     alt={nextSlide1.name}
-                    className="w-full h-full object-cover filter contrast-[1.05]"
+                    className="absolute inset-0 w-full h-full object-cover filter contrast-[1.05]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
                 </div>
 
-                {/* 1st Card in Deck (Active Front Card with Lateral Sideways Shadows, Same Size) */}
+                {/* 1st Card in Deck (Active Front Card - 100% Identical Exact Size as Back Cards) */}
                 <div
-                  className="relative z-30 w-full h-full rounded-[52px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-[10px_0_28px_-4px_rgba(0,0,0,0.32),-6px_0_20px_-4px_rgba(0,0,0,0.1)] bg-[#191919] transition-all duration-500 group select-none cursor-pointer"
+                  className="absolute inset-0 z-30 rounded-[52px] sm:rounded-[64px] overflow-hidden border-[8px] border-white shadow-[10px_0_28px_-4px_rgba(0,0,0,0.32),-6px_0_20px_-4px_rgba(0,0,0,0.1)] bg-[#191919] transition-all duration-500 group select-none cursor-pointer"
                   onClick={() => setActiveSlide((prev) => (prev + 1) % LOCATION_SLIDES.length)}
                   title="Click to explore next trending place"
                 >
                   {/* Carousel Image */}
-                  <div className="relative w-full h-full overflow-hidden">
+                  <div className="absolute inset-0 w-full h-full overflow-hidden">
                     <img
                       key={currentSlide.id}
                       src={currentSlide.imageUrl}
                       alt={currentSlide.name}
-                      className="w-full h-full object-cover filter contrast-[1.05] transition-all duration-700 animate-in fade-in zoom-in-95"
+                      className="absolute inset-0 w-full h-full object-cover filter contrast-[1.05] transition-all duration-700 animate-in fade-in zoom-in-95"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
                   </div>
