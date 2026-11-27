@@ -248,81 +248,15 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Trending */}
-            <div
-              className="relative shrink-0"
-              onMouseEnter={() => handleMouseEnter('trending')}
-              onMouseLeave={handleMouseLeave}
+            <button
+              onClick={() => handleNavClick('trending')}
+              className={`px-3.5 xl:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${currentPage === 'trending'
+                ? 'text-[#F02D25] bg-[#F5F3EE]'
+                : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
+                }`}
             >
-              <button
-                onClick={() => handleNavClick('trending')}
-                className={`flex items-center gap-1.5 px-3.5 xl:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap shrink-0 ${currentPage === 'trending'
-                  ? 'text-[#F02D25] bg-[#F5F3EE]'
-                  : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
-                  }`}
-              >
-                <span className="whitespace-nowrap">Trending</span>
-                <ChevronDown
-                  className={`w-4 h-4 shrink-0 transition-transform duration-200 ${activeDropdown === 'trending' ? 'rotate-180 text-[#191919]' : 'text-[#77736D]'
-                    }`}
-                />
-              </button>
-
-              {/* Trending Flyout Dropdown */}
-              {activeDropdown === 'trending' && (
-                <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-2xl border border-[#E3DFD7] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
-                  <div className="px-1 pb-3 border-b border-[#E3DFD7] mb-3 flex items-center justify-between">
-                    <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
-                      Footfall Analytics
-                    </span>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <div
-                      onClick={() => handleNavClick('trending')}
-                      className="p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3.5"
-                    >
-                      <div className="w-11 h-11 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
-                        <TrendingUp className="w-5 h-5 text-[#191919] group-hover:text-white transition-colors" />
-                      </div>
-                      <div>
-                        <h4 className="text-sm sm:text-[15px] font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors leading-snug whitespace-nowrap">
-                          High-Frequency Urban Hotspots
-                        </h4>
-                        <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
-                          Ranked destinations derived from Bengaluru transactional mobility
-                        </p>
-                      </div>
-                    </div>
-
-                    <div
-                      onClick={() => handleNavClick('trending')}
-                      className="p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3.5"
-                    >
-                      <div className="w-11 h-11 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
-                        <Utensils className="w-5 h-5 text-[#191919] group-hover:text-white transition-colors" />
-                      </div>
-                      <div>
-                        <h4 className="text-sm sm:text-[15px] font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors leading-snug whitespace-nowrap">
-                          Gastronomy & Culture
-                        </h4>
-                        <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
-                          Toit, Truffles, Koshy's, Nagarjuna & Vidyarthi Bhavan
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 mt-3 border-t border-[#E3DFD7]">
-                    <button
-                      onClick={() => handleNavClick('trending')}
-                      className="w-full text-center py-2.5 text-xs sm:text-sm font-black text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
-                    >
-                      View All Trending Places &rarr;
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+              Trending
+            </button>
 
             {/* Domains */}
             <div
