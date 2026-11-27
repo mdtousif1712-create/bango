@@ -278,7 +278,6 @@ export const App: React.FC = () => {
             onSearch={handleNaturalSearch}
             isSearching={isSearching}
             onExploreMap={() => setCurrentPage('map')}
-            trendingPlaces={trendingPlaces}
           />
         )}
 
