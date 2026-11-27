@@ -287,147 +287,155 @@ export const App: React.FC = () => {
           />
         )}
 
-        {/* PAGE 2: MAP EXPLORER */}
+        {/* PAGE 2: MAP EXPLORER - Fits 100% in viewport without outer scrolling */}
       {currentPage === 'map' && (
-        <div className="py-8 sm:py-10 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
-          <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
-
-            {/* Heading */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25]"></span>
-                  <span className="text-xs font-bold uppercase tracking-widest text-[#77736D]">
-                    bango &bull; Interactive Geographical Exploration
-                  </span>
-                </div>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[#191919] tracking-tight leading-tight">
-                  bengaluru map explorer.
-                </h2>
-              </div>
-
-              <p className="text-xs sm:text-sm text-[#77736D] max-w-md font-normal leading-relaxed">
-                Click any category marker on the map to focus that place, view details, and compute live Apriori association recommendations.
-              </p>
+        <div className="w-full h-[calc(100vh-80px)] bg-[#ECE9E2] flex flex-col px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-3.5 overflow-hidden">
+          
+          {/* Compact Top Heading Bar (shrink-0) */}
+          <div className="flex items-center justify-between gap-4 mb-2.5 sm:mb-3 shrink-0">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25] shrink-0"></span>
+              <h2 className="font-display font-bold text-xl sm:text-2xl text-[#191919] tracking-tight leading-none whitespace-nowrap">
+                bengaluru map explorer.
+              </h2>
+              <span className="hidden md:inline text-xs text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
+                Click any marker on the map to focus & compute live Apriori association recommendations
+              </span>
             </div>
 
-            {/* 65 / 35 Responsive Grid Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {selectedPlace && (
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-[#E3DFD7] text-xs shrink-0 shadow-xs">
+                <span className="text-[#77736D] text-[11px] uppercase font-bold">Active:</span>
+                <span className="font-bold text-[#191919]">{selectedPlace.name}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F5F3EE] text-[#F02D25] font-extrabold uppercase">
+                  {selectedPlace.category}
+                </span>
+              </div>
+            )}
+          </div>
 
-              {/* LEFT: 65% Interactive Leaflet Map (8 cols) */}
-              <div className="lg:col-span-8 flex flex-col min-h-[600px] lg:min-h-[700px] xl:min-h-[760px] relative rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-lg bg-white">
-                <div className="flex-1 w-full h-full relative">
-                  <CityMap
-                    places={places}
-                    selectedPlace={selectedPlace}
-                    onSelectPlace={(p) => handleSelectPlace(p, false)}
-                    onSavePlace={handleSavePlace}
-                    isPlaceSaved={isPlaceSaved}
-                    userLocation={userLocation}
-                    onLocateMe={handleLocateMe}
-                    onViewDetails={(p) => setDrawerPlace(p)}
+          {/* 65 / 35 Responsive Grid Layout - Locked to remaining screen height (flex-1 min-h-0) */}
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 min-h-0 overflow-hidden">
+
+            {/* LEFT: 65% Interactive Leaflet Map (8 cols) - 100% Height of Screen */}
+            <div className="lg:col-span-8 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm bg-white relative">
+              <div className="flex-1 w-full h-full relative min-h-0">
+                <CityMap
+                  places={places}
+                  selectedPlace={selectedPlace}
+                  onSelectPlace={(p) => handleSelectPlace(p, false)}
+                  onSavePlace={handleSavePlace}
+                  isPlaceSaved={isPlaceSaved}
+                  userLocation={userLocation}
+                  onLocateMe={handleLocateMe}
+                  onViewDetails={(p) => setDrawerPlace(p)}
+                />
+
+                {/* Floating Search Assistant in the Map Container */}
+                <div className="absolute bottom-4 left-4 right-4 z-[400] max-w-xl mx-auto">
+                  <SearchAssistant
+                    onSearch={handleNaturalSearch}
+                    isLoading={isSearching}
                   />
-
-                  {/* Floating Search Assistant in the Map Container */}
-                  <div className="absolute bottom-4 left-4 right-4 z-[400] max-w-xl mx-auto">
-                    <SearchAssistant
-                      onSearch={handleNaturalSearch}
-                      isLoading={isSearching}
-                    />
-                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* RIGHT: 35% Editorial Discovery Panel (4 cols) */}
-              <div className="lg:col-span-4 flex flex-col min-h-[600px] lg:min-h-[700px] xl:min-h-[760px] rounded-3xl bg-white border border-[#E3DFD7] p-5 shadow-lg overflow-hidden">
+            {/* RIGHT: 35% Editorial Discovery Panel (4 cols) - Fixed Top Controls + Independent Scrollable Feed */}
+            <div className="lg:col-span-4 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl bg-white border border-[#E3DFD7] p-3.5 sm:p-4 shadow-sm overflow-hidden">
 
-                {/* Category Filter Pills */}
-                <div className="mb-4 shrink-0">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] block mb-2">
+              {/* 1. FIXED: Category Filter Pills at Top */}
+              <div className="mb-2.5 shrink-0">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D]">
                     Filter by Domain
                   </span>
-                  <CategoryFilters
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    onSelectCategory={handleCategorySelect}
-                  />
+                  <span className="text-[10px] text-[#A8A29E] font-medium">
+                    {selectedCategory === 'all' ? 'All 8 Domains' : selectedCategory}
+                  </span>
                 </div>
+                <CategoryFilters
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={handleCategorySelect}
+                />
+              </div>
 
-                {/* Natural Search Explanation Bar */}
-                {activeSearchExplanation && (
-                  <div className="mb-3 px-3.5 py-2.5 bg-[#F5F3EE] rounded-2xl border border-[#E3DFD7] text-xs text-[#191919] flex items-center justify-between shrink-0">
-                    <span className="font-semibold truncate">{activeSearchExplanation}</span>
-                    <button
-                      onClick={() => setActiveSearchExplanation(null)}
-                      className="text-[#F02D25] hover:underline text-[11px] font-bold shrink-0 ml-2 uppercase tracking-wider"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                )}
+              {/* 2. FIXED: Natural Search Explanation Bar (if active) */}
+              {activeSearchExplanation && (
+                <div className="mb-2.5 px-3 py-1.5 bg-[#F5F3EE] rounded-xl border border-[#E3DFD7] text-xs text-[#191919] flex items-center justify-between shrink-0">
+                  <span className="font-semibold truncate text-[11px]">{activeSearchExplanation}</span>
+                  <button
+                    onClick={() => setActiveSearchExplanation(null)}
+                    className="text-[#F02D25] hover:underline text-[10px] font-bold shrink-0 ml-2 uppercase tracking-wider"
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
 
-                {/* Discovery View Tabs */}
-                <div className="flex items-center justify-between border-b border-[#E3DFD7] pb-3 mb-4 shrink-0">
-                  <div className="flex items-center gap-1.5 bg-[#F5F3EE] p-1 rounded-2xl">
-                    <button
-                      onClick={() => setRightPanelTab('recommendations')}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                        rightPanelTab === 'recommendations'
-                          ? 'bg-[#191919] text-white shadow-xs'
-                          : 'text-[#77736D] hover:text-[#191919]'
-                      }`}
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-[#F02D25]" />
-                      <span>For You</span>
-                      {recommendations.length > 0 && (
-                        <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#F02D25] text-white">
-                          {recommendations.length}
-                        </span>
-                      )}
-                    </button>
-
-                    <button
-                      onClick={() => setRightPanelTab('places')}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                        rightPanelTab === 'places'
-                          ? 'bg-[#191919] text-white shadow-xs'
-                          : 'text-[#77736D] hover:text-[#191919]'
-                      }`}
-                    >
-                      <MapPin className="w-3.5 h-3.5" />
-                      <span>Places</span>
-                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#ECE9E2] text-[#191919]">
-                        {places.length}
+              {/* 3. FIXED: View Tabs (For You / Places / Saved) */}
+              <div className="flex items-center justify-between border-b border-[#E3DFD7] pb-2 mb-2.5 shrink-0">
+                <div className="flex items-center gap-1 bg-[#F5F3EE] p-1 rounded-xl">
+                  <button
+                    onClick={() => setRightPanelTab('recommendations')}
+                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      rightPanelTab === 'recommendations'
+                        ? 'bg-[#191919] text-white shadow-xs'
+                        : 'text-[#77736D] hover:text-[#191919]'
+                    }`}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-[#F02D25]" />
+                    <span>For You</span>
+                    {recommendations.length > 0 && (
+                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#F02D25] text-white">
+                        {recommendations.length}
                       </span>
-                    </button>
+                    )}
+                  </button>
 
-                    <button
-                      onClick={() => setRightPanelTab('saved')}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                        rightPanelTab === 'saved'
-                          ? 'bg-[#191919] text-white shadow-xs'
-                          : 'text-[#77736D] hover:text-[#191919]'
-                      }`}
-                    >
-                      <Bookmark className="w-3.5 h-3.5" />
-                      <span>Saved</span>
-                      {savedPlaces.length > 0 && (
-                        <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#F02D25] text-white">
-                          {savedPlaces.length}
-                        </span>
-                      )}
-                    </button>
-                  </div>
-
-                  {selectedPlace && (
-                    <span className="text-[11px] text-[#77736D] hidden sm:inline truncate max-w-[120px]">
-                      Focus: <strong className="text-[#191919] uppercase">{selectedPlace.name}</strong>
+                  <button
+                    onClick={() => setRightPanelTab('places')}
+                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      rightPanelTab === 'places'
+                        ? 'bg-[#191919] text-white shadow-xs'
+                        : 'text-[#77736D] hover:text-[#191919]'
+                    }`}
+                  >
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>Places</span>
+                    <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#ECE9E2] text-[#191919]">
+                      {places.length}
                     </span>
-                  )}
+                  </button>
+
+                  <button
+                    onClick={() => setRightPanelTab('saved')}
+                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      rightPanelTab === 'saved'
+                        ? 'bg-[#191919] text-white shadow-xs'
+                        : 'text-[#77736D] hover:text-[#191919]'
+                    }`}
+                  >
+                    <Bookmark className="w-3.5 h-3.5" />
+                    <span>Saved</span>
+                    {savedPlaces.length > 0 && (
+                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#F02D25] text-white">
+                        {savedPlaces.length}
+                      </span>
+                    )}
+                  </button>
                 </div>
 
-                {/* Scrollable Feed */}
-                <div className="flex-1 overflow-y-auto space-y-3.5 pr-1">
+                {selectedPlace && (
+                  <span className="text-[10px] text-[#77736D] hidden xl:inline truncate max-w-[120px]">
+                    Focus: <strong className="text-[#191919] uppercase">{selectedPlace.name}</strong>
+                  </span>
+                )}
+              </div>
+
+              {/* 4. INDEPENDENT SCROLLABLE FEED OF PLACES / RECOMMENDATIONS */}
+              <div className="flex-1 overflow-y-auto min-h-0 space-y-3 pr-1">
                   {/* 1. RECOMMENDATIONS TAB */}
                   {rightPanelTab === 'recommendations' && (
                     <div className="space-y-3.5">
@@ -522,8 +530,6 @@ export const App: React.FC = () => {
                     </div>
                   )}
                 </div>
-
-              </div>
 
             </div>
 
