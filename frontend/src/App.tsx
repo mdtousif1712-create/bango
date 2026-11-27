@@ -37,9 +37,54 @@ interface ToastData {
   type: 'saved' | 'removed';
 }
 
+const VALID_PAGES: PageId[] = ['discover', 'map', 'assistant', 'trending', 'domains', 'saved'];
+
+const PAGE_TITLES: Record<PageId, string> = {
+  discover: 'Bango — Smart City Discovery & Apriori Intelligence',
+  map: 'Map Explorer — Bango Bengaluru',
+  assistant: 'AI Search Assistant — Bango Bengaluru',
+  trending: 'Trending Hotspots — Bango Bengaluru',
+  domains: 'Explore Domains — Bango Bengaluru',
+  saved: 'Saved Places — Bango Bengaluru',
+};
+
+const getInitialPage = (): PageId => {
+  if (typeof window === 'undefined') return 'discover';
+
+  // 1. From Pathname (e.g. /map, /assistant, /trending)
+  const path = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+  if (VALID_PAGES.includes(path as PageId)) {
+    return path as PageId;
+  }
+
+  // 2. From Hash (e.g. #/map, #map)
+  const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
+  if (VALID_PAGES.includes(hash as PageId)) {
+    return hash as PageId;
+  }
+
+  // 3. From Query Param (e.g. ?page=map)
+  const query = new URLSearchParams(window.location.search).get('page')?.toLowerCase();
+  if (query && VALID_PAGES.includes(query as PageId)) {
+    return query as PageId;
+  }
+
+  // 4. From Session Storage (fallback if host stripped path on refresh)
+  try {
+    const saved = sessionStorage.getItem('blr_active_page') as PageId;
+    if (saved && VALID_PAGES.includes(saved)) {
+      return saved;
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return 'discover';
+};
+
 export const App: React.FC = () => {
-  // Page Routing & Navigation
-  const [currentPage, setCurrentPage] = useState<PageId>('discover');
+  // Page Routing & Navigation (URL synced & persistent across refresh)
+  const [currentPage, setCurrentPage] = useState<PageId>(getInitialPage);
   const [rightPanelTab, setRightPanelTab] = useState<'recommendations' | 'places' | 'saved'>('recommendations');
 
   // Data states
@@ -137,11 +182,93 @@ export const App: React.FC = () => {
     }
   };
 
+  // Centralized page navigation handler with HTML5 History API integration
+  const navigateToPage = (targetPage: PageId, replace: boolean = false) => {
+    if (targetPage === currentPage) return;
+
+    const targetPath = targetPage === 'discover' ? '/' : `/${targetPage}`;
+    if (replace) {
+      window.history.replaceState({ page: targetPage }, '', targetPath);
+    } else {
+      window.history.pushState({ page: targetPage }, '', targetPath);
+    }
+
+    document.title = PAGE_TITLES[targetPage] || 'Bango — Smart City Discovery';
+
+    try {
+      sessionStorage.setItem('blr_active_page', targetPage);
+    } catch (e) {
+      // ignore
+    }
+
+    setCurrentPage(targetPage);
+  };
+
+  // Sync initial URL, History state & Title on mount
+  useEffect(() => {
+    const initial = getInitialPage();
+    const targetPath = initial === 'discover' ? '/' : `/${initial}`;
+
+    document.title = PAGE_TITLES[initial] || 'Bango — Smart City Discovery';
+
+    if (window.location.pathname !== targetPath && !window.location.pathname.startsWith('/api')) {
+      window.history.replaceState({ page: initial }, '', targetPath);
+    } else if (!window.history.state || window.history.state.page !== initial) {
+      window.history.replaceState({ page: initial }, '', window.location.pathname || targetPath);
+    }
+
+    try {
+      sessionStorage.setItem('blr_active_page', initial);
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  // Handle browser popstate (Back & Forward buttons)
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      const statePage = event.state?.page;
+      const targetPage: PageId = (statePage && VALID_PAGES.includes(statePage))
+        ? statePage
+        : getInitialPage();
+
+      document.title = PAGE_TITLES[targetPage] || 'Bango — Smart City Discovery';
+      setCurrentPage(targetPage);
+
+      try {
+        sessionStorage.setItem('blr_active_page', targetPage);
+      } catch (e) {
+        // ignore
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Handle hardware mouse Back & Forward buttons (buttons 3 and 4)
+  useEffect(() => {
+    const handleMouseNav = (e: MouseEvent) => {
+      // Button 3: Mouse thumb back button
+      // Button 4: Mouse thumb forward button
+      if (e.button === 3) {
+        e.preventDefault();
+        window.history.back();
+      } else if (e.button === 4) {
+        e.preventDefault();
+        window.history.forward();
+      }
+    };
+
+    window.addEventListener('mouseup', handleMouseNav);
+    return () => window.removeEventListener('mouseup', handleMouseNav);
+  }, []);
+
   const handleLogout = () => {
     clearStoredUser();
     setCurrentUser(null);
     if (currentPage === 'saved') {
-      setCurrentPage('discover');
+      navigateToPage('discover');
     }
   };
 
@@ -202,7 +329,7 @@ export const App: React.FC = () => {
   const handleSelectPlace = async (place: Place, shouldScrollToMap = false) => {
     setSelectedPlace(place);
     if (shouldScrollToMap) {
-      setCurrentPage('map');
+      navigateToPage('map');
     }
 
     setIsLoadingRecs(true);
@@ -240,7 +367,7 @@ export const App: React.FC = () => {
         setRecNotice(res.notice);
       }
       // Switch directly to map page so user sees results immediately
-      setCurrentPage('map');
+      navigateToPage('map');
     } catch (err) {
       console.error('Search error:', err);
     } finally {
@@ -309,12 +436,12 @@ export const App: React.FC = () => {
       {/* 1. PERSISTENT NAVIGATION HEADER */}
       <Header
         currentPage={currentPage}
-        onSelectPage={(page) => setCurrentPage(page)}
+        onSelectPage={(page) => navigateToPage(page)}
         savedCount={savedPlaces.length}
         savedPlaces={savedPlaces}
         onSelectCategory={(cat) => {
           handleCategorySelect(cat);
-          setCurrentPage('map');
+          navigateToPage('map');
         }}
         onSelectPlace={(p) => handleSelectPlace(p, true)}
         user={currentUser}
@@ -330,7 +457,7 @@ export const App: React.FC = () => {
           <HeroSection
             onSearch={handleNaturalSearch}
             isSearching={isSearching}
-            onExploreMap={() => setCurrentPage('map')}
+            onExploreMap={() => navigateToPage('map')}
             onPlanDay={handlePlanYourDay}
           />
         )}
@@ -575,7 +702,7 @@ export const App: React.FC = () => {
                                   onSavePlace={handleSavePlace}
                                   isPlaceSaved={isPlaceSaved}
                                   onViewDetails={(p) => setDrawerPlace(p)}
-                                  onNavigateToMap={() => setCurrentPage('map')}
+                                  onNavigateToMap={() => navigateToPage('map')}
                                 />
                               )}
 
@@ -585,9 +712,9 @@ export const App: React.FC = () => {
                                   categories={categories}
                                   onSelectCategory={(catName) => {
                                     handleCategorySelect(catName);
-                                    setCurrentPage('map');
+                                    navigateToPage('map');
                                   }}
-                                  onNavigateToMap={() => setCurrentPage('map')}
+                                  onNavigateToMap={() => navigateToPage('map')}
                                 />
                               )}
 
@@ -598,7 +725,7 @@ export const App: React.FC = () => {
                                   onSelectPlace={(p) => handleSelectPlace(p, false)}
                                   onRemovePlace={handleSavePlace}
                                   onViewDetails={(p) => setDrawerPlace(p)}
-                                  onNavigateToMap={() => setCurrentPage('map')}
+                                  onNavigateToMap={() => navigateToPage('map')}
                                 />
                               )}
 
@@ -654,7 +781,7 @@ export const App: React.FC = () => {
                                   <div className="flex items-center gap-1.5 shrink-0">
                                     <button
                                       onClick={() => {
-                                        setCurrentPage('map');
+                                        navigateToPage('map');
                                         setRightPanelTab('saved');
                                         setToast(null);
                                       }}
