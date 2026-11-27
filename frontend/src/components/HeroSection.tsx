@@ -132,10 +132,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 cornerRadius={24}
                 onSelect={() => onExploreMap()}
               />
-              <div className="flex items-center gap-2 mt-1 px-3.5 py-1.5 rounded-full bg-white/95 border border-[#E3DFD7] text-xs font-semibold text-[#77736D] shadow-xs select-none">
-                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
-                <span>Hover or click any destination to explore</span>
-              </div>
             </div>
 
             {/* Decorative Ambient Background Ring */}
