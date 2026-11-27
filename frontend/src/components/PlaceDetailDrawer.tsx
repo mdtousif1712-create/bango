@@ -73,7 +73,7 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full sm:w-[500px] bg-white shadow-2xl z-50 flex flex-col border-l border-[#E3DFD7] animate-in slide-in-from-right duration-300 font-sans">
+    <div className="fixed inset-y-0 right-0 w-full sm:w-[500px] bg-white shadow-2xl z-[1500] flex flex-col border-l border-[#E3DFD7] animate-in slide-in-from-right duration-300 font-sans">
       {/* Header Bar */}
       <div className="h-16 px-6 border-b border-[#E3DFD7] flex items-center justify-between shrink-0 bg-[#F5F3EE]">
         <div className="flex items-center gap-2">

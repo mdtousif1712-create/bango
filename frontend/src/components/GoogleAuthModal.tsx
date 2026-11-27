@@ -87,7 +87,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         onClick={onClose}
@@ -131,16 +131,16 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
           </div>
 
           <h3 className="font-display font-bold text-2xl lowercase tracking-tight text-[#191919]">
-            sign in with google
+            sign in or sign up with google
           </h3>
           {pendingPlaceName ? (
-            <div className="mt-2.5 px-3 py-1.5 rounded-full bg-red-50 border border-red-200 inline-flex items-center gap-1.5 text-xs font-bold text-[#F02D25]">
+            <div className="mt-2.5 px-3.5 py-1.5 rounded-full bg-red-50 border border-red-200 inline-flex items-center gap-1.5 text-xs font-bold text-[#F02D25]">
               <Bookmark className="w-3.5 h-3.5 fill-current" />
-              <span>Sign in to bookmark &ldquo;{pendingPlaceName}&rdquo;</span>
+              <span>Sign in to save &ldquo;{pendingPlaceName}&rdquo;</span>
             </div>
           ) : (
             <p className="text-xs text-[#77736D] mt-1.5 max-w-xs mx-auto leading-relaxed">
-              Sync your saved destinations across devices and unlock customized Apriori urban recommendations.
+              Sync your saved destinations across devices and unlock customized urban recommendations.
             </p>
           )}
         </div>

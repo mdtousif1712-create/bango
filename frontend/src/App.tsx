@@ -24,8 +24,17 @@ import {
   MapPin,
   Bookmark,
   AlertCircle,
-  Loader2
+  Loader2,
+  X,
+  Check
 } from 'lucide-react';
+
+interface ToastData {
+  id: string;
+  message: string;
+  placeName?: string;
+  type: 'saved' | 'removed';
+}
 
 export const App: React.FC = () => {
   // Page Routing & Navigation
@@ -49,6 +58,27 @@ export const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(getStoredUser);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [pendingSavePlace, setPendingSavePlace] = useState<Place | null>(null);
+  const [toast, setToast] = useState<ToastData | null>(null);
+
+  const showToast = (message: string, placeName?: string, type: 'saved' | 'removed' = 'saved') => {
+    setToast({
+      id: Date.now().toString(),
+      message,
+      placeName,
+      type,
+    });
+  };
+
+  // Auto-dismiss bottom toast after 3.5 seconds
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [savedPlaces, setSavedPlaces] = useState<Place[]>(() => {
     try {
@@ -78,6 +108,10 @@ export const App: React.FC = () => {
 
   const handleLoginSuccess = (user: AuthUser) => {
     setCurrentUser(user);
+    const targetPlace = pendingSavePlace;
+    setPendingSavePlace(null);
+    setIsAuthModalOpen(false);
+
     setSavedPlaces((prev) => {
       let updated = [...prev];
       if (user.saved_places && user.saved_places.length > 0 && places.length > 0) {
@@ -86,14 +120,20 @@ export const App: React.FC = () => {
         const newItems = userCloudPlaces.filter((p) => !existingIds.has(p.place_id));
         updated = [...updated, ...newItems];
       }
-      if (pendingSavePlace) {
-        if (!updated.some((p) => p.place_id === pendingSavePlace.place_id)) {
-          updated.push(pendingSavePlace);
+      if (targetPlace) {
+        if (!updated.some((p) => p.place_id === targetPlace.place_id)) {
+          updated.push(targetPlace);
         }
-        setPendingSavePlace(null);
+      }
+      if (user.email) {
+        syncUserSavedPlaces(user.email, updated.map((p) => p.place_id));
       }
       return updated;
     });
+
+    if (targetPlace) {
+      showToast('Saved to your collection!', targetPlace.name, 'saved');
+    }
   };
 
   const handleLogout = () => {
@@ -214,21 +254,29 @@ export const App: React.FC = () => {
 
   // Save / Bookmark Place
   const handleSavePlace = (place: Place) => {
-    // If user has not signed in with Google, prompt sign-in popup!
+    // If user has not signed in with Google, prompt sign-in / sign-up popup!
     if (!currentUser) {
       setPendingSavePlace(place);
       setIsAuthModalOpen(true);
       return;
     }
 
-    setSavedPlaces((prev) => {
-      const exists = prev.some((p) => p.place_id === place.place_id);
-      if (exists) {
-        return prev.filter((p) => p.place_id !== place.place_id);
-      } else {
-        return [...prev, place];
+    const isCurrentlySaved = savedPlaces.some((p) => p.place_id === place.place_id);
+    if (isCurrentlySaved) {
+      const nextSaved = savedPlaces.filter((p) => p.place_id !== place.place_id);
+      setSavedPlaces(nextSaved);
+      showToast('Removed from your saved places', place.name, 'removed');
+      if (currentUser?.email) {
+        syncUserSavedPlaces(currentUser.email, nextSaved.map((p) => p.place_id));
       }
-    });
+    } else {
+      const nextSaved = [...savedPlaces, place];
+      setSavedPlaces(nextSaved);
+      showToast('Saved to your places!', place.name, 'saved');
+      if (currentUser?.email) {
+        syncUserSavedPlaces(currentUser.email, nextSaved.map((p) => p.place_id));
+      }
+    }
   };
 
   const isPlaceSaved = (placeId: string) => savedPlaces.some((p) => p.place_id === placeId);
@@ -564,6 +612,52 @@ export const App: React.FC = () => {
                               onLoginSuccess={handleLoginSuccess}
                               pendingPlaceName={pendingSavePlace?.name}
                             />
+
+                            {/* Small Bottom Pop Up (Toast) */}
+                            {toast && (
+                              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[3000] max-w-md w-[92%] sm:w-auto animate-in fade-in slide-in-from-bottom-5 duration-300">
+                                <div className="bg-[#191919] text-white px-4 py-3 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-3 backdrop-blur-md">
+                                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+                                    toast.type === 'saved' ? 'bg-[#F02D25] text-white' : 'bg-white/15 text-white'
+                                  }`}>
+                                    {toast.type === 'saved' ? (
+                                      <Bookmark className="w-4 h-4 fill-current" />
+                                    ) : (
+                                      <X className="w-4 h-4" />
+                                    )}
+                                  </div>
+
+                                  <div className="flex-1 min-w-0 pr-2">
+                                    <p className="text-xs font-bold truncate text-white">
+                                      {toast.placeName || 'Location'}
+                                    </p>
+                                    <p className="text-[11px] text-[#A8A29E] truncate">
+                                      {toast.message}
+                                    </p>
+                                  </div>
+
+                                  <div className="flex items-center gap-1.5 shrink-0">
+                                    <button
+                                      onClick={() => {
+                                        setCurrentPage('map');
+                                        setRightPanelTab('saved');
+                                        setToast(null);
+                                      }}
+                                      className="text-[11px] font-bold uppercase tracking-wider text-white hover:text-[#F02D25] bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+                                    >
+                                      View
+                                    </button>
+                                    <button
+                                      onClick={() => setToast(null)}
+                                      className="p-1 text-[#A8A29E] hover:text-white transition-colors cursor-pointer"
+                                      title="Dismiss"
+                                    >
+                                      <X className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                           );
 };
