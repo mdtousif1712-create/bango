@@ -326,15 +326,7 @@ export const App: React.FC = () => {
             <div className="lg:col-span-4 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl bg-white border border-[#E3DFD7] p-3.5 sm:p-4 shadow-sm overflow-hidden">
 
               {/* 1. FIXED: Category Filter Pills at Top */}
-              <div className="mb-2.5 shrink-0">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D]">
-                    Filter by Domain
-                  </span>
-                  <span className="text-[10px] text-[#A8A29E] font-medium">
-                    {selectedCategory === 'all' ? 'All 8 Domains' : selectedCategory}
-                  </span>
-                </div>
+              <div className="mb-2 shrink-0 min-w-0 w-full">
                 <CategoryFilters
                   categories={categories}
                   selectedCategory={selectedCategory}

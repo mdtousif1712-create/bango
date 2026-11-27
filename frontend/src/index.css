@@ -69,6 +69,22 @@
   background: #B3ADA3;
 }
 
+/* Category filter custom horizontal scrollbar */
+.category-scroll-container::-webkit-scrollbar {
+  height: 4px;
+}
+.category-scroll-container::-webkit-scrollbar-track {
+  background: #ECE9E2;
+  border-radius: 9999px;
+}
+.category-scroll-container::-webkit-scrollbar-thumb {
+  background: #D1CCC4;
+  border-radius: 9999px;
+}
+.category-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #F02D25;
+}
+
 /* Leaflet map custom markers & popups styling */
 .leaflet-popup-content-wrapper {
   border-radius: 18px !important;
