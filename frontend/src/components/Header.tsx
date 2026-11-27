@@ -112,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({
           title="bango™ • smart city discovery"
         >
           {/* Circular bo Monogram */}
-          <div className="w-10 h-10 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display font-bold text-lg lowercase tracking-tight transition-colors shadow-sm">
+          <div className="w-10 h-10 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display font-bold text-lg lowercase tracking-tight transition-colors">
             bo
           </div>
 
@@ -137,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* 1. DISCOVER ITEM (Direct Navigation, No Dropdown) */}
           <button
             onClick={() => handleNavClick('discover')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
               currentPage === 'discover'
                 ? 'text-[#F02D25] bg-[#F5F3EE]'
                 : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
@@ -154,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <button
               onClick={() => handleNavClick('map')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
                 currentPage === 'map'
                   ? 'text-[#F02D25] bg-[#F5F3EE]'
                   : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
@@ -162,34 +162,34 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <span>Map Explorer</span>
               <ChevronDown
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  activeDropdown === 'map' ? 'rotate-180 text-[#F02D25]' : 'text-[#77736D]'
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  activeDropdown === 'map' ? 'rotate-180 text-[#191919]' : 'text-[#77736D]'
                 }`}
               />
             </button>
 
-            {/* Map Flyout Dropdown */}
+            {/* Map Flyout Dropdown (Bold, Bigger, Black Icons, No Rounded Shadows) */}
             {activeDropdown === 'map' && (
-              <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl border border-[#E3DFD7] shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-3 py-2 border-b border-[#E3DFD7] mb-2">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D]">
+              <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                <div className="px-1 pb-3 border-b-2 border-[#191919] mb-3 flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
                     Geographical Exploration
                   </span>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <div
                     onClick={() => handleNavClick('map')}
-                    className="p-2.5 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3"
+                    className="p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3.5"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#F5F3EE] group-hover:bg-[#191919] group-hover:text-white text-[#F02D25] flex items-center justify-center shrink-0 transition-colors">
-                      <Map className="w-4 h-4" />
+                    <div className="w-11 h-11 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
+                      <Map className="w-5 h-5 text-[#191919] group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#191919] group-hover:text-[#F02D25] transition-colors">
+                      <h4 className="text-sm sm:text-[15px] font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors leading-snug">
                         Interactive 65/35 City Map
                       </h4>
-                      <p className="text-[11px] text-[#77736D] leading-snug mt-0.5">
+                      <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
                         Category markers, popups, and instant Apriori recommendation rules
                       </p>
                     </div>
@@ -197,26 +197,26 @@ export const Header: React.FC<HeaderProps> = ({
 
                   <div
                     onClick={() => handleNavClick('map')}
-                    className="p-2.5 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3"
+                    className="p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3.5"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#F5F3EE] group-hover:bg-[#191919] group-hover:text-white text-[#F02D25] flex items-center justify-center shrink-0 transition-colors">
-                      <Search className="w-4 h-4" />
+                    <div className="w-11 h-11 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
+                      <Search className="w-5 h-5 text-[#191919] group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#191919] group-hover:text-[#F02D25] transition-colors">
+                      <h4 className="text-sm sm:text-[15px] font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors leading-snug">
                         Natural Search Assistant
                       </h4>
-                      <p className="text-[11px] text-[#77736D] leading-snug mt-0.5">
+                      <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
                         Search places using semantic queries and natural language
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-2 mt-2 border-t border-[#E3DFD7]">
+                <div className="pt-3 mt-3 border-t border-[#E3DFD7]">
                   <button
                     onClick={() => handleNavClick('map')}
-                    className="w-full text-center py-2 text-xs font-bold text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
+                    className="w-full text-center py-2.5 text-xs sm:text-sm font-black text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
                   >
                     Open Bengaluru Map &rarr;
                   </button>
@@ -233,7 +233,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <button
               onClick={() => handleNavClick('trending')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
                 currentPage === 'trending'
                   ? 'text-[#F02D25] bg-[#F5F3EE]'
                   : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
@@ -241,34 +241,34 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <span>Trending</span>
               <ChevronDown
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  activeDropdown === 'trending' ? 'rotate-180 text-[#F02D25]' : 'text-[#77736D]'
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  activeDropdown === 'trending' ? 'rotate-180 text-[#191919]' : 'text-[#77736D]'
                 }`}
               />
             </button>
 
-            {/* Trending Flyout Dropdown */}
+            {/* Trending Flyout Dropdown (Bold, Bigger, Black Icons, No Rounded Shadows) */}
             {activeDropdown === 'trending' && (
-              <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl border border-[#E3DFD7] shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-3 py-2 border-b border-[#E3DFD7] mb-2">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D]">
+              <div className="absolute top-full left-0 mt-2 w-[400px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                <div className="px-1 pb-3 border-b-2 border-[#191919] mb-3 flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
                     Footfall Analytics
                   </span>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <div
                     onClick={() => handleNavClick('trending')}
-                    className="p-2.5 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3"
+                    className="p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3.5"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#F5F3EE] group-hover:bg-[#191919] group-hover:text-white text-[#F02D25] flex items-center justify-center shrink-0 transition-colors">
-                      <TrendingUp className="w-4 h-4" />
+                    <div className="w-11 h-11 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
+                      <TrendingUp className="w-5 h-5 text-[#191919] group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#191919] group-hover:text-[#F02D25] transition-colors">
+                      <h4 className="text-sm sm:text-[15px] font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors leading-snug">
                         High-Frequency Urban Hotspots
                       </h4>
-                      <p className="text-[11px] text-[#77736D] leading-snug mt-0.5">
+                      <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
                         Ranked destinations derived from Bengaluru transactional mobility
                       </p>
                     </div>
@@ -276,26 +276,26 @@ export const Header: React.FC<HeaderProps> = ({
 
                   <div
                     onClick={() => handleNavClick('trending')}
-                    className="p-2.5 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3"
+                    className="p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3.5"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#F5F3EE] group-hover:bg-[#191919] group-hover:text-white text-[#F02D25] flex items-center justify-center shrink-0 transition-colors">
-                      <Utensils className="w-4 h-4" />
+                    <div className="w-11 h-11 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
+                      <Utensils className="w-5 h-5 text-[#191919] group-hover:text-white transition-colors" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-[#191919] group-hover:text-[#F02D25] transition-colors">
+                      <h4 className="text-sm sm:text-[15px] font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors leading-snug">
                         Gastronomy & Culture
                       </h4>
-                      <p className="text-[11px] text-[#77736D] leading-snug mt-0.5">
+                      <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
                         Toit, Truffles, Koshy's, Nagarjuna & Vidyarthi Bhavan
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-2 mt-2 border-t border-[#E3DFD7]">
+                <div className="pt-3 mt-3 border-t border-[#E3DFD7]">
                   <button
                     onClick={() => handleNavClick('trending')}
-                    className="w-full text-center py-2 text-xs font-bold text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
+                    className="w-full text-center py-2.5 text-xs sm:text-sm font-black text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
                   >
                     View All Trending Places &rarr;
                   </button>
@@ -312,7 +312,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <button
               onClick={() => handleNavClick('domains')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
                 currentPage === 'domains'
                   ? 'text-[#F02D25] bg-[#F5F3EE]'
                   : 'text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE]'
@@ -320,41 +320,41 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <span>Domains</span>
               <ChevronDown
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  activeDropdown === 'domains' ? 'rotate-180 text-[#F02D25]' : 'text-[#77736D]'
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  activeDropdown === 'domains' ? 'rotate-180 text-[#191919]' : 'text-[#77736D]'
                 }`}
               />
             </button>
 
-            {/* Domains Flyout Dropdown (2-Column Grid) */}
+            {/* Domains Flyout Dropdown (Bold, Bigger, Black Icons, No Rounded Shadows) */}
             {activeDropdown === 'domains' && (
-              <div className="absolute top-full -left-20 mt-2 w-[480px] bg-white rounded-2xl border border-[#E3DFD7] shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-2 pb-2.5 border-b border-[#E3DFD7] mb-3 flex items-center justify-between">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D]">
+              <div className="absolute top-full -left-20 mt-2 w-[540px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                <div className="px-1 pb-3 border-b-2 border-[#191919] mb-3.5 flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
                     8 Smart City Sectors
                   </span>
-                  <span className="text-[10px] text-[#77736D] font-semibold">
+                  <span className="text-[11px] text-[#66635C] font-bold">
                     Click to filter on Map
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-2 gap-2">
                   {DOMAINS_LIST.map((domain) => {
                     const DomainIcon = domain.icon;
                     return (
                       <div
                         key={domain.name}
                         onClick={() => handleDomainClick(domain.name)}
-                        className="p-2.5 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-2.5"
+                        className="p-2.5 sm:p-3 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors group flex items-start gap-3"
                       >
-                        <div className="w-7 h-7 rounded-lg bg-[#F5F3EE] group-hover:bg-[#191919] group-hover:text-white text-[#F02D25] flex items-center justify-center shrink-0 transition-colors mt-0.5">
-                          <DomainIcon className="w-3.5 h-3.5" />
+                        <div className="w-9 h-9 rounded-xl bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                          <DomainIcon className="w-4.5 h-4.5 text-[#191919] group-hover:text-white transition-colors" />
                         </div>
-                        <div className="min-w-0">
-                          <h4 className="text-xs font-bold text-[#191919] group-hover:text-[#F02D25] transition-colors truncate">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-xs sm:text-sm font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors truncate leading-snug">
                             {domain.name}
                           </h4>
-                          <p className="text-[10px] text-[#77736D] leading-tight truncate">
+                          <p className="text-[11px] text-[#66635C] font-medium leading-tight truncate mt-0.5">
                             {domain.desc}
                           </p>
                         </div>
@@ -363,10 +363,10 @@ export const Header: React.FC<HeaderProps> = ({
                   })}
                 </div>
 
-                <div className="pt-2.5 mt-3 border-t border-[#E3DFD7]">
+                <div className="pt-3 mt-3.5 border-t border-[#E3DFD7]">
                   <button
                     onClick={() => handleNavClick('domains')}
-                    className="w-full text-center py-2 text-xs font-bold text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
+                    className="w-full text-center py-2.5 text-xs sm:text-sm font-black text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
                   >
                     View All 8 Domains Grid &rarr;
                   </button>
@@ -388,55 +388,55 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <button
               onClick={() => handleNavClick('saved')}
-              className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-2xl transition-all cursor-pointer border ${
+              className={`flex items-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-2xl transition-all cursor-pointer border ${
                 currentPage === 'saved'
-                  ? 'bg-[#191919] text-white border-[#191919] shadow-sm'
+                  ? 'bg-[#191919] text-white border-[#191919]'
                   : 'bg-white border-[#E3DFD7] hover:bg-[#F5F3EE] text-[#191919]'
               }`}
               title={`Saved Destinations (${savedCount})`}
             >
-              <Bookmark className="w-4 h-4 text-[#F02D25] shrink-0" />
-              <span className="hidden sm:inline text-xs font-bold uppercase tracking-wider">
+              <Bookmark className="w-4 h-4 text-[#191919] shrink-0" />
+              <span className="hidden sm:inline text-xs sm:text-sm font-extrabold uppercase tracking-wider">
                 Saved
               </span>
-              <span className="w-5 h-5 rounded-full bg-[#F02D25] text-white text-[10px] font-extrabold flex items-center justify-center shrink-0">
+              <span className="w-5 h-5 rounded-full bg-[#191919] text-white text-[11px] font-black flex items-center justify-center shrink-0">
                 {savedCount}
               </span>
             </button>
 
-            {/* Saved Places Flyout Preview */}
+            {/* Saved Places Flyout Preview (Bold, Bigger, Black Icons, No Rounded Shadows) */}
             {activeDropdown === 'saved' && (
-              <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-2xl border border-[#E3DFD7] shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-2 py-1.5 border-b border-[#E3DFD7] mb-2 flex items-center justify-between">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D]">
+              <div className="absolute top-full right-0 mt-2 w-[360px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                <div className="px-1 pb-3 border-b-2 border-[#191919] mb-3 flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
                     Saved Collection
                   </span>
-                  <span className="text-[10px] font-bold text-[#F02D25]">
+                  <span className="text-xs font-black text-[#191919] bg-[#F0EDE6] px-2.5 py-0.5 rounded-full">
                     {savedCount} items
                   </span>
                 </div>
 
                 {savedPlaces.length > 0 ? (
-                  <div className="space-y-1.5 max-h-56 overflow-y-auto">
-                    {savedPlaces.slice(0, 3).map((place) => (
+                  <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
+                    {savedPlaces.slice(0, 4).map((place) => (
                       <div
                         key={place.place_id}
                         onClick={() => {
                           if (onSelectPlace) onSelectPlace(place);
                           setActiveDropdown(null);
                         }}
-                        className="p-2 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors flex items-center gap-2.5"
+                        className="p-2.5 rounded-xl hover:bg-[#F5F3EE] cursor-pointer transition-colors flex items-center gap-3 group"
                       >
                         <img
                           src={place.image_url}
                           alt={place.name}
-                          className="w-9 h-9 rounded-lg object-cover shrink-0"
+                          className="w-11 h-11 rounded-xl object-cover shrink-0"
                         />
                         <div className="min-w-0 flex-1">
-                          <p className="text-xs font-bold text-[#191919] truncate">
+                          <p className="text-xs sm:text-sm font-extrabold text-[#191919] group-hover:text-[#F02D25] transition-colors truncate">
                             {place.name}
                           </p>
-                          <span className="text-[10px] text-[#77736D] truncate block">
+                          <span className="text-[11px] font-medium text-[#66635C] truncate block mt-0.5">
                             {place.locality} &bull; {place.category}
                           </span>
                         </div>
@@ -444,19 +444,19 @@ export const Header: React.FC<HeaderProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <div className="py-5 text-center text-xs text-[#77736D]">
-                    <Bookmark className="w-6 h-6 text-[#D1CCC4] mx-auto mb-1.5" />
-                    <p className="font-semibold text-[#191919]">No places saved yet</p>
-                    <p className="text-[10px] text-[#77736D] mt-0.5">
+                  <div className="py-6 text-center text-xs text-[#77736D]">
+                    <Bookmark className="w-7 h-7 text-[#191919] mx-auto mb-2" />
+                    <p className="font-extrabold text-sm text-[#191919]">No places saved yet</p>
+                    <p className="text-xs font-medium text-[#66635C] mt-1">
                       Bookmark places on the map to collect them here
                     </p>
                   </div>
                 )}
 
-                <div className="pt-2 mt-2 border-t border-[#E3DFD7]">
+                <div className="pt-3 mt-3 border-t border-[#E3DFD7]">
                   <button
                     onClick={() => handleNavClick('saved')}
-                    className="w-full text-center py-1.5 text-xs font-bold text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
+                    className="w-full text-center py-2 text-xs sm:text-sm font-black text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
                   >
                     View All Saved Places &rarr;
                   </button>
@@ -468,7 +468,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Explore City Pill CTA Button (Like Dribbble's 'Start Project Brief') */}
           <button
             onClick={() => handleNavClick('map')}
-            className="group flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider transition-all shadow-sm cursor-pointer shrink-0"
+            className="group flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-[#191919] hover:bg-[#F02D25] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer shrink-0"
           >
             <span>Explore City</span>
             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -481,7 +481,7 @@ export const Header: React.FC<HeaderProps> = ({
               onMouseEnter={() => handleMouseEnter('profile')}
               onMouseLeave={handleMouseLeave}
             >
-              <div className="w-9 h-9 rounded-full bg-[#191919] border border-[#E3DFD7] hover:border-[#F02D25] flex items-center justify-center font-bold text-xs text-white cursor-pointer transition-colors shadow-2xs overflow-hidden">
+              <div className="w-9 h-9 rounded-full bg-[#191919] border-2 border-[#191919] hover:border-[#F02D25] flex items-center justify-center font-bold text-xs text-white cursor-pointer transition-colors overflow-hidden">
                 {user.picture ? (
                   <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
                 ) : (
@@ -489,11 +489,11 @@ export const Header: React.FC<HeaderProps> = ({
                 )}
               </div>
 
-              {/* Profile Flyout Dropdown */}
+              {/* Profile Flyout Dropdown (Bold, Bigger, Black Icons, No Rounded Shadows) */}
               {activeDropdown === 'profile' && (
-                <div className="absolute top-full right-0 mt-2 w-72 bg-white rounded-2xl border border-[#E3DFD7] shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="flex items-center gap-3 p-2 border-b border-[#E3DFD7] pb-3 mb-2">
-                    <div className="w-10 h-10 rounded-full bg-[#191919] text-white flex items-center justify-center font-bold text-sm overflow-hidden shrink-0">
+                <div className="absolute top-full right-0 mt-2 w-[340px] bg-white rounded-2xl border-2 border-[#191919] p-4 sm:p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 shadow-none">
+                  <div className="flex items-center gap-3 p-1 border-b-2 border-[#191919] pb-3 mb-3">
+                    <div className="w-11 h-11 rounded-full bg-[#191919] text-white flex items-center justify-center font-extrabold text-sm overflow-hidden shrink-0">
                       {user.picture ? (
                         <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
@@ -501,29 +501,29 @@ export const Header: React.FC<HeaderProps> = ({
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-xs font-bold text-[#191919] truncate">
+                      <h4 className="text-sm font-extrabold text-[#191919] truncate">
                         {user.name}
                       </h4>
-                      <span className="text-[10px] text-[#77736D] block truncate font-mono">
+                      <span className="text-xs text-[#66635C] block truncate font-mono mt-0.5">
                         {user.email}
                       </span>
                     </div>
                   </div>
 
-                  <div className="space-y-1.5 text-xs text-[#77736D] p-2">
-                    <div className="flex items-center gap-2 text-emerald-600 font-semibold text-[11px]">
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  <div className="space-y-2 text-xs text-[#77736D] p-1">
+                    <div className="flex items-center gap-2 text-emerald-700 font-extrabold text-xs">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
                       <span>Google Account Connected</span>
                     </div>
-                    <p className="text-[10px] text-[#77736D]">
+                    <p className="text-xs font-medium text-[#66635C]">
                       Cloud sync active: {savedCount} places saved to MongoDB
                     </p>
                   </div>
 
-                  <div className="pt-2 mt-1 border-t border-[#E3DFD7] flex items-center justify-between gap-2 px-1">
+                  <div className="pt-3 mt-2 border-t border-[#E3DFD7] flex items-center justify-between gap-2 px-1">
                     <button
                       onClick={() => handleNavClick('saved')}
-                      className="text-[11px] font-bold text-[#191919] hover:text-[#F02D25] py-1.5 transition-colors cursor-pointer"
+                      className="text-xs sm:text-sm font-extrabold text-[#191919] hover:text-[#F02D25] py-1.5 transition-colors cursor-pointer"
                     >
                       Saved Places ({savedCount})
                     </button>
@@ -533,9 +533,9 @@ export const Header: React.FC<HeaderProps> = ({
                           onLogout();
                           setActiveDropdown(null);
                         }}
-                        className="flex items-center gap-1 text-[11px] font-bold text-[#F02D25] hover:underline py-1.5 transition-colors cursor-pointer"
+                        className="flex items-center gap-1.5 text-xs sm:text-sm font-black text-[#F02D25] hover:underline py-1.5 transition-colors cursor-pointer"
                       >
-                        <LogOut className="w-3 h-3" />
+                        <LogOut className="w-3.5 h-3.5" />
                         <span>Sign Out</span>
                       </button>
                     )}
@@ -546,7 +546,7 @@ export const Header: React.FC<HeaderProps> = ({
           ) : (
             <button
               onClick={onOpenAuthModal}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-[#E3DFD7] hover:border-[#191919] bg-white text-xs font-bold text-[#191919] shadow-2xs hover:bg-[#F5F3EE] transition-all cursor-pointer shrink-0"
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-full border-2 border-[#191919] bg-white text-xs sm:text-sm font-extrabold text-[#191919] hover:bg-[#F5F3EE] transition-all cursor-pointer shrink-0"
               title="Sign in with Google"
             >
               <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
