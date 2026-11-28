@@ -20,6 +20,7 @@ import { TrendingSection } from './components/TrendingSection';
 import { SavedPlacesSection } from './components/SavedPlacesSection';
 import { FriendsSection } from './components/FriendsSection';
 import { BangoAiPage } from './components/BangoAiPage';
+import { BangoAiFloatingButton } from './components/BangoAiFloatingButton';
 import { PlaceCard } from './components/PlaceCard';
 import { RecommendationCard } from './components/RecommendationCard';
 import { PlaceDetailDrawer } from './components/PlaceDetailDrawer';
@@ -834,7 +835,13 @@ export const App: React.FC = () => {
 
                             </main>
 
-                            {/* Place Detail Slide-over Drawer */}
+                            {/* Persistent Floating Bango AI "bo" Button with Cursor Following Physics */}
+      <BangoAiFloatingButton
+        currentPage={currentPage}
+        onClick={() => navigateToPage('bango-ai')}
+      />
+
+      {/* Place Detail Slide-over Drawer */}
                             <PlaceDetailDrawer
                               place={drawerPlace}
                               onClose={() => setDrawerPlace(null)}
