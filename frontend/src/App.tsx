@@ -19,6 +19,7 @@ import { DomainDetailPage } from './components/DomainDetailPage';
 import { TrendingSection } from './components/TrendingSection';
 import { SavedPlacesSection } from './components/SavedPlacesSection';
 import { FriendsSection } from './components/FriendsSection';
+import { BangoAiPage } from './components/BangoAiPage';
 import { PlaceCard } from './components/PlaceCard';
 import { RecommendationCard } from './components/RecommendationCard';
 import { PlaceDetailDrawer } from './components/PlaceDetailDrawer';
@@ -48,6 +49,7 @@ const VALID_PAGES: PageId[] = [
   'domain-detail',
   'friends',
   'saved',
+  'bango-ai',
 ];
 
 const DOMAIN_SLUGS: Record<string, string> = {
@@ -70,6 +72,7 @@ const PAGE_TITLES: Record<PageId, string> = {
   'domain-detail': 'Sector Details — Bango Bengaluru',
   friends: 'Friends & Circles — Bango Bengaluru',
   saved: 'Saved Places — Bango Bengaluru',
+  'bango-ai': 'Bango AI — Smart Bengaluru Planner & Assistant',
 };
 
 interface InitialRoute {
@@ -505,7 +508,7 @@ export const App: React.FC = () => {
 
   // Plan Your Day Itinerary Search
   const handlePlanYourDay = () => {
-    handleNaturalSearch('Curated full day smart city itinerary: morning heritage walk & filter coffee, afternoon lakeside stroll, evening craft brewery & dining');
+    navigateToPage('bango-ai');
   };
 
   // Save / Bookmark Place
@@ -697,6 +700,26 @@ export const App: React.FC = () => {
 
           </div>
         </div>
+      )}
+
+      {/* PAGE: BANGO AI (DAY PLANNER & AI CONVERSATION) */}
+      {currentPage === 'bango-ai' && (
+        <BangoAiPage
+          places={places}
+          onSelectPlace={(p) => handleSelectPlace(p, false)}
+          onExploreOnMap={(place) => {
+            setSingleFocusedPlace(place);
+            handleSelectPlace(place, true);
+          }}
+          onViewDetails={(place) => setDrawerPlace(place)}
+          onSavePlace={handleSavePlace}
+          isPlaceSaved={isPlaceSaved}
+          userLocation={userLocation}
+          onNavigateToMap={() => {
+            setSingleFocusedPlace(null);
+            navigateToPage('map');
+          }}
+        />
       )}
 
       {/* PAGE: NATURAL SEARCH ASSISTANT WITH FULL MAP & BOTTOM CHATBOT */}

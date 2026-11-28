@@ -18,6 +18,7 @@ const PAGE_NAMES: Record<PageId, string> = {
   'domain-detail': 'Sector Detail',
   friends: 'Friends',
   saved: 'Saved Places',
+  'bango-ai': 'Bango AI',
 };
 
 export const MobileHeader: React.FC<MobileHeaderProps> = ({
