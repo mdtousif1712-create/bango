@@ -263,6 +263,10 @@ export const App: React.FC = () => {
 
     if (targetPage === currentPage && targetPage !== 'domain-detail') return;
 
+    if (targetPage !== 'map') {
+      window.scrollTo(0, 0);
+    }
+
     const targetPath = targetPage === 'discover' ? '/' : `/${targetPage}`;
     if (replace) {
       window.history.replaceState({ page: targetPage, domain: null }, '', targetPath);
@@ -307,7 +311,7 @@ export const App: React.FC = () => {
 
     setSelectedDomain(domainName);
     setCurrentPage('domain-detail');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   };
 
   // Automatically slide the side panel in / close whenever exiting a page or domain
@@ -611,103 +615,102 @@ export const App: React.FC = () => {
           />
         )}
 
-        {/* PAGE 2: MAP EXPLORER - Fits 100% in viewport without outer scrolling */}
-        {currentPage === 'map' && (
-          <div className="w-full h-[calc(100vh-80px)] bg-[#ECE9E2] flex flex-col px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-3.5 overflow-hidden">
+        {/* PAGE 2: MAP EXPLORER - Kept mounted in DOM for instantaneous 0ms page switching without rebuilding Leaflet */}
+        <div className={currentPage === 'map' ? "w-full h-[calc(100vh-80px)] bg-[#ECE9E2] flex flex-col px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-3.5 overflow-hidden" : "hidden"}>
 
-            {/* Top Heading Bar (shrink-0) */}
-            <div className="flex items-center justify-between gap-4 mb-2 sm:mb-2.5 shrink-0">
-              <div className="flex items-center gap-3 min-w-0">
-                <span className="w-3.5 h-3.5 rounded-full bg-[#F02D25] shrink-0"></span>
-                <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-[#191919] tracking-tight leading-none whitespace-nowrap">
-                  bengaluru map <span className="text-[#F02D25]">explorer.</span>
-                </h2>
-                <span className="hidden md:inline text-xs sm:text-sm text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
-                  Explore destinations, transit hubs, and curated smart city locations across Bengaluru
-                </span>
-              </div>
-            </div>
-
-            {/* 65 / 35 Responsive Grid Layout - Locked to remaining screen height (flex-1 min-h-0) */}
-            <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 min-h-0 overflow-hidden">
-
-              {/* LEFT: 65% Interactive Leaflet Map (8 cols) - 100% Height of Screen */}
-              <div className="lg:col-span-8 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm bg-white relative">
-                <div className="flex-1 w-full h-full relative min-h-0">
-                  <CityMap
-                    places={places}
-                    selectedPlace={selectedPlace}
-                    focusedPlace={singleFocusedPlace}
-                    onClearFocus={() => setSingleFocusedPlace(null)}
-                    onSelectPlace={(p) => handleSelectPlace(p, false)}
-                    onSavePlace={handleSavePlace}
-                    isPlaceSaved={isPlaceSaved}
-                    userLocation={userLocation}
-                    onLocateMe={handleLocateMe}
-                    onViewDetails={(p) => setDrawerPlace(p)}
-                  />
-                </div>
-              </div>
-
-              {/* RIGHT: 35% Editorial Discovery Panel (4 cols) - Fixed Top Controls + Independent Scrollable Feed */}
-              <div className="lg:col-span-4 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl bg-white border border-[#E3DFD7] p-3.5 sm:p-4 shadow-sm overflow-hidden">
-
-                {/* 1. FIXED: Category Filter Pills at Top */}
-                <div className="mb-2 shrink-0 min-w-0 w-full">
-                  <CategoryFilters
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    onSelectCategory={handleCategorySelect}
-                  />
-                </div>
-
-                {/* 2. FIXED: Natural Search Explanation Bar (if active) */}
-                {activeSearchExplanation && (
-                  <div className="mb-2.5 px-3 py-1.5 bg-[#F5F3EE] rounded-xl border border-[#E3DFD7] text-xs text-[#191919] flex items-center justify-between shrink-0">
-                    <span className="font-semibold truncate text-[11px]">{activeSearchExplanation}</span>
-                    <button
-                      onClick={() => setActiveSearchExplanation(null)}
-                      className="text-[#F02D25] hover:underline text-[10px] font-bold shrink-0 ml-2 uppercase tracking-wider"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                )}
-
-                {/* 3. INDEPENDENT SCROLLABLE FEED OF PLACES */}
-                <div className="flex-1 overflow-y-auto min-h-0 space-y-3 pr-1 pt-1">
-                  {isLoadingPlaces ? (
-                    <div className="py-16 text-center text-xs text-[#77736D]">
-                      <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F02D25]" />
-                      Loading places...
-                    </div>
-                  ) : places.length > 0 ? (
-                    places.map((place) => (
-                      <PlaceCard
-                        key={place.place_id}
-                        place={place}
-                        isSelected={selectedPlace?.place_id === place.place_id}
-                        isSaved={isPlaceSaved(place.place_id)}
-                        onSelect={(p) => handleSelectPlace(p, false)}
-                        onSave={handleSavePlace}
-                        onViewDetails={(p) => setDrawerPlace(p)}
-                      />
-                    ))
-                  ) : (
-                    <div className="py-16 text-center text-xs text-[#77736D] bg-[#ECE9E2] rounded-2xl border border-dashed border-[#E3DFD7] p-6">
-                      <p className="font-bold text-[#191919] uppercase">No places found</p>
-                      <p className="text-[11px] text-[#77736D] mt-1">
-                        Try selecting another category from the filters above.
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-              </div>
-
+          {/* Top Heading Bar (shrink-0) */}
+          <div className="flex items-center justify-between gap-4 mb-2 sm:mb-2.5 shrink-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#F02D25] shrink-0"></span>
+              <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-[#191919] tracking-tight leading-none whitespace-nowrap">
+                bengaluru map <span className="text-[#F02D25]">explorer.</span>
+              </h2>
+              <span className="hidden md:inline text-xs sm:text-sm text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
+                Explore destinations, transit hubs, and curated smart city locations across Bengaluru
+              </span>
             </div>
           </div>
-        )}
+
+          {/* 65 / 35 Responsive Grid Layout - Locked to remaining screen height (flex-1 min-h-0) */}
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 min-h-0 overflow-hidden">
+
+            {/* LEFT: 65% Interactive Leaflet Map (8 cols) - 100% Height of Screen */}
+            <div className="lg:col-span-8 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm bg-white relative">
+              <div className="flex-1 w-full h-full relative min-h-0">
+                <CityMap
+                  places={places}
+                  selectedPlace={selectedPlace}
+                  focusedPlace={singleFocusedPlace}
+                  isActive={currentPage === 'map'}
+                  onClearFocus={() => setSingleFocusedPlace(null)}
+                  onSelectPlace={(p) => handleSelectPlace(p, false)}
+                  onSavePlace={handleSavePlace}
+                  isPlaceSaved={isPlaceSaved}
+                  userLocation={userLocation}
+                  onLocateMe={handleLocateMe}
+                  onViewDetails={(p) => setDrawerPlace(p)}
+                />
+              </div>
+            </div>
+
+            {/* RIGHT: 35% Editorial Discovery Panel (4 cols) - Fixed Top Controls + Independent Scrollable Feed */}
+            <div className="lg:col-span-4 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl bg-white border border-[#E3DFD7] p-3.5 sm:p-4 shadow-sm overflow-hidden">
+
+              {/* 1. FIXED: Category Filter Pills at Top */}
+              <div className="mb-2 shrink-0 min-w-0 w-full">
+                <CategoryFilters
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={handleCategorySelect}
+                />
+              </div>
+
+              {/* 2. FIXED: Natural Search Explanation Bar (if active) */}
+              {activeSearchExplanation && (
+                <div className="mb-2.5 px-3 py-1.5 bg-[#F5F3EE] rounded-xl border border-[#E3DFD7] text-xs text-[#191919] flex items-center justify-between shrink-0">
+                  <span className="font-semibold truncate text-[11px]">{activeSearchExplanation}</span>
+                  <button
+                    onClick={() => setActiveSearchExplanation(null)}
+                    className="text-[#F02D25] hover:underline text-[10px] font-bold shrink-0 ml-2 uppercase tracking-wider"
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
+
+              {/* 3. INDEPENDENT SCROLLABLE FEED OF PLACES */}
+              <div className="flex-1 overflow-y-auto min-h-0 space-y-3 pr-1 pt-1">
+                {isLoadingPlaces ? (
+                  <div className="py-16 text-center text-xs text-[#77736D]">
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F02D25]" />
+                    Loading places...
+                  </div>
+                ) : places.length > 0 ? (
+                  places.map((place) => (
+                    <PlaceCard
+                      key={place.place_id}
+                      place={place}
+                      isSelected={selectedPlace?.place_id === place.place_id}
+                      isSaved={isPlaceSaved(place.place_id)}
+                      onSelect={(p) => handleSelectPlace(p, false)}
+                      onSave={handleSavePlace}
+                      onViewDetails={(p) => setDrawerPlace(p)}
+                    />
+                  ))
+                ) : (
+                  <div className="py-16 text-center text-xs text-[#77736D] bg-[#ECE9E2] rounded-2xl border border-dashed border-[#E3DFD7] p-6">
+                    <p className="font-bold text-[#191919] uppercase">No places found</p>
+                    <p className="text-[11px] text-[#77736D] mt-1">
+                      Try selecting another category from the filters above.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+            </div>
+
+          </div>
+        </div>
 
         {/* PAGE: BANGO AI (DAY PLANNER & AI CONVERSATION) */}
         {currentPage === 'bango-ai' && (

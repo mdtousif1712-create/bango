@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Place } from '../types';
 import { Star, MapPin, Bookmark, ArrowUpRight, TrendingUp } from 'lucide-react';
 
@@ -25,7 +25,7 @@ const CATEGORY_TABS = [
   'Startups',
 ];
 
-export const TrendingSection: React.FC<TrendingSectionProps> = ({
+const TrendingSectionComponent: React.FC<TrendingSectionProps> = ({
   places,
   allPlaces,
   onSelectPlace,
@@ -41,26 +41,28 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Pool of all catalog places for the active domain
-  const poolOfAllPlaces = allPlaces && allPlaces.length > 0 ? allPlaces : places;
-  const domainAllPlaces = poolOfAllPlaces.filter(
-    (p) => p.category.toLowerCase() === selectedFilter.toLowerCase()
-  );
+  const poolOfAllPlaces = useMemo(() => {
+    return allPlaces && allPlaces.length > 0 ? allPlaces : places;
+  }, [allPlaces, places]);
 
-  // Combine scored trending places with any domain places from the full catalog
-  const filteredPlaces =
-    selectedFilter === 'All'
-      ? (places && places.length >= 20 ? places : poolOfAllPlaces)
-      : (() => {
-          const domainTrending = places.filter(
-            (p) => p.category.toLowerCase() === selectedFilter.toLowerCase()
-          );
-          const existingIds = new Set(domainTrending.map((p) => p.place_id));
-          const additional = domainAllPlaces.filter((p) => !existingIds.has(p.place_id));
-          return [...domainTrending, ...additional];
-        })();
+  // Combine scored trending places with any domain places from the full catalog (memoized)
+  const filteredPlaces = useMemo(() => {
+    if (selectedFilter === 'All') {
+      return places && places.length >= 20 ? places : poolOfAllPlaces;
+    }
+    const domainAllPlaces = poolOfAllPlaces.filter(
+      (p) => p.category.toLowerCase() === selectedFilter.toLowerCase()
+    );
+    const domainTrending = places.filter(
+      (p) => p.category.toLowerCase() === selectedFilter.toLowerCase()
+    );
+    const existingIds = new Set(domainTrending.map((p) => p.place_id));
+    const additional = domainAllPlaces.filter((p) => !existingIds.has(p.place_id));
+    return [...domainTrending, ...additional];
+  }, [places, poolOfAllPlaces, selectedFilter]);
 
   // Top 5 destinations for the featured rotating hero card
-  const heroCarouselPlaces = filteredPlaces.slice(0, 5);
+  const heroCarouselPlaces = useMemo(() => filteredPlaces.slice(0, 5), [filteredPlaces]);
   const activeIndex = activeFeaturedIndex % (heroCarouselPlaces.length || 1);
   const featured = heroCarouselPlaces[activeIndex] || filteredPlaces[0] || places[0];
 
@@ -83,9 +85,13 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   }, [selectedFilter]);
 
   // Remaining places for secondary stack (2 cards) and tertiary grid (all remaining cards)
-  const otherPlaces = filteredPlaces.filter((p) => p.place_id !== featured?.place_id);
-  const secondary = otherPlaces.slice(0, 2);
-  const tertiary = otherPlaces.slice(2);
+  const { secondary, tertiary } = useMemo(() => {
+    const other = filteredPlaces.filter((p) => p.place_id !== featured?.place_id);
+    return {
+      secondary: other.slice(0, 2),
+      tertiary: other.slice(2),
+    };
+  }, [filteredPlaces, featured?.place_id]);
 
   const handleExploreMap = (place: Place, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -351,3 +357,5 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
     </section>
   );
 };
+
+export const TrendingSection = React.memo(TrendingSectionComponent);

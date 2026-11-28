@@ -11,7 +11,7 @@ interface PlaceCardProps {
   onViewDetails: (place: Place) => void;
 }
 
-export const PlaceCard: React.FC<PlaceCardProps> = ({
+export const PlaceCard: React.FC<PlaceCardProps> = React.memo(({
   place,
   isSelected = false,
   isSaved = false,
@@ -35,6 +35,7 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
           alt={place.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
+          decoding="async"
         />
         {place.rating && (
           <div className="absolute bottom-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-[#191919]/80 backdrop-blur-xs text-white text-[10px] font-bold flex items-center gap-1">
@@ -98,4 +99,4 @@ export const PlaceCard: React.FC<PlaceCardProps> = ({
       </div>
     </div>
   );
-};
+});

@@ -11,7 +11,7 @@ interface RecommendationCardProps {
   onViewDetails: (place: Place) => void;
 }
 
-export const RecommendationCard: React.FC<RecommendationCardProps> = ({
+export const RecommendationCard: React.FC<RecommendationCardProps> = React.memo(({
   item,
   isSelected = false,
   isSaved = false,
@@ -39,6 +39,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
             alt={place.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
+            decoding="async"
           />
           {place.rating && (
             <div className="absolute bottom-1 left-1 px-1.5 py-0.2 rounded-md bg-[#191919]/80 backdrop-blur-xs text-white text-[9px] font-bold flex items-center gap-0.5">
@@ -102,4 +103,4 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       </div>
     </div>
   );
-};
+});

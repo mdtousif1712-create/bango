@@ -8,6 +8,7 @@ interface CityMapProps {
   places: Place[];
   selectedPlace: Place | null;
   focusedPlace?: Place | null;
+  isActive?: boolean;
   onClearFocus?: () => void;
   onSelectPlace: (place: Place) => void;
   onSavePlace: (place: Place) => void;
@@ -69,6 +70,15 @@ const createCustomMarkerIcon = (category: string) => {
   });
 };
 
+// Global cache for marker icons to avoid recreating DOM icons on every render
+const MARKER_ICON_CACHE: Record<string, L.DivIcon> = {};
+export const getCustomMarkerIcon = (category: string): L.DivIcon => {
+  if (!MARKER_ICON_CACHE[category]) {
+    MARKER_ICON_CACHE[category] = createCustomMarkerIcon(category);
+  }
+  return MARKER_ICON_CACHE[category];
+};
+
 const userLocationIcon = L.divIcon({
   html: `
     <div style="position: relative; width: 22px; height: 22px;">
@@ -81,12 +91,24 @@ const userLocationIcon = L.divIcon({
   iconAnchor: [11, 11],
 });
 
-// Map controller component for user geolocation pan and focused place flyTo
+// Map controller component for user geolocation pan, focused place flyTo, and resize invalidation
 const MapController: React.FC<{
   userLocation: { lat: number; lng: number } | null;
   focusedPlace?: Place | null;
-}> = ({ userLocation, focusedPlace }) => {
+  isActive?: boolean;
+}> = ({ userLocation, focusedPlace, isActive = true }) => {
   const map = useMap();
+
+  useEffect(() => {
+    if (isActive) {
+      const timer = setTimeout(() => {
+        try {
+          map.invalidateSize();
+        } catch {}
+      }, 60);
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, map]);
 
   useEffect(() => {
     if (focusedPlace) {
@@ -102,10 +124,11 @@ const MapController: React.FC<{
   return null;
 };
 
-export const CityMap: React.FC<CityMapProps> = ({
+const CityMapComponent: React.FC<CityMapProps> = ({
   places,
   selectedPlace,
   focusedPlace,
+  isActive = true,
   onClearFocus,
   onSelectPlace,
   onSavePlace,
@@ -138,7 +161,7 @@ export const CityMap: React.FC<CityMapProps> = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <MapController userLocation={userLocation} focusedPlace={focusedPlace} />
+        <MapController userLocation={userLocation} focusedPlace={focusedPlace} isActive={isActive} />
 
         {/* User Location Marker */}
         {userLocation && (
@@ -151,7 +174,7 @@ export const CityMap: React.FC<CityMapProps> = ({
 
         {/* Bengaluru Place Markers (Single isolated marker if focusedPlace is set, or all places) */}
         {displayPlaces.map((place) => {
-          const markerIcon = createCustomMarkerIcon(place.category);
+          const markerIcon = getCustomMarkerIcon(place.category);
           const categoryColor = CATEGORY_COLORS[place.category] || '#F02D25';
           const isFocused = Boolean(focusedPlace && place.place_id === focusedPlace.place_id);
 
@@ -182,6 +205,7 @@ export const CityMap: React.FC<CityMapProps> = ({
                       alt={place.name}
                       className="w-full h-full object-cover"
                       loading="lazy"
+                      decoding="async"
                     />
                     <div
                       className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
@@ -312,3 +336,5 @@ export const CityMap: React.FC<CityMapProps> = ({
     </div>
   );
 };
+
+export const CityMap = React.memo(CityMapComponent);

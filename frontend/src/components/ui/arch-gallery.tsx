@@ -187,6 +187,8 @@ export function ArchGallery({
                 src={entry.image.src}
                 alt={entry.image.alt || entry.title || ''}
                 draggable={false}
+                loading="lazy"
+                decoding="async"
                 className='pointer-events-none absolute inset-0 h-full w-full select-none object-cover transition-transform duration-500 group-hover:scale-105'
               />
 
