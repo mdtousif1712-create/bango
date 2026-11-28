@@ -9,7 +9,7 @@ router = APIRouter()
 @router.get("/trending")
 def get_trending(
     category: Optional[str] = Query(None, description="Domain category e.g. Tourism, Restaurants"),
-    limit: int = Query(10, ge=1, le=50)
+    limit: int = Query(100, ge=1, le=200)
 ):
     trending_places = trending_service.get_trending_places(category=category, limit=limit)
     return {

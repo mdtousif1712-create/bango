@@ -392,7 +392,7 @@ export const App: React.FC = () => {
         const [cats, plcs, trnd] = await Promise.all([
           fetchCategories(),
           fetchPlaces({ limit: 80 }),
-          fetchTrendingPlaces('All', 10),
+          fetchTrendingPlaces('All', 100),
         ]);
         setCategories(cats);
         setPlaces(plcs);
@@ -812,7 +812,8 @@ export const App: React.FC = () => {
       {/* PAGE 3: TRENDING */}
                               {currentPage === 'trending' && (
                                 <TrendingSection
-                                  places={trendingPlaces}
+                                  places={trendingPlaces && trendingPlaces.length >= 30 ? trendingPlaces : places}
+                                  allPlaces={places}
                                   onSelectPlace={(p) => handleSelectPlace(p, false)}
                                   onSavePlace={handleSavePlace}
                                   isPlaceSaved={isPlaceSaved}

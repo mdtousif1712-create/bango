@@ -46,7 +46,7 @@ export async function fetchPlaceDetails(place_id: string): Promise<Place> {
   return res.json();
 }
 
-export async function fetchTrendingPlaces(category?: string, limit: number = 10): Promise<Place[]> {
+export async function fetchTrendingPlaces(category?: string, limit: number = 100): Promise<Place[]> {
   const query = new URLSearchParams();
   if (category && category !== 'all') query.set('category', category);
   query.set('limit', limit.toString());

@@ -4,7 +4,7 @@ from app.services.location_service import location_service
 from app.services.apriori_engine import apriori_engine
 
 class TrendingService:
-    def get_trending_places(self, category: Optional[str] = None, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_trending_places(self, category: Optional[str] = None, limit: int = 100) -> List[Dict[str, Any]]:
         """
         Calculates trending places from occurrence counts in the smart city transactions dataset,
         weighted by historical citizen visits.

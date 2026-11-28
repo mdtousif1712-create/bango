@@ -4,6 +4,7 @@ import { Star, MapPin, Bookmark, ArrowUpRight, TrendingUp } from 'lucide-react';
 
 interface TrendingSectionProps {
   places: Place[];
+  allPlaces?: Place[];
   onSelectPlace: (place: Place) => void;
   onSavePlace: (place: Place) => void;
   isPlaceSaved: (placeId: string) => boolean;
@@ -25,6 +26,7 @@ const CATEGORY_TABS = [
 
 export const TrendingSection: React.FC<TrendingSectionProps> = ({
   places,
+  allPlaces,
   onSelectPlace,
   onSavePlace,
   isPlaceSaved,
@@ -36,15 +38,29 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Pool of all catalog places for the active domain
+  const poolOfAllPlaces = allPlaces && allPlaces.length > 0 ? allPlaces : places;
+  const domainAllPlaces = poolOfAllPlaces.filter(
+    (p) => p.category.toLowerCase() === selectedFilter.toLowerCase()
+  );
+
+  // Combine scored trending places with any domain places from the full catalog
   const filteredPlaces =
     selectedFilter === 'All'
-      ? places
-      : places.filter((p) => p.category.toLowerCase() === selectedFilter.toLowerCase());
+      ? (places && places.length >= 20 ? places : poolOfAllPlaces)
+      : (() => {
+          const domainTrending = places.filter(
+            (p) => p.category.toLowerCase() === selectedFilter.toLowerCase()
+          );
+          const existingIds = new Set(domainTrending.map((p) => p.place_id));
+          const additional = domainAllPlaces.filter((p) => !existingIds.has(p.place_id));
+          return [...domainTrending, ...additional];
+        })();
 
   // Top 5 destinations for the featured rotating hero card
   const heroCarouselPlaces = filteredPlaces.slice(0, 5);
   const activeIndex = activeFeaturedIndex % (heroCarouselPlaces.length || 1);
-  const featured = heroCarouselPlaces[activeIndex] || places[0];
+  const featured = heroCarouselPlaces[activeIndex] || filteredPlaces[0] || places[0];
 
   // Auto-rotating timer that changes featured card every 4.5 seconds (matching discover page)
   useEffect(() => {
@@ -64,10 +80,10 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
     setActiveFeaturedIndex(0);
   }, [selectedFilter]);
 
-  // Remaining places for secondary and tertiary grids
+  // Remaining places for secondary stack (2 cards) and tertiary grid (all remaining cards)
   const otherPlaces = filteredPlaces.filter((p) => p.place_id !== featured?.place_id);
   const secondary = otherPlaces.slice(0, 2);
-  const tertiary = otherPlaces.slice(2, 8);
+  const tertiary = otherPlaces.slice(2);
 
   const handleCardClick = (place: Place) => {
     onSelectPlace(place);
@@ -131,11 +147,15 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                 className="group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[460px] flex-1 flex flex-col justify-between select-none"
               >
                 {/* Photo with overlay and smooth keyframe fade */}
-                <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 z-0 bg-[#ECE9E2]">
                   <img
                     key={featured.place_id}
                     src={featured.image_url}
                     alt={featured.name}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1200&q=80';
+                    }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-[0.85] animate-in fade-in zoom-in-95"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20"></div>
@@ -230,6 +250,10 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                   <img
                     src={place.image_url}
                     alt={place.name}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=800&q=80';
+                    }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
@@ -278,6 +302,10 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                   <img
                     src={place.image_url}
                     alt={place.name}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=800&q=80';
+                    }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />

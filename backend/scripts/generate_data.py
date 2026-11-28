@@ -518,7 +518,7 @@ BENGALURU_PLACES: List[Dict] = [
         "locality": "Hosur Road / Dairy Circle",
         "latitude": 12.9342,
         "longitude": 77.6060,
-        "image_url": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+        "image_url": "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=800&q=80",
         "rating": 4.6,
         "review_count": 14700,
         "tags": ["university", "christ", "liberal arts", "commerce", "campus"],
