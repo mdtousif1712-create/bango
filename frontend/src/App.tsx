@@ -606,21 +606,21 @@ export const App: React.FC = () => {
         )}
 
         {/* PAGE 2: MAP EXPLORER - Fits 100% in viewport without outer scrolling */}
-      {currentPage === 'map' && (
-        <div className="w-full h-[calc(100vh-80px)] bg-[#ECE9E2] flex flex-col px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-3.5 overflow-hidden">
-          
-          {/* Top Heading Bar (shrink-0) */}
-          <div className="flex items-center justify-between gap-4 mb-2 sm:mb-2.5 shrink-0">
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#F02D25] shrink-0"></span>
-              <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-[#191919] tracking-tight leading-none whitespace-nowrap">
-                bengaluru map <span className="text-[#F02D25]">explorer.</span>
-              </h2>
-              <span className="hidden md:inline text-xs sm:text-sm text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
-                Explore destinations, transit hubs, and curated smart city locations across Bengaluru
-              </span>
+        {currentPage === 'map' && (
+          <div className="w-full h-[calc(100vh-80px)] bg-[#ECE9E2] flex flex-col px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-3.5 overflow-hidden">
+
+            {/* Top Heading Bar (shrink-0) */}
+            <div className="flex items-center justify-between gap-4 mb-2 sm:mb-2.5 shrink-0">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="w-3.5 h-3.5 rounded-full bg-[#F02D25] shrink-0"></span>
+                <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-[#191919] tracking-tight leading-none whitespace-nowrap">
+                  bengaluru map <span className="text-[#F02D25]">explorer.</span>
+                </h2>
+                <span className="hidden md:inline text-xs sm:text-sm text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
+                  Explore destinations, transit hubs, and curated smart city locations across Bengaluru
+                </span>
+              </div>
             </div>
-          </div>
 
             {/* 65 / 35 Responsive Grid Layout - Locked to remaining screen height (flex-1 min-h-0) */}
             <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 min-h-0 overflow-hidden">

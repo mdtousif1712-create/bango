@@ -35,9 +35,7 @@ export const clearStoredUser = (): void => {
 
 export const authenticateWithGoogle = async (params: {
   credential?: string;
-  email?: string;
-  name?: string;
-  picture?: string;
+  access_token?: string;
 }): Promise<AuthUser> => {
   const response = await fetch('/api/auth/google', {
     method: 'POST',

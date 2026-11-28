@@ -13,9 +13,7 @@ router = APIRouter(prefix="/auth")
 
 class GoogleAuthRequest(BaseModel):
     credential: Optional[str] = None
-    email: Optional[str] = None
-    name: Optional[str] = None
-    picture: Optional[str] = None
+    access_token: Optional[str] = None
 
 class SyncSavedRequest(BaseModel):
     email: str
@@ -25,11 +23,12 @@ class SyncSavedRequest(BaseModel):
 def google_auth(payload: GoogleAuthRequest):
     """
     Authenticate a user via Google Sign-In.
-    Verifies Google ID token (or payload profile), upserts user in MongoDB, and returns user session.
+    Verifies Google ID token (JWT) or OAuth2 access token directly with Google's servers,
+    upserts user in MongoDB, and returns user session.
     """
     user_info = {}
     
-    # If a real Google JWT credential is provided, verify it with Google's public tokeninfo
+    # 1. If a Google JWT ID credential is provided, verify via Google's tokeninfo endpoint
     if payload.credential:
         try:
             resp = requests.get(
@@ -47,39 +46,46 @@ def google_auth(payload: GoogleAuthRequest):
                 }
                 logger.info("Successfully verified Google ID token for email: %s", user_info["email"])
             else:
-                logger.warning("Token verification via tokeninfo returned %s, checking payload fallback", resp.status_code)
-                if payload.email:
-                    user_info = {
-                        "google_id": f"usr_{int(time.time())}",
-                        "email": payload.email,
-                        "name": payload.name or "Google Explorer",
-                        "picture": payload.picture or ""
-                    }
-                else:
-                    raise HTTPException(status_code=400, detail="Invalid Google ID token.")
+                logger.warning("Google tokeninfo returned status %s: %s", resp.status_code, resp.text)
+                raise HTTPException(status_code=401, detail="Invalid Google ID token. Please sign in again.")
         except HTTPException:
             raise
         except Exception as e:
             logger.error("Error validating Google credential: %s", str(e))
-            if payload.email:
+            raise HTTPException(status_code=502, detail="Failed to connect to Google authentication service.")
+
+    # 2. If a Google OAuth2 access token is provided, verify via Google's userinfo endpoint
+    elif payload.access_token:
+        try:
+            resp = requests.get(
+                "https://www.googleapis.com/oauth2/v3/userinfo",
+                headers={"Authorization": f"Bearer {payload.access_token}"},
+                timeout=5.0
+            )
+            if resp.status_code == 200:
+                data = resp.json()
                 user_info = {
-                    "google_id": f"usr_{int(time.time())}",
-                    "email": payload.email,
-                    "name": payload.name or "Google Explorer",
-                    "picture": payload.picture or ""
+                    "google_id": data.get("sub"),
+                    "email": data.get("email"),
+                    "name": data.get("name", "Google Explorer"),
+                    "picture": data.get("picture", ""),
+                    "email_verified": data.get("email_verified", True)
                 }
+                logger.info("Successfully verified Google access token for email: %s", user_info["email"])
             else:
-                raise HTTPException(status_code=400, detail="Failed to connect to Google authentication service.")
-    elif payload.email:
-        # Direct email / profile sign-in (for development and test accounts)
-        user_info = {
-            "google_id": f"usr_{hash(payload.email) & 0xffffffff}",
-            "email": payload.email,
-            "name": payload.name or "Google Explorer",
-            "picture": payload.picture or ""
-        }
+                logger.warning("Google userinfo returned status %s: %s", resp.status_code, resp.text)
+                raise HTTPException(status_code=401, detail="Invalid or expired Google access token.")
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error("Error validating Google access token: %s", str(e))
+            raise HTTPException(status_code=502, detail="Failed to connect to Google authentication service.")
+
     else:
-        raise HTTPException(status_code=400, detail="Missing credential or user profile.")
+        raise HTTPException(status_code=400, detail="Missing Google credential or access token.")
+
+    if not user_info.get("email"):
+        raise HTTPException(status_code=400, detail="No email address associated with this Google account.")
 
     # Upsert user record in MongoDB
     db = get_database()
