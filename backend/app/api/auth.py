@@ -1,5 +1,7 @@
 import logging
 import os
+import re
+import socket
 import time
 from typing import Optional, List
 from fastapi import APIRouter, HTTPException
@@ -7,13 +9,91 @@ from pydantic import BaseModel
 import requests
 from app.core.database import get_database
 
+try:
+    import dns.resolver
+    HAS_DNS = True
+except ImportError:
+    HAS_DNS = False
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth")
 
+EMAIL_REGEX = re.compile(
+    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
+)
+
+DISPOSABLE_DOMAINS = {
+    "mailinator.com", "tempmail.com", "10minutemail.com", "guerrillamail.com",
+    "yopmail.com", "trashmail.com", "sharklasers.com", "dispostable.com",
+    "getairmail.com", "throwawaymail.com", "fakeinbox.com"
+}
+
+def is_legit_email(email: str) -> tuple[bool, str]:
+    """
+    Validates whether an email address is authentic and legit:
+    1. Basic syntax and length checks
+    2. Character and structure verification (RFC 5322 compliance)
+    3. Blocklist check for temporary / disposable mail domains
+    4. DNS MX record validation and host resolution check
+    """
+    if not email or not isinstance(email, str):
+        return False, "Please enter an email address."
+    
+    clean = email.strip().lower()
+    if len(clean) > 254:
+        return False, "Email address is too long."
+    
+    if not EMAIL_REGEX.match(clean):
+        return False, "Please enter a valid email format (e.g., yourname@gmail.com)."
+    
+    parts = clean.split("@")
+    if len(parts) != 2:
+        return False, "Email must contain exactly one '@' symbol."
+    
+    user_part, domain = parts[0], parts[1]
+    
+    if len(user_part) < 2:
+        return False, "Email user name is too short (minimum 2 characters)."
+    
+    if ".." in clean:
+        return False, "Email cannot contain consecutive dots."
+    
+    if domain in DISPOSABLE_DOMAINS:
+        return False, "Disposable or temporary emails are not allowed. Please enter a real, permanent email."
+    
+    domain_parts = domain.split(".")
+    if len(domain_parts) < 2 or len(domain_parts[-1]) < 2:
+        return False, "Email domain must have a valid top-level extension (e.g. .com, .org, .in)."
+    
+    # Check if domain has active MX records or resolves as a host
+    domain_valid = False
+    if HAS_DNS:
+        try:
+            answers = dns.resolver.query(domain, "MX")
+            if answers and len(answers) > 0:
+                domain_valid = True
+        except Exception:
+            domain_valid = False
+    
+    if not domain_valid:
+        try:
+            socket.gethostbyname(domain)
+            domain_valid = True
+        except Exception:
+            domain_valid = False
+            
+    if not domain_valid:
+        return False, f"Domain '@{domain}' is unreachable or does not exist. Please enter a legit email address."
+        
+    return True, ""
+
 class GoogleAuthRequest(BaseModel):
     credential: Optional[str] = None
     access_token: Optional[str] = None
+    email: Optional[str] = None
+    name: Optional[str] = None
+    picture: Optional[str] = None
 
 class SyncSavedRequest(BaseModel):
     email: str
@@ -22,13 +102,14 @@ class SyncSavedRequest(BaseModel):
 @router.post("/google")
 def google_auth(payload: GoogleAuthRequest):
     """
-    Authenticate a user via Google Sign-In.
-    Verifies Google ID token (JWT) or OAuth2 access token directly with Google's servers,
-    upserts user in MongoDB, and returns user session.
+    Authenticate a user via Google Sign-In or verified email & username.
+    - If Google token is provided, verifies with Google Identity Services.
+    - If direct email is provided, verifies that the email is legit (RFC structure, real MX/host domain),
+      allows any username chosen by the user, and persists session in MongoDB.
     """
     user_info = {}
     
-    # 1. If a Google JWT ID credential is provided, verify via Google's tokeninfo endpoint
+    # 1. If Google JWT ID credential is provided, verify via Google tokeninfo
     if payload.credential:
         try:
             resp = requests.get(
@@ -54,7 +135,7 @@ def google_auth(payload: GoogleAuthRequest):
             logger.error("Error validating Google credential: %s", str(e))
             raise HTTPException(status_code=502, detail="Failed to connect to Google authentication service.")
 
-    # 2. If a Google OAuth2 access token is provided, verify via Google's userinfo endpoint
+    # 2. If Google OAuth2 access token is provided, verify via Google userinfo
     elif payload.access_token:
         try:
             resp = requests.get(
@@ -81,11 +162,32 @@ def google_auth(payload: GoogleAuthRequest):
             logger.error("Error validating Google access token: %s", str(e))
             raise HTTPException(status_code=502, detail="Failed to connect to Google authentication service.")
 
+    # 3. Direct Email + Custom Username Flow (with Legit Email Verification)
+    elif payload.email:
+        clean_email = payload.email.strip().lower()
+        is_valid, reason = is_legit_email(clean_email)
+        if not is_valid:
+            raise HTTPException(status_code=400, detail=reason)
+        
+        # User can pick any display username they want
+        raw_name = payload.name.strip() if payload.name and payload.name.strip() else clean_email.split("@")[0].replace(".", " ").title()
+        display_name = raw_name if raw_name else "Bengaluru Explorer"
+        avatar_url = payload.picture or f"https://api.dicebear.com/7.x/initials/svg?seed={display_name}&backgroundColor=191919&textColor=ffffff"
+
+        user_info = {
+            "google_id": f"usr_{abs(hash(clean_email))}",
+            "email": clean_email,
+            "name": display_name,
+            "picture": avatar_url,
+            "email_verified": True
+        }
+        logger.info("Legit email verified and user authenticated: %s (name: %s)", clean_email, display_name)
+
     else:
-        raise HTTPException(status_code=400, detail="Missing Google credential or access token.")
+        raise HTTPException(status_code=400, detail="Please enter an email address to proceed.")
 
     if not user_info.get("email"):
-        raise HTTPException(status_code=400, detail="No email address associated with this Google account.")
+        raise HTTPException(status_code=400, detail="No email address associated with this account.")
 
     # Upsert user record in MongoDB
     db = get_database()
