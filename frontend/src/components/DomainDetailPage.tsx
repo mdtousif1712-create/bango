@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ArrowUpRight,
   MapPin,
   Star,
   Bookmark,
@@ -139,24 +140,45 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* HERO DISPLAY SECTION (Matches Healthcare reference) */}
         <div className="mb-10 sm:mb-12">
-          <div>
-            {/* Category Pill Tag */}
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: meta.color }}></span>
-              <span className="text-xs font-black uppercase tracking-widest text-[#77736D]">
-                Bengaluru Smart City Sector &bull; {domainPlaces.length} Verified Locations
-              </span>
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div>
+              {/* Category Pill Tag */}
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: meta.color }}></span>
+                <span className="text-xs font-black uppercase tracking-widest text-[#77736D]">
+                  Bengaluru Smart City Sector &bull; {domainPlaces.length} Verified Locations
+                </span>
+              </div>
+
+              {/* Huge Bold Title (e.g. HEALTHCARE, TRANSPORTATION, STARTUPS) */}
+              <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[#191919] uppercase leading-none">
+                {canonicalDomain}
+              </h1>
+
+              {/* Tagline / Subtitle */}
+              <p className="text-base sm:text-lg text-[#66635C] mt-4 max-w-3xl leading-relaxed font-medium">
+                {meta.tagline}. {meta.description}
+              </p>
             </div>
 
-            {/* Huge Bold Title (e.g. HEALTHCARE, TRANSPORTATION) */}
-            <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[#191919] uppercase leading-none">
-              {canonicalDomain}
-            </h1>
+            {/* If Startups domain: show dedicated startup map button */}
+            {canonicalDomain.toLowerCase() === 'startups' && (
+              <a
+                href="https://www.bangalorestartupmap.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex items-center justify-between gap-4 sm:gap-6 px-7 sm:px-9 py-3.5 sm:py-4 rounded-full bg-[#191919] hover:bg-[#F02D25] text-white text-xs sm:text-[13px] font-bold uppercase tracking-wider transition-all duration-300 ease-out shadow-md hover:shadow-xl hover:shadow-[#F02D25]/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer shrink-0 overflow-hidden"
+                title="Open Dedicated Bangalore Startup Map"
+              >
+                <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 whitespace-nowrap">
+                  Open Dedicated Startup Map
+                </span>
 
-            {/* Tagline / Subtitle */}
-            <p className="text-base sm:text-lg text-[#66635C] mt-4 max-w-3xl leading-relaxed font-medium">
-              {meta.tagline}. {meta.description}
-            </p>
+                <div className="relative z-10 w-7 h-7 rounded-full bg-[#F02D25] group-hover:bg-[#191919] flex items-center justify-center text-white shrink-0 transition-colors duration-300">
+                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-45 group-hover:scale-110" />
+                </div>
+              </a>
+            )}
           </div>
         </div>
 
