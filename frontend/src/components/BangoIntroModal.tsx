@@ -22,32 +22,50 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
     const video = videoRef.current;
     if (!video) return;
 
-    // Automatically play with full sound enabled
+    // Enable sound by default with full volume
     video.muted = false;
-    video.volume = 1;
+    video.volume = 1.0;
 
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch((err) => {
-        console.warn('Browser required gesture for sound:', err);
-        // Play video immediately, and unmute on first gesture silently without showing any UI badge
+    let cleanupListeners: (() => void) | null = null;
+
+    const startPlayback = async () => {
+      try {
+        await video.play();
+      } catch (err) {
+        console.warn('Autoplay with sound prevented by browser policy; starting muted with instant unmute on interaction:', err);
+        // Fallback: start muted so video doesn't stall if browser strictly enforces autoplay policy
         video.muted = true;
-        video.play().then(() => {
-          video.muted = false;
-        }).catch(() => {});
-      });
-    }
+        try {
+          await video.play();
+        } catch {
+          handleFinish();
+          return;
+        }
 
-    const handleSilentUnmute = () => {
-      if (video && video.muted) {
-        video.muted = false;
-        video.volume = 1;
+        // On first user interaction, unmute audio immediately
+        const unmuteOnUserGesture = () => {
+          try {
+            video.muted = false;
+            video.volume = 1.0;
+          } catch {}
+          removeGestureListeners();
+        };
+
+        const removeGestureListeners = () => {
+          window.removeEventListener('click', unmuteOnUserGesture);
+          window.removeEventListener('touchstart', unmuteOnUserGesture);
+          window.removeEventListener('keydown', unmuteOnUserGesture);
+        };
+
+        window.addEventListener('click', unmuteOnUserGesture, { once: true });
+        window.addEventListener('touchstart', unmuteOnUserGesture, { once: true });
+        window.addEventListener('keydown', unmuteOnUserGesture, { once: true });
+
+        cleanupListeners = removeGestureListeners;
       }
     };
 
-    window.addEventListener('click', handleSilentUnmute);
-    window.addEventListener('keydown', handleSilentUnmute);
-    window.addEventListener('touchstart', handleSilentUnmute);
+    startPlayback();
 
     const handleTimeUpdate = () => {
       if (video.duration) {
@@ -71,9 +89,7 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener('click', handleSilentUnmute);
-      window.removeEventListener('keydown', handleSilentUnmute);
-      window.removeEventListener('touchstart', handleSilentUnmute);
+      if (cleanupListeners) cleanupListeners();
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('ended', handleEnded);
       window.removeEventListener('keydown', handleKeyDown);
