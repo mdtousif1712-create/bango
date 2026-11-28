@@ -87,12 +87,6 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-2 h-2 rounded-full bg-[#F02D25]"></span>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#77736D]">
-                bango &bull; 8 Smart City Sectors
-              </span>
-            </div>
             <h2 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
               one city. <br />
               endless possibilities.

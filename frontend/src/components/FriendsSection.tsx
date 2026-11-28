@@ -215,12 +215,6 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
         {/* 1. SECTION HERO HEADER */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 sm:mb-12">
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#F02D25]"></span>
-              <span className="text-xs font-black uppercase tracking-widest text-[#77736D]">
-                bango &bull; Urban Social Discovery
-              </span>
-            </div>
             <h1 className="font-display font-black text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
               explore bengaluru <br className="hidden sm:inline" />
               with friends.
