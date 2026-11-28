@@ -146,63 +146,63 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
             </div>
           </div>
 
-        {/* Action Buttons */}
-        <div className="p-4 sm:p-5 border-b border-[#E3DFD7] bg-[#F5F3EE]">
-          <div className="grid grid-cols-4 gap-2">
-            <button
-              onClick={() => onSelectPlace(place)}
-              className="h-11 px-1 bg-[#F02D25] hover:bg-[#d0251e] text-white text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0"
-              title="Explore this location on inside app map"
-            >
-              <Compass className="w-3.5 h-3.5 shrink-0 text-white" />
-              <span className="truncate">Explore</span>
-            </button>
+          {/* Action Buttons */}
+          <div className="p-4 sm:p-5 border-b border-[#E3DFD7] bg-[#F5F3EE]">
+            <div className="grid grid-cols-4 gap-2">
+              <button
+                onClick={() => onSelectPlace(place)}
+                className="h-11 px-1 bg-[#F02D25] hover:bg-[#d0251e] text-white text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0"
+                title="Explore this location on inside app map"
+              >
+                <Compass className="w-3.5 h-3.5 shrink-0 text-white" />
+                <span className="truncate">Explore</span>
+              </button>
 
-            <button
-              onClick={handleDirections}
-              className="h-11 px-1 bg-[#191919] hover:bg-[#333] text-white text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0"
-              title="Google Maps Directions"
-            >
-              <Navigation2 className="w-3.5 h-3.5 shrink-0 fill-white" />
-              <span className="truncate">G Direction</span>
-            </button>
+              <button
+                onClick={handleDirections}
+                className="h-11 px-1 bg-[#191919] hover:bg-[#333] text-white text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0"
+                title="Google Maps Directions"
+              >
+                <Navigation2 className="w-3.5 h-3.5 shrink-0 fill-white" />
+                <span className="truncate">G Direction</span>
+              </button>
 
-            <button
-              onClick={() => onSavePlace(place)}
-              className={`h-11 px-1 border text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 shadow-2xs ${
-                isSaved
-                  ? 'bg-[#F02D25] text-white border-[#F02D25]'
-                  : 'border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2]'
-              }`}
-              title={isSaved ? 'Saved to collection' : 'Bookmark destination'}
-            >
-              <Bookmark className={`w-3.5 h-3.5 shrink-0 ${isSaved ? 'fill-current' : ''}`} />
-              <span className="truncate">{isSaved ? 'Saved' : 'Bookmark'}</span>
-            </button>
+              <button
+                onClick={() => onSavePlace(place)}
+                className={`h-11 px-1 border text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 shadow-2xs ${
+                  isSaved
+                    ? 'bg-[#F02D25] text-white border-[#F02D25]'
+                    : 'border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2]'
+                }`}
+                title={isSaved ? 'Saved to collection' : 'Bookmark destination'}
+              >
+                <Bookmark className={`w-3.5 h-3.5 shrink-0 ${isSaved ? 'fill-current' : ''}`} />
+                <span className="truncate">{isSaved ? 'Saved' : 'Bookmark'}</span>
+              </button>
 
-            <button
-              onClick={() => setIsShareModalOpen(true)}
-              className="h-11 px-1 border border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2] text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 shadow-2xs"
-              title="Share with friends in app or via link"
-            >
-              <Share2 className="w-3.5 h-3.5 shrink-0 text-[#F02D25]" />
-              <span className="truncate">Share</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Details Section */}
-        <div className="p-6 space-y-6">
-          <div>
-            <h4 className="text-xs font-bold text-[#77736D] uppercase tracking-wider mb-2">
-              About This Destination
-            </h4>
-            <p className="text-sm text-[#191919] leading-relaxed font-normal">
-              {place.description}
-            </p>
+              <button
+                onClick={() => setIsShareModalOpen(true)}
+                className="h-11 px-1 border border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2] text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 shadow-2xs"
+                title="Share with friends in app or via link"
+              >
+                <Share2 className="w-3.5 h-3.5 shrink-0 text-[#F02D25]" />
+                <span className="truncate">Share</span>
+              </button>
+            </div>
           </div>
 
-          <div className="space-y-2">
+          {/* Details Section */}
+          <div className="p-6 space-y-6">
+            <div>
+              <h4 className="text-xs font-bold text-[#77736D] uppercase tracking-wider mb-2">
+                About This Destination
+              </h4>
+              <p className="text-sm text-[#191919] leading-relaxed font-normal">
+                {place.description}
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <h4 className="text-xs font-bold text-[#77736D] uppercase tracking-wider mb-2">
                 Civic Address & Coordinates
               </h4>
