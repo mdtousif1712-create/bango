@@ -245,15 +245,6 @@ export const Header: React.FC<HeaderProps> = ({
                       </div>
                     </div>
                   </div>
-
-                  <div className="pt-3 mt-3 border-t border-[#E3DFD7]">
-                    <button
-                      onClick={() => handleNavClick('map')}
-                      className="w-full text-center py-2.5 text-xs sm:text-sm font-black text-[#191919] hover:text-[#F02D25] hover:bg-[#F5F3EE] rounded-xl transition-colors cursor-pointer"
-                    >
-                      Open Bengaluru Map &rarr;
-                    </button>
-                  </div>
                 </div>
               )}
             </div>
