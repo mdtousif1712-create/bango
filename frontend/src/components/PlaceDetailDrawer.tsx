@@ -147,45 +147,48 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="p-4 sm:p-6 border-b border-[#E3DFD7] flex flex-wrap items-center gap-2.5 sm:gap-3 bg-[#F5F3EE]">
-          <button
-            onClick={() => onSelectPlace(place)}
-            className="flex-1 py-3 px-4 bg-[#F02D25] hover:bg-[#d0251e] text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
-            title="Explore this location on inside app map"
-          >
-            <Compass className="w-4 h-4 text-white" />
-            <span>Explore on Map</span>
-          </button>
+        <div className="p-4 sm:p-5 border-b border-[#E3DFD7] bg-[#F5F3EE]">
+          <div className="grid grid-cols-4 gap-2">
+            <button
+              onClick={() => onSelectPlace(place)}
+              className="h-11 px-1 bg-[#F02D25] hover:bg-[#d0251e] text-white text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0"
+              title="Explore this location on inside app map"
+            >
+              <Compass className="w-3.5 h-3.5 shrink-0 text-white" />
+              <span className="truncate">Explore</span>
+            </button>
 
-          <button
-            onClick={handleDirections}
-            className="py-3 px-3.5 bg-[#191919] hover:bg-[#333] text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
-            title="Google Maps Directions"
-          >
-            <Navigation2 className="w-4 h-4 fill-white" />
-            <span className="hidden sm:inline">Directions</span>
-          </button>
+            <button
+              onClick={handleDirections}
+              className="h-11 px-1 bg-[#191919] hover:bg-[#333] text-white text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0"
+              title="Google Maps Directions"
+            >
+              <Navigation2 className="w-3.5 h-3.5 shrink-0 fill-white" />
+              <span className="truncate">G Direction</span>
+            </button>
 
-          <button
-            onClick={() => onSavePlace(place)}
-            className={`py-3 px-3.5 border text-xs font-bold uppercase tracking-wider rounded-2xl transition-all flex items-center gap-2 cursor-pointer ${
-              isSaved
-                ? 'bg-[#F02D25] text-white border-[#F02D25]'
-                : 'border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2]'
-            }`}
-          >
-            <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
-            <span>{isSaved ? 'Saved' : 'Bookmark'}</span>
-          </button>
+            <button
+              onClick={() => onSavePlace(place)}
+              className={`h-11 px-1 border text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 shadow-2xs ${
+                isSaved
+                  ? 'bg-[#F02D25] text-white border-[#F02D25]'
+                  : 'border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2]'
+              }`}
+              title={isSaved ? 'Saved to collection' : 'Bookmark destination'}
+            >
+              <Bookmark className={`w-3.5 h-3.5 shrink-0 ${isSaved ? 'fill-current' : ''}`} />
+              <span className="truncate">{isSaved ? 'Saved' : 'Bookmark'}</span>
+            </button>
 
-          <button
-            onClick={() => setIsShareModalOpen(true)}
-            className="py-3 px-3.5 border border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2] text-xs font-bold uppercase tracking-wider rounded-2xl transition-all flex items-center gap-2 cursor-pointer shadow-2xs"
-            title="Share with friends in app or via link"
-          >
-            <Share2 className="w-4 h-4 text-[#F02D25]" />
-            <span>Share</span>
-          </button>
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className="h-11 px-1 border border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2] text-[11px] font-extrabold uppercase tracking-tight rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap min-w-0 shadow-2xs"
+              title="Share with friends in app or via link"
+            >
+              <Share2 className="w-3.5 h-3.5 shrink-0 text-[#F02D25]" />
+              <span className="truncate">Share</span>
+            </button>
+          </div>
         </div>
 
         {/* Details Section */}
