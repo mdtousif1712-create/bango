@@ -21,15 +21,20 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const googleBtnRef = useRef<HTMLDivElement>(null);
 
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+  const clientId =
+    import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+    '762108023268-vqer99vjf0f2g4i9ki0ub4dcjman0gr5.apps.googleusercontent.com';
 
   // Initialize official Google Identity Services silently in background if client ID is configured
   useEffect(() => {
     if (!isOpen || !clientId) return;
 
-    if (typeof window !== 'undefined' && (window as any).google?.accounts?.id) {
+    const renderGoogleButton = () => {
+      const g = (window as any).google;
+      if (!g?.accounts?.id) return;
+
       try {
-        (window as any).google.accounts.id.initialize({
+        g.accounts.id.initialize({
           client_id: clientId,
           callback: async (response: any) => {
             if (response.credential) {
@@ -46,20 +51,35 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
               }
             }
           },
+          auto_select: false,
         });
 
         if (googleBtnRef.current) {
-          (window as any).google.accounts.id.renderButton(googleBtnRef.current, {
+          googleBtnRef.current.innerHTML = '';
+          g.accounts.id.renderButton(googleBtnRef.current, {
             theme: 'outline',
             size: 'large',
             width: 320,
             text: 'continue_with',
             shape: 'pill',
+            logo_alignment: 'left',
           });
         }
       } catch (e) {
         console.warn('Google GSI initialization warning:', e);
       }
+    };
+
+    if ((window as any).google?.accounts?.id) {
+      renderGoogleButton();
+    } else {
+      const timer = setInterval(() => {
+        if ((window as any).google?.accounts?.id) {
+          clearInterval(timer);
+          renderGoogleButton();
+        }
+      }, 200);
+      return () => clearInterval(timer);
     }
   }, [isOpen, clientId]);
 
@@ -172,10 +192,18 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
           </div>
         )}
 
-        {/* Optional Google Identity Services Button Container (if client ID configured in codebase) */}
+        {/* Official Google Identity Services One Tap / Button (rendered via Client ID) */}
         {clientId && (
-          <div className="flex justify-center mb-4">
-            <div ref={googleBtnRef} />
+          <div className="mb-4">
+            <div className="flex justify-center">
+              <div ref={googleBtnRef} className="min-h-[44px]" />
+            </div>
+            <div className="relative my-4 flex items-center justify-center">
+              <div className="border-t border-[#E3DFD7] w-full" />
+              <span className="bg-white px-3 text-[10px] uppercase font-bold text-[#77736D] tracking-wider absolute">
+                or with email
+              </span>
+            </div>
           </div>
         )}
 
