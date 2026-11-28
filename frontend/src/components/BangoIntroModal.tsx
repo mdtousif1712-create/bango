@@ -116,15 +116,15 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
         </div>
       </div>
 
-      {/* Center Video Cinema Container */}
-      <div className="relative w-full h-full flex items-center justify-center p-0 sm:p-4 md:p-8">
+      {/* Fullscreen Video Container */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center">
         <video
           ref={videoRef}
           playsInline
           autoPlay
           muted={isMuted}
           preload="auto"
-          className="w-full h-full object-contain max-h-[92vh] max-w-[96vw] rounded-none sm:rounded-2xl shadow-2xl"
+          className="w-full h-full object-cover"
         >
           <source src="/bango_og_intro.webm" type="video/webm" />
           <source src="/bango_og_intro.mp4" type="video/mp4" />
