@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, VolumeX, ArrowRight, Play, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface BangoIntroModalProps {
   onComplete: () => void;
@@ -7,9 +7,7 @@ interface BangoIntroModalProps {
 
 export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) => {
   const [isFading, setIsFading] = useState<boolean>(false);
-  const [isMuted, setIsMuted] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleFinish = () => {
@@ -31,9 +29,7 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
         console.warn('Autoplay prevented or video playback error:', err);
         // Fallback: If autoplay fails, ensure video plays muted
         video.muted = true;
-        setIsMuted(true);
         video.play().catch(() => {
-          // If playback totally fails, don't trap user
           handleFinish();
         });
       });
@@ -67,14 +63,6 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
     };
   }, []);
 
-  const toggleSound = () => {
-    if (videoRef.current) {
-      const nextMuted = !videoRef.current.muted;
-      videoRef.current.muted = nextMuted;
-      setIsMuted(nextMuted);
-    }
-  };
-
   return (
     <div
       className={`fixed inset-0 z-[9999] bg-[#0A0A0B] flex flex-col items-center justify-center transition-all duration-700 ease-out select-none ${
@@ -96,15 +84,6 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
 
         {/* Action Controls */}
         <div className="flex items-center gap-3">
-          {/* Sound Toggle Button */}
-          <button
-            onClick={toggleSound}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white/80 hover:text-white backdrop-blur-md transition-all cursor-pointer"
-            title={isMuted ? 'Unmute' : 'Mute'}
-          >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
-
           {/* Skip Button */}
           <button
             onClick={handleFinish}
@@ -122,7 +101,7 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
           ref={videoRef}
           playsInline
           autoPlay
-          muted={isMuted}
+          muted
           preload="auto"
           className="w-full h-full object-cover"
         >
