@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Users,
   UserPlus,
@@ -19,7 +19,10 @@ import {
   Coffee,
   Beer,
   Layers,
-  Copy
+  Copy,
+  Plus,
+  Trash2,
+  X
 } from 'lucide-react';
 import { Place } from '../types';
 import { CATEGORY_COLORS } from './CityMap';
@@ -46,62 +49,12 @@ interface FriendProfile {
   recentSavedPlaceId: string;
 }
 
-const MOCK_FRIENDS: FriendProfile[] = [
-  {
-    id: 'f-1',
-    name: 'Arjun Mehta',
-    handle: '@arjun_blr',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-    locality: 'Indiranagar',
-    savedPlacesCount: 16,
-    favoriteDomain: 'Restaurants',
-    status: 'Exploring craft breweries on 100ft Road 🍺',
-    recentSavedPlaceId: 'blr_rest_01', // Toit
-  },
-  {
-    id: 'f-2',
-    name: 'Priya Rao',
-    handle: '@priyarao_arch',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80',
-    locality: 'Malleshwaram',
-    savedPlacesCount: 22,
-    favoriteDomain: 'Tourism',
-    status: 'Sketching colonial balconies near Cubbon Park 🌿',
-    recentSavedPlaceId: 'blr_tour_01', // Cubbon Park
-  },
-  {
-    id: 'f-3',
-    name: 'Karthik Somayaji',
-    handle: '@karthik_filtercoffee',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-    locality: 'Basavanagudi',
-    savedPlacesCount: 19,
-    favoriteDomain: 'Restaurants',
-    status: 'Crispy benne dosa crawl at Vidyarthi Bhavan ☕',
-    recentSavedPlaceId: 'blr_rest_02', // Vidyarthi Bhavan
-  },
-  {
-    id: 'f-4',
-    name: 'Ananya Sharma',
-    handle: '@ananya_deeptech',
-    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80',
-    locality: 'HSR Layout',
-    savedPlacesCount: 25,
-    favoriteDomain: 'Startups',
-    status: 'Demo day at HSR Sector 4 incubator 🚀',
-    recentSavedPlaceId: 'blr_startup_02', // HSR Founders Corridor
-  },
-  {
-    id: 'f-5',
-    name: 'Rohan Deshmukh',
-    handle: '@rohan_transit',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
-    locality: 'Central Bengaluru',
-    savedPlacesCount: 14,
-    favoriteDomain: 'Transportation',
-    status: 'Testing new Purple Line feeder connections 🚇',
-    recentSavedPlaceId: 'blr_trans_01', // Majestic Metro Station
-  },
+const DEFAULT_AVATARS = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
 ];
 
 const LOCALITY_MIDPOINTS: Record<string, { midpointLocality: string; note: string; spotPlaceId: string }> = {
@@ -143,7 +96,87 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'feed' | 'circles' | 'midpoint'>('feed');
   const [copiedInvite, setCopiedInvite] = useState(false);
-  const [selectedFriend, setSelectedFriend] = useState<FriendProfile>(MOCK_FRIENDS[0]);
+  const [friends, setFriends] = useState<FriendProfile[]>(() => {
+    try {
+      const saved = localStorage.getItem('bango_connected_friends');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [selectedFriend, setSelectedFriend] = useState<FriendProfile | null>(null);
+
+  // Add friend modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [friendName, setFriendName] = useState('');
+  const [friendHandle, setFriendHandle] = useState('');
+  const [friendLocality, setFriendLocality] = useState('Indiranagar');
+  const [friendDomain, setFriendDomain] = useState('Restaurants');
+  const [friendStatus, setFriendStatus] = useState('');
+  const [friendPlaceId, setFriendPlaceId] = useState('');
+
+  // Keep selectedFriend in sync if list changes
+  useEffect(() => {
+    if (friends.length > 0) {
+      if (!selectedFriend || !friends.some((f) => f.id === selectedFriend.id)) {
+        setSelectedFriend(friends[0]);
+      }
+    } else {
+      setSelectedFriend(null);
+    }
+  }, [friends, selectedFriend]);
+
+  const handleAddFriend = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!friendName.trim()) return;
+
+    const chosenPlaceId =
+      friendPlaceId ||
+      places.find((p) => p.category === friendDomain)?.place_id ||
+      places[0]?.place_id ||
+      '';
+
+    const newFriend: FriendProfile = {
+      id: `friend_${Date.now()}`,
+      name: friendName.trim(),
+      handle: friendHandle.trim().startsWith('@')
+        ? friendHandle.trim()
+        : `@${friendHandle.trim().toLowerCase().replace(/\s+/g, '_') || 'bango_user'}`,
+      avatar: DEFAULT_AVATARS[friends.length % DEFAULT_AVATARS.length],
+      locality: friendLocality,
+      savedPlacesCount: 1,
+      favoriteDomain: friendDomain,
+      status: friendStatus.trim() || `Exploring ${friendLocality} hotspots 📍`,
+      recentSavedPlaceId: chosenPlaceId,
+    };
+
+    const updated = [newFriend, ...friends];
+    setFriends(updated);
+    setSelectedFriend(newFriend);
+    try {
+      localStorage.setItem('bango_connected_friends', JSON.stringify(updated));
+    } catch (err) {
+      console.error(err);
+    }
+
+    setFriendName('');
+    setFriendHandle('');
+    setFriendStatus('');
+    setFriendPlaceId('');
+    setShowAddModal(false);
+    onShowToast(`Connected with ${newFriend.name}!`, 'Added to your Bengaluru circle');
+  };
+
+  const handleRemoveFriend = (friendId: string, name: string) => {
+    const updated = friends.filter((f) => f.id !== friendId);
+    setFriends(updated);
+    try {
+      localStorage.setItem('bango_connected_friends', JSON.stringify(updated));
+    } catch (err) {
+      console.error(err);
+    }
+    onShowToast(`Removed ${name}`, 'Friend removed from your circle');
+  };
 
   // Midpoint selector state
   const [localityA, setLocalityA] = useState('Indiranagar');
@@ -193,6 +226,14 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
 
           {/* Action buttons */}
           <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#E3DFD7] hover:border-[#191919] text-xs sm:text-sm font-extrabold text-[#191919] hover:bg-[#F5F3EE] transition-all cursor-pointer shadow-xs"
+            >
+              <Plus className="w-4 h-4 text-[#F02D25]" />
+              <span>Add Friend</span>
+            </button>
+
             <button
               onClick={handleCopyInviteLink}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#E3DFD7] hover:border-[#191919] text-xs sm:text-sm font-extrabold text-[#191919] hover:bg-[#F5F3EE] transition-all cursor-pointer shadow-xs"
@@ -257,101 +298,147 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
                   Live Activity in Bengaluru
                 </span>
                 <span className="text-xs font-medium text-[#77736D]">
-                  Updated 3 minutes ago
+                  {friends.length === 0 ? '0 Connected Friends' : `${friends.length} Active Friends`}
                 </span>
               </div>
 
-              {MOCK_FRIENDS.map((friend, idx) => {
-                const place =
-                  places.find((p) => p.place_id === friend.recentSavedPlaceId) ||
-                  places[idx % places.length];
-                const isSaved = isPlaceSaved(place?.place_id);
+              {friends.length === 0 ? (
+                <div className="bg-white rounded-3xl border border-[#E3DFD7] p-8 sm:p-12 text-center shadow-xs">
+                  <div className="w-16 h-16 rounded-full bg-[#FAF8F5] border border-[#E3DFD7] text-[#F02D25] flex items-center justify-center mx-auto mb-4 shadow-xs">
+                    <Users className="w-8 h-8" />
+                  </div>
+                  <h3 className="font-display font-black text-2xl text-[#191919] tracking-tight">
+                    No Friend Activity Yet
+                  </h3>
+                  <p className="text-sm text-[#66635C] mt-2 max-w-md mx-auto leading-relaxed">
+                    You haven&apos;t connected with any friends on Bango yet. Share your invite link or connect with friends to see what places they are exploring and saving across Bengaluru!
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+                    <button
+                      onClick={handleCopyInviteLink}
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F02D25] hover:bg-[#d0251e] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-sm"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                      <span>Invite Friends</span>
+                    </button>
+                    <button
+                      onClick={() => setShowAddModal(true)}
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#191919] hover:bg-[#333] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-sm"
+                    >
+                      <Plus className="w-4 h-4 text-[#F02D25]" />
+                      <span>Add a Friend</span>
+                    </button>
+                    <button
+                      onClick={onNavigateToMap}
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-[#E3DFD7] hover:border-[#191919] text-[#191919] text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
+                    >
+                      <Compass className="w-4 h-4 text-[#F02D25]" />
+                      <span>Explore Group Map</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                friends.map((friend, idx) => {
+                  const place =
+                    places.find((p) => p.place_id === friend.recentSavedPlaceId) ||
+                    places[idx % places.length];
+                  const isSaved = isPlaceSaved(place?.place_id);
 
-                return (
-                  <div
-                    key={friend.id}
-                    className="bg-white rounded-3xl border border-[#E3DFD7] p-5 sm:p-6 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row items-start gap-5"
-                  >
-                    {/* Friend Avatar */}
-                    <img
-                      src={friend.avatar}
-                      alt={friend.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-xs shrink-0"
-                    />
+                  return (
+                    <div
+                      key={friend.id}
+                      className="bg-white rounded-3xl border border-[#E3DFD7] p-5 sm:p-6 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row items-start gap-5"
+                    >
+                      {/* Friend Avatar */}
+                      <img
+                        src={friend.avatar}
+                        alt={friend.name}
+                        className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-xs shrink-0"
+                      />
 
-                    {/* Activity Body */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div>
-                          <h4 className="font-extrabold text-[#191919] text-sm sm:text-base leading-none">
-                            {friend.name}
-                          </h4>
-                          <span className="text-xs text-[#77736D] font-mono mt-0.5 block">
-                            {friend.handle} &bull; {friend.locality}
-                          </span>
+                      {/* Activity Body */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div>
+                            <h4 className="font-extrabold text-[#191919] text-sm sm:text-base leading-none">
+                              {friend.name}
+                            </h4>
+                            <span className="text-xs text-[#77736D] font-mono mt-0.5 block">
+                              {friend.handle} &bull; {friend.locality}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-bold text-[#F02D25] bg-[#F5F3EE] px-2.5 py-1 rounded-full border border-[#E3DFD7]">
+                              Saved to {friend.favoriteDomain}
+                            </span>
+                            <button
+                              onClick={() => handleRemoveFriend(friend.id, friend.name)}
+                              className="p-1 rounded-lg text-[#77736D] hover:text-[#F02D25] hover:bg-[#F5F3EE] transition-colors cursor-pointer"
+                              title="Remove Friend"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
-                        <span className="text-[11px] font-bold text-[#F02D25] bg-[#F5F3EE] px-2.5 py-1 rounded-full border border-[#E3DFD7]">
-                          Saved to {friend.favoriteDomain}
-                        </span>
-                      </div>
 
-                      {/* Status note */}
-                      <p className="text-xs text-[#191919] font-medium mt-2.5 bg-[#FAF8F5] p-2.5 rounded-xl border border-[#E3DFD7]">
-                        &ldquo;{friend.status}&rdquo;
-                      </p>
+                        {/* Status note */}
+                        <p className="text-xs text-[#191919] font-medium mt-2.5 bg-[#FAF8F5] p-2.5 rounded-xl border border-[#E3DFD7]">
+                          &ldquo;{friend.status}&rdquo;
+                        </p>
 
-                      {/* Embedded Place Card */}
-                      {place && (
-                        <div className="mt-4 p-3 bg-[#F5F3EE] rounded-2xl border border-[#E3DFD7] flex flex-col sm:flex-row items-center justify-between gap-3 group hover:border-[#191919] transition-all">
-                          <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
-                            <img
-                              src={place.image_url}
-                              alt={place.name}
-                              className="w-14 h-14 rounded-xl object-cover shrink-0"
-                            />
-                            <div className="min-w-0">
-                              <h5 className="font-display font-bold text-sm text-[#191919] truncate group-hover:text-[#F02D25] transition-colors">
-                                {place.name}
-                              </h5>
-                              <p className="text-xs text-[#77736D] truncate mt-0.5 flex items-center gap-1">
-                                <MapPin className="w-3 h-3 text-[#F02D25] shrink-0" />
-                                <span>{place.locality}</span>
-                              </p>
+                        {/* Embedded Place Card */}
+                        {place && (
+                          <div className="mt-4 p-3 bg-[#F5F3EE] rounded-2xl border border-[#E3DFD7] flex flex-col sm:flex-row items-center justify-between gap-3 group hover:border-[#191919] transition-all">
+                            <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
+                              <img
+                                src={place.image_url}
+                                alt={place.name}
+                                className="w-14 h-14 rounded-xl object-cover shrink-0"
+                              />
+                              <div className="min-w-0">
+                                <h5 className="font-display font-bold text-sm text-[#191919] truncate group-hover:text-[#F02D25] transition-colors">
+                                  {place.name}
+                                </h5>
+                                <p className="text-xs text-[#77736D] truncate mt-0.5 flex items-center gap-1">
+                                  <MapPin className="w-3 h-3 text-[#F02D25] shrink-0" />
+                                  <span>{place.locality}</span>
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
+                              <button
+                                onClick={() => onSelectPlace(place)}
+                                className="py-1.5 px-3 rounded-lg bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                              >
+                                View on Map
+                              </button>
+                              <button
+                                onClick={() => onViewDetails(place)}
+                                className="p-1.5 rounded-lg border border-[#E3DFD7] text-[#191919] hover:bg-white transition-colors cursor-pointer"
+                                title="Details"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => onSavePlace(place)}
+                                className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+                                  isSaved
+                                    ? 'bg-[#F02D25] text-white border-[#F02D25]'
+                                    : 'border-[#E3DFD7] text-[#77736D] hover:bg-white'
+                                }`}
+                                title={isSaved ? 'Saved' : 'Save Place'}
+                              >
+                                <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-current' : ''}`} />
+                              </button>
                             </div>
                           </div>
-
-                          <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
-                            <button
-                              onClick={() => onSelectPlace(place)}
-                              className="py-1.5 px-3 rounded-lg bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider transition-colors"
-                            >
-                              View on Map
-                            </button>
-                            <button
-                              onClick={() => onViewDetails(place)}
-                              className="p-1.5 rounded-lg border border-[#E3DFD7] text-[#191919] hover:bg-white transition-colors"
-                              title="Details"
-                            >
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() => onSavePlace(place)}
-                              className={`p-1.5 rounded-lg border transition-colors ${
-                                isSaved
-                                  ? 'bg-[#F02D25] text-white border-[#F02D25]'
-                                  : 'border-[#E3DFD7] text-[#77736D] hover:bg-white'
-                              }`}
-                              title={isSaved ? 'Saved' : 'Save Place'}
-                            >
-                              <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-current' : ''}`} />
-                            </button>
-                          </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
 
             {/* Right 4 Cols: Quick Circles & Apriori Group Hangout Recommendations */}
@@ -422,123 +509,181 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
 
         {/* 4. TAB 2: FRIENDS CIRCLES & SAVES */}
         {activeTab === 'circles' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8">
-            {/* Left 4 Cols: Friend selector */}
-            <div className="lg:col-span-4 space-y-2.5">
-              <div className="pb-1 text-xs font-black uppercase tracking-wider text-[#191919]">
-                Your Connected Friends ({MOCK_FRIENDS.length})
-              </div>
-
-              {MOCK_FRIENDS.map((f) => {
-                const isSelected = selectedFriend.id === f.id;
-                return (
-                  <div
-                    key={f.id}
-                    onClick={() => setSelectedFriend(f)}
-                    className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-center gap-3.5 ${
-                      isSelected
-                        ? 'bg-white border-[#191919] shadow-md'
-                        : 'bg-white/70 border-[#E3DFD7] hover:bg-white hover:border-[#191919]'
-                    }`}
+          <div>
+            {friends.length === 0 ? (
+              <div className="bg-white rounded-3xl border border-[#E3DFD7] p-8 sm:p-12 text-center shadow-xs max-w-2xl mx-auto">
+                <div className="w-16 h-16 rounded-full bg-[#FAF8F5] border border-[#E3DFD7] text-[#77736D] flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-[#77736D]" />
+                </div>
+                <h3 className="font-display font-black text-2xl text-[#191919] tracking-tight">
+                  No Connected Friends
+                </h3>
+                <p className="text-sm text-[#66635C] mt-2 max-w-md mx-auto leading-relaxed">
+                  Connect with friends to discover their saved collections, favorite neighborhoods, and curated places across Bengaluru.
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+                  <button
+                    onClick={() => setShowAddModal(true)}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#191919] hover:bg-[#333] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-sm"
                   >
-                    <img
-                      src={f.avatar}
-                      alt={f.name}
-                      className="w-12 h-12 rounded-full object-cover shrink-0 border"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-extrabold text-sm text-[#191919] truncate">{f.name}</h4>
-                        <span className="text-[10px] font-bold text-[#F02D25] bg-[#F5F3EE] px-2 py-0.5 rounded-full">
-                          {f.savedPlacesCount} saved
-                        </span>
-                      </div>
-                      <p className="text-xs text-[#77736D] truncate mt-0.5">{f.locality}</p>
-                      <p className="text-[11px] text-[#66635C] truncate mt-1">{f.status}</p>
-                    </div>
+                    <Plus className="w-4 h-4 text-[#F02D25]" />
+                    <span>Add a Friend</span>
+                  </button>
+                  <button
+                    onClick={handleCopyInviteLink}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-[#E3DFD7] hover:border-[#191919] text-[#191919] text-xs sm:text-sm font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
+                  >
+                    <UserPlus className="w-4 h-4 text-[#F02D25]" />
+                    <span>Invite Friends</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8">
+                {/* Left 4 Cols: Friend selector */}
+                <div className="lg:col-span-4 space-y-2.5">
+                  <div className="flex items-center justify-between pb-1">
+                    <span className="text-xs font-black uppercase tracking-wider text-[#191919]">
+                      Your Connected Friends ({friends.length})
+                    </span>
+                    <button
+                      onClick={() => setShowAddModal(true)}
+                      className="text-xs font-bold text-[#F02D25] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add</span>
+                    </button>
                   </div>
-                );
-              })}
-            </div>
 
-            {/* Right 8 Cols: Selected Friend's Saved Collection */}
-            <div className="lg:col-span-8 bg-white rounded-3xl border border-[#E3DFD7] p-6 shadow-xs">
-              <div className="flex items-center justify-between pb-4 border-b border-[#E3DFD7] mb-6">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={selectedFriend.avatar}
-                    alt={selectedFriend.name}
-                    className="w-12 h-12 rounded-full object-cover border"
-                  />
-                  <div>
-                    <h3 className="font-display font-bold text-xl text-[#191919]">
-                      {selectedFriend.name}&apos;s Saved Collection
-                    </h3>
-                    <p className="text-xs text-[#77736D] mt-0.5">
-                      {selectedFriend.locality} &bull; Favorite Domain: {selectedFriend.favoriteDomain}
-                    </p>
-                  </div>
+                  {friends.map((f) => {
+                    const isSelected = (selectedFriend || friends[0])?.id === f.id;
+                    return (
+                      <div
+                        key={f.id}
+                        onClick={() => setSelectedFriend(f)}
+                        className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-center gap-3.5 ${
+                          isSelected
+                            ? 'bg-white border-[#191919] shadow-md'
+                            : 'bg-white/70 border-[#E3DFD7] hover:bg-white hover:border-[#191919]'
+                        }`}
+                      >
+                        <img
+                          src={f.avatar}
+                          alt={f.name}
+                          className="w-12 h-12 rounded-full object-cover shrink-0 border"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between">
+                            <h4 className="font-extrabold text-sm text-[#191919] truncate">{f.name}</h4>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-bold text-[#F02D25] bg-[#F5F3EE] px-2 py-0.5 rounded-full">
+                                {f.savedPlacesCount} saved
+                              </span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleRemoveFriend(f.id, f.name);
+                                }}
+                                className="p-1 rounded-md text-[#77736D] hover:text-[#F02D25] hover:bg-[#F5F3EE] transition-colors cursor-pointer"
+                                title="Remove"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-xs text-[#77736D] truncate mt-0.5">{f.locality}</p>
+                          <p className="text-[11px] text-[#66635C] truncate mt-1">{f.status}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                <button
-                  onClick={onNavigateToMap}
-                  className="px-4 py-2 rounded-xl bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                >
-                  View on Map
-                </button>
-              </div>
-
-              {/* Places grid for selected friend */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {places.slice(0, 6).map((place, idx) => (
-                  <div
-                    key={place.place_id}
-                    className="p-3 bg-[#FAF8F5] rounded-2xl border border-[#E3DFD7] flex items-center justify-between gap-3 hover:border-[#191919] transition-all group"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <img
-                        src={place.image_url}
-                        alt={place.name}
-                        className="w-14 h-14 rounded-xl object-cover shrink-0"
-                      />
-                      <div className="min-w-0">
-                        <span
-                          className="text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white inline-block mb-0.5"
-                          style={{ backgroundColor: CATEGORY_COLORS[place.category] || '#F02D25' }}
-                        >
-                          {place.category}
-                        </span>
-                        <h5 className="font-display font-bold text-xs sm:text-sm text-[#191919] truncate group-hover:text-[#F02D25] transition-colors">
-                          {place.name}
-                        </h5>
-                        <p className="text-[11px] text-[#77736D] truncate mt-0.5">{place.locality}</p>
+                {/* Right 8 Cols: Selected Friend's Saved Collection */}
+                {(selectedFriend || friends[0]) && (
+                  <div className="lg:col-span-8 bg-white rounded-3xl border border-[#E3DFD7] p-6 shadow-xs">
+                    <div className="flex items-center justify-between pb-4 border-b border-[#E3DFD7] mb-6">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={(selectedFriend || friends[0]).avatar}
+                          alt={(selectedFriend || friends[0]).name}
+                          className="w-12 h-12 rounded-full object-cover border"
+                        />
+                        <div>
+                          <h3 className="font-display font-bold text-xl text-[#191919]">
+                            {(selectedFriend || friends[0]).name}&apos;s Saved Collection
+                          </h3>
+                          <p className="text-xs text-[#77736D] mt-0.5">
+                            {(selectedFriend || friends[0]).locality} &bull; Favorite Domain: {(selectedFriend || friends[0]).favoriteDomain}
+                          </p>
+                        </div>
                       </div>
+
+                      <button
+                        onClick={onNavigateToMap}
+                        className="px-4 py-2 rounded-xl bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      >
+                        View on Map
+                      </button>
                     </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        onClick={() => onSelectPlace(place)}
-                        className="p-2 rounded-lg bg-[#191919] hover:bg-[#F02D25] text-white text-[11px] font-bold transition-colors"
-                        title="Locate on Map"
-                      >
-                        <Compass className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => onSavePlace(place)}
-                        className={`p-2 rounded-lg border transition-colors ${
-                          isPlaceSaved(place.place_id)
-                            ? 'bg-[#F02D25] text-white border-[#F02D25]'
-                            : 'border-[#E3DFD7] text-[#77736D] hover:bg-white'
-                        }`}
-                        title="Save to My Places"
-                      >
-                        <Bookmark className={`w-3.5 h-3.5 ${isPlaceSaved(place.place_id) ? 'fill-current' : ''}`} />
-                      </button>
+                    {/* Places grid for selected friend */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {places
+                        .filter((p) => p.category === (selectedFriend || friends[0]).favoriteDomain)
+                        .slice(0, 6)
+                        .map((place) => (
+                          <div
+                            key={place.place_id}
+                            className="p-3 bg-[#FAF8F5] rounded-2xl border border-[#E3DFD7] flex items-center justify-between gap-3 hover:border-[#191919] transition-all group"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <img
+                                src={place.image_url}
+                                alt={place.name}
+                                className="w-14 h-14 rounded-xl object-cover shrink-0"
+                              />
+                              <div className="min-w-0">
+                                <span
+                                  className="text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white inline-block mb-0.5"
+                                  style={{ backgroundColor: CATEGORY_COLORS[place.category] || '#F02D25' }}
+                                >
+                                  {place.category}
+                                </span>
+                                <h5 className="font-display font-bold text-xs sm:text-sm text-[#191919] truncate group-hover:text-[#F02D25] transition-colors">
+                                  {place.name}
+                                </h5>
+                                <p className="text-[11px] text-[#77736D] truncate mt-0.5">{place.locality}</p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button
+                                onClick={() => onSelectPlace(place)}
+                                className="p-2 rounded-lg bg-[#191919] hover:bg-[#F02D25] text-white text-[11px] font-bold transition-colors cursor-pointer"
+                                title="Locate on Map"
+                              >
+                                <Compass className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => onSavePlace(place)}
+                                className={`p-2 rounded-lg border transition-colors cursor-pointer ${
+                                  isPlaceSaved(place.place_id)
+                                    ? 'bg-[#F02D25] text-white border-[#F02D25]'
+                                    : 'border-[#E3DFD7] text-[#77736D] hover:bg-white'
+                                }`}
+                                title="Save to My Places"
+                              >
+                                <Bookmark className={`w-3.5 h-3.5 ${isPlaceSaved(place.place_id) ? 'fill-current' : ''}`} />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
                     </div>
                   </div>
-                ))}
+                )}
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -616,7 +761,7 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
 
                 <button
                   onClick={() => onSelectPlace(midpointPlace)}
-                  className="px-5 py-2.5 rounded-xl bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-extrabold uppercase tracking-wider transition-colors shrink-0 shadow-sm"
+                  className="px-5 py-2.5 rounded-xl bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-extrabold uppercase tracking-wider transition-colors shrink-0 shadow-sm cursor-pointer"
                 >
                   Explore on Map &rarr;
                 </button>
@@ -650,13 +795,13 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => onViewDetails(midpointPlace)}
-                      className="py-2 px-3.5 rounded-xl border border-[#E3DFD7] text-xs font-bold text-[#191919] hover:bg-[#F5F3EE] transition-colors"
+                      className="py-2 px-3.5 rounded-xl border border-[#E3DFD7] text-xs font-bold text-[#191919] hover:bg-[#F5F3EE] transition-colors cursor-pointer"
                     >
                       View Details
                     </button>
                     <button
                       onClick={() => onSavePlace(midpointPlace)}
-                      className={`p-2 rounded-xl border transition-colors ${
+                      className={`p-2 rounded-xl border transition-colors cursor-pointer ${
                         isPlaceSaved(midpointPlace.place_id)
                           ? 'bg-[#F02D25] text-white border-[#F02D25]'
                           : 'border-[#E3DFD7] text-[#77736D] hover:bg-[#F5F3EE]'
@@ -672,6 +817,154 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
           </div>
         )}
       </div>
+
+      {/* 6. ADD FRIEND MODAL */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl border border-[#E3DFD7] p-6 sm:p-8 max-w-md w-full shadow-2xl relative">
+            <button
+              onClick={() => setShowAddModal(false)}
+              className="absolute top-5 right-5 p-2 rounded-full hover:bg-[#F5F3EE] text-[#77736D] hover:text-[#191919] transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-[#FAF8F5] border border-[#E3DFD7] text-[#F02D25] flex items-center justify-center">
+                <UserPlus className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-display font-black text-xl text-[#191919]">
+                  Add a Friend
+                </h3>
+                <p className="text-xs text-[#77736D]">
+                  Connect friends to see their Bengaluru recommendations
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleAddFriend} className="space-y-4">
+              <div>
+                <label className="text-xs font-black uppercase tracking-wider text-[#77736D] block mb-1.5">
+                  Friend Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={friendName}
+                  onChange={(e) => setFriendName(e.target.value)}
+                  placeholder="e.g. Pooja Rao"
+                  className="w-full p-3 rounded-xl bg-[#FAF8F5] border border-[#E3DFD7] text-sm text-[#191919] font-medium focus:outline-hidden focus:border-[#191919]"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-black uppercase tracking-wider text-[#77736D] block mb-1.5">
+                  Handle / Username
+                </label>
+                <input
+                  type="text"
+                  value={friendHandle}
+                  onChange={(e) => setFriendHandle(e.target.value)}
+                  placeholder="@pooja_blr"
+                  className="w-full p-3 rounded-xl bg-[#FAF8F5] border border-[#E3DFD7] text-sm text-[#191919] font-mono focus:outline-hidden focus:border-[#191919]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-black uppercase tracking-wider text-[#77736D] block mb-1.5">
+                    Neighborhood
+                  </label>
+                  <select
+                    value={friendLocality}
+                    onChange={(e) => setFriendLocality(e.target.value)}
+                    className="w-full p-2.5 rounded-xl bg-[#FAF8F5] border border-[#E3DFD7] text-xs font-bold text-[#191919] focus:outline-hidden"
+                  >
+                    <option value="Indiranagar">Indiranagar</option>
+                    <option value="Koramangala">Koramangala</option>
+                    <option value="Malleshwaram">Malleshwaram</option>
+                    <option value="HSR Layout">HSR Layout</option>
+                    <option value="Whitefield">Whitefield</option>
+                    <option value="Jayanagar">Jayanagar</option>
+                    <option value="Central Bengaluru">Central Bengaluru</option>
+                    <option value="Basavanagudi">Basavanagudi</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-black uppercase tracking-wider text-[#77736D] block mb-1.5">
+                    Favorite Sector
+                  </label>
+                  <select
+                    value={friendDomain}
+                    onChange={(e) => setFriendDomain(e.target.value)}
+                    className="w-full p-2.5 rounded-xl bg-[#FAF8F5] border border-[#E3DFD7] text-xs font-bold text-[#191919] focus:outline-hidden"
+                  >
+                    <option value="Restaurants">Restaurants</option>
+                    <option value="Tourism">Tourism</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Education">Education</option>
+                    <option value="Startups">Startups</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Healthcare">Healthcare</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-black uppercase tracking-wider text-[#77736D] block mb-1.5">
+                  Status / Note
+                </label>
+                <input
+                  type="text"
+                  value={friendStatus}
+                  onChange={(e) => setFriendStatus(e.target.value)}
+                  placeholder="e.g. Trying new coffee spots in Indiranagar ☕"
+                  className="w-full p-3 rounded-xl bg-[#FAF8F5] border border-[#E3DFD7] text-sm text-[#191919] focus:outline-hidden focus:border-[#191919]"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-black uppercase tracking-wider text-[#77736D] block mb-1.5">
+                  Recently Visited Spot
+                </label>
+                <select
+                  value={friendPlaceId}
+                  onChange={(e) => setFriendPlaceId(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-[#FAF8F5] border border-[#E3DFD7] text-xs font-bold text-[#191919] focus:outline-hidden"
+                >
+                  <option value="">Default to top {friendDomain} spot</option>
+                  {places
+                    .filter((p) => p.category === friendDomain)
+                    .map((p) => (
+                      <option key={p.place_id} value={p.place_id}>
+                        {p.name} ({p.locality})
+                      </option>
+                    ))}
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#E3DFD7]">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2 rounded-xl border border-[#E3DFD7] text-xs font-bold text-[#77736D] hover:bg-[#FAF8F5] transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl bg-[#F02D25] hover:bg-[#d0251e] text-white text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
+                >
+                  Connect Friend
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
