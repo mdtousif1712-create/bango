@@ -7,7 +7,6 @@ import {
   Bookmark,
   ArrowUpRight,
   ChevronDown,
-  Sparkles,
   MapPin,
   HeartPulse,
   Train,
@@ -215,33 +214,6 @@ export const Header: React.FC<HeaderProps> = ({
                         </h4>
                         <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
                           Category markers, popups, and instant Apriori recommendation rules
-                        </p>
-                      </div>
-                    </div>
-
-                    <div
-                      onClick={() => handleNavClick('bango-ai')}
-                      className={`p-3 rounded-xl cursor-pointer transition-colors group flex items-start gap-3.5 ${
-                        currentPage === 'bango-ai' ? 'bg-[#F5F3EE]' : 'hover:bg-[#F5F3EE]'
-                      }`}
-                    >
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                        currentPage === 'bango-ai'
-                          ? 'bg-[#191919] text-white'
-                          : 'bg-[#F0EDE6] group-hover:bg-[#191919] group-hover:text-white text-[#191919]'
-                      }`}>
-                        <Sparkles className={`w-5 h-5 transition-colors ${
-                          currentPage === 'bango-ai' ? 'text-white' : 'text-[#F02D25] group-hover:text-white'
-                        }`} />
-                      </div>
-                      <div>
-                        <h4 className={`text-sm sm:text-[15px] font-extrabold transition-colors leading-snug whitespace-nowrap ${
-                          currentPage === 'bango-ai' ? 'text-[#F02D25]' : 'text-[#191919] group-hover:text-[#F02D25]'
-                        }`}>
-                          Bango AI Day Planner
-                        </h4>
-                        <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
-                          Plan your day, ask natural queries & explore Apriori itineraries
                         </p>
                       </div>
                     </div>
