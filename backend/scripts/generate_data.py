@@ -652,6 +652,22 @@ BENGALURU_PLACES: List[Dict] = [
         "tags": ["library", "heritage", "books", "cubbon park", "quiet study"],
         "popular_activity": "Quiet reading and reference research"
     },
+    {
+        "place_id": "blr_edu_11",
+        "name": "Sapthagiri NPS University",
+        "category": "Education",
+        "subcategory": "Multidisciplinary Private University",
+        "description": "Leading higher educational and multidisciplinary university campus in North-West Bengaluru offering premier programs across engineering, allied healthcare, management, and technology research.",
+        "address": "14/5, Chikkasandra, Hesaraghatta Main Road, Bengaluru, Karnataka 560057",
+        "locality": "Hesaraghatta Road / Chikkabanavara",
+        "latitude": 13.0691,
+        "longitude": 77.5029,
+        "image_url": "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80",
+        "rating": 4.8,
+        "review_count": 14200,
+        "tags": ["university", "sapthagiri", "engineering", "nps", "campus", "research"],
+        "popular_activity": "Multidisciplinary engineering, science & research studies"
+    },
 
     # ---------------- HEALTHCARE (10 places) ----------------
     {
@@ -1361,6 +1377,10 @@ PATTERNS = [
     # 8. Student & academic journeys
     ["Indian Institute of Science (IISc)", "CTR (Shri Sagar - Central Tiffin Room)", "Malleshwaram Heritage Neighborhood"],
     ["Indian Institute of Science (IISc)", "CTR (Shri Sagar - Central Tiffin Room)", "Yeshwanthpur Railway Station"],
+    ["Sapthagiri NPS University", "Yeshwanthpur Metro Station", "Orion Mall"],
+    ["Sapthagiri NPS University", "Indian Institute of Science (IISc)", "CTR (Shri Sagar - Central Tiffin Room)"],
+    ["Sapthagiri NPS University", "PVR INOX Orion Mall", "Orion Mall"],
+    ["Sapthagiri NPS University", "IISc SID DeepTech Innovation Centre", "Yeshwanthpur Railway Station"],
     ["PES University (Ring Road Campus)", "RV College of Engineering (RVCE)", "Bangalore University (Jnana Bharathi Campus)"],
     ["RV College of Engineering (RVCE)", "Bangalore University (Jnana Bharathi Campus)", "National Law School of India University (NLSIU)"],
     ["RV College of Engineering (RVCE)", "Wonderla Amusement Park", "PES University (Ring Road Campus)"],

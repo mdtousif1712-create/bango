@@ -50,7 +50,7 @@ class LocationService:
         lng: Optional[float] = None,
         radius_km: Optional[float] = None,
         skip: int = 0,
-        limit: int = 50
+        limit: int = 100
     ) -> List[Dict[str, Any]]:
         places = self.get_all_places()
         filtered = []

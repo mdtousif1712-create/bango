@@ -295,11 +295,10 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
                           e.stopPropagation();
                           onSavePlace(place);
                         }}
-                        className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${
-                          isSaved
+                        className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${isSaved
                             ? 'bg-[#F02D25] text-white border-[#F02D25]'
                             : 'border-[#E3DFD7] text-[#77736D] hover:text-[#191919] hover:bg-[#F5F3EE]'
-                        }`}
+                          }`}
                         title={isSaved ? 'Saved to collection' : 'Save Place'}
                       >
                         <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-current' : ''}`} />

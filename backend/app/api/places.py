@@ -14,7 +14,7 @@ def get_places(
     longitude: Optional[float] = Query(None, description="User longitude for distance calculation"),
     radius_km: Optional[float] = Query(None, description="Radius limit in km"),
     skip: int = Query(0, ge=0),
-    limit: int = Query(50, ge=1, le=100)
+    limit: int = Query(100, ge=1, le=200)
 ):
     results = location_service.get_places(
         category=category,

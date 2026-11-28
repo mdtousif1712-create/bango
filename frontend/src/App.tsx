@@ -391,7 +391,7 @@ export const App: React.FC = () => {
       try {
         const [cats, plcs, trnd] = await Promise.all([
           fetchCategories(),
-          fetchPlaces({ limit: 80 }),
+          fetchPlaces({ limit: 100 }),
           fetchTrendingPlaces('All', 100),
         ]);
         setCategories(cats);
