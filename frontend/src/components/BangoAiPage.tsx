@@ -238,10 +238,10 @@ export const BangoAiPage: React.FC<BangoAiPageProps> = ({
         {/* TOP BRANDING BAR: "bango ai" Title + "bo" Avatar Badge */}
         <div className="flex items-center justify-between gap-4 mb-8 sm:mb-12">
           <div className="flex items-center gap-3 select-none">
-            <h1 className="font-display font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-[#191919] lowercase leading-none">
+            <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-none">
               bango <span className="text-[#F02D25]">ai</span>
             </h1>
-            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-black text-xl sm:text-3xl shrink-0 shadow-md">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-bold text-base sm:text-lg md:text-xl shrink-0 shadow-md">
               bo
             </div>
           </div>
