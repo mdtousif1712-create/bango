@@ -8,8 +8,8 @@ export interface BangoRobotEyesProps {
 }
 
 /**
- * Reusable Bango AI companion face with cursor-tracking gaze and natural periodic eye-blinking.
- * Styled after the modern companion robot UI in VajraCast/Bango AI.
+ * Bango AI companion face featuring the original "bo" typography design
+ * acting as reactive, blinking companion eyes that follow the cursor.
  */
 export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
   size = 'md',
@@ -21,7 +21,7 @@ export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
   const [isBlinking, setIsBlinking] = useState(false);
   const [eyeOffset, setEyeOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  // Blinking loop: blinks naturally every 2.4s - 4.6s with occasional double-blink
+  // Natural blinking loop: blinks every 2.4s - 4.6s with occasional double-blink
   useEffect(() => {
     let timer: NodeJS.Timeout;
     let isMounted = true;
@@ -30,7 +30,7 @@ export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
       if (!isMounted) return;
       setIsBlinking(true);
 
-      // Close eyes for 130ms (squash vertically)
+      // Blink lasts 130ms (squashing 'bo' into horizontal eyelid slits)
       setTimeout(() => {
         if (!isMounted) return;
         setIsBlinking(false);
@@ -79,7 +79,7 @@ export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
       const distY = e.clientY - centerY;
       const distance = Math.hypot(distX, distY);
 
-      const maxShift = size === 'sm' ? 4 : size === 'lg' ? 8 : 6.5;
+      const maxShift = size === 'sm' ? 4 : size === 'lg' ? 8 : 6;
       const gazeDistance = Math.min(distance, 450);
       const ratio = gazeDistance / 450;
       const angle = Math.atan2(distY, distX);
@@ -94,10 +94,14 @@ export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [followCursor, size]);
 
-  // Dimensions for different sizes
-  const eyeWidth = size === 'sm' ? 'w-[7px]' : size === 'lg' ? 'w-[10px]' : 'w-[8.5px]';
-  const eyeHeight = size === 'sm' ? 'h-[16px]' : size === 'lg' ? 'h-[25px]' : 'h-[21px]';
-  const eyeGap = size === 'sm' ? 'gap-1.5' : size === 'lg' ? 'gap-2.5' : 'gap-2';
+  const fontSizeClass =
+    size === 'sm'
+      ? 'text-lg sm:text-xl'
+      : size === 'lg'
+      ? 'text-3xl sm:text-4xl'
+      : 'text-2xl sm:text-3xl';
+
+  const gapClass = size === 'sm' ? 'gap-0.5' : size === 'lg' ? 'gap-1.5' : 'gap-1';
 
   return (
     <div
@@ -106,35 +110,24 @@ export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
         transform: `translate3d(${eyeOffset.x}px, ${eyeOffset.y}px, 0)`,
         transition: 'transform 0.12s ease-out',
       }}
-      className={`flex items-center justify-center ${eyeGap} select-none pointer-events-none ${className}`}
+      className={`flex items-center justify-center select-none pointer-events-none ${className}`}
     >
-      {/* Left Capsule Eye */}
+      {/* Original "bo" letters acting as interactive eyes */}
       <div
         style={{
           transform: isBlinking ? 'scaleY(0.08)' : 'scaleY(1)',
           transformOrigin: 'center',
-          transition: 'transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, box-shadow 0.2s ease',
+          transition: 'transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s ease',
         }}
-        className={`${eyeWidth} ${eyeHeight} rounded-full transition-all duration-200 ${
+        className={`font-display font-black tracking-tight lowercase text-white leading-none flex items-center justify-center ${gapClass} ${fontSizeClass} ${
           isHovered
-            ? 'bg-[#00F0FF] shadow-[0_0_12px_#00F0FF]'
-            : 'bg-white shadow-[0_0_4px_rgba(255,255,255,0.7)]'
+            ? 'drop-shadow-[0_0_10px_rgba(255,255,255,0.95)]'
+            : 'drop-shadow-[0_0_3px_rgba(255,255,255,0.4)]'
         }`}
-      />
-
-      {/* Right Capsule Eye */}
-      <div
-        style={{
-          transform: isBlinking ? 'scaleY(0.08)' : 'scaleY(1)',
-          transformOrigin: 'center',
-          transition: 'transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, box-shadow 0.2s ease',
-        }}
-        className={`${eyeWidth} ${eyeHeight} rounded-full transition-all duration-200 ${
-          isHovered
-            ? 'bg-[#00F0FF] shadow-[0_0_12px_#00F0FF]'
-            : 'bg-white shadow-[0_0_4px_rgba(255,255,255,0.7)]'
-        }`}
-      />
+      >
+        <span className="inline-block">b</span>
+        <span className="inline-block">o</span>
+      </div>
     </div>
   );
 };
