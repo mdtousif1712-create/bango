@@ -1,238 +1,143 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { X, Play, Pause, RotateCcw, Volume2, VolumeX, Maximize2, Download, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Volume2, VolumeX, ArrowRight, Play, Sparkles } from 'lucide-react';
 
 interface BangoIntroModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  onComplete: () => void;
 }
 
-export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ isOpen, onClose }) => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) => {
+  const [isFading, setIsFading] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
-  const [currentTime, setCurrentTime] = useState<string>('0:00');
-  const [duration, setDuration] = useState<string>('0:12');
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleFinish = () => {
+    if (isFading) return;
+    setIsFading(true);
+    setTimeout(() => {
+      onComplete();
+    }, 600);
+  };
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === ' ' && isOpen) {
-        e.preventDefault();
-        togglePlay();
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Start playing video automatically
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.warn('Autoplay prevented or video playback error:', err);
+        // Fallback: If autoplay fails, ensure video plays muted
+        video.muted = true;
+        setIsMuted(true);
+        video.play().catch(() => {
+          // If playback totally fails, don't trap user
+          handleFinish();
+        });
+      });
+    }
+
+    const handleTimeUpdate = () => {
+      if (video.duration) {
+        setProgress((video.currentTime / video.duration) * 100);
       }
     };
 
-    if (isOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-      // Attempt autoplay with sound
-      if (videoRef.current) {
-        videoRef.current.currentTime = 0;
-        videoRef.current.play().catch(() => {
-          // If browser blocks unmuted autoplay, mute and try again
-          if (videoRef.current) {
-            videoRef.current.muted = true;
-            setIsMuted(true);
-            videoRef.current.play();
-          }
-        });
-        setIsPlaying(true);
+    const handleEnded = () => {
+      handleFinish();
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        handleFinish();
       }
-    } else {
-      document.body.style.overflow = '';
-      if (videoRef.current) {
-        videoRef.current.pause();
-      }
-    }
+    };
+
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    video.addEventListener('ended', handleEnded);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+      video.removeEventListener('ended', handleEnded);
       window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
     };
-  }, [isOpen, onClose]);
+  }, []);
 
-  if (!isOpen) return null;
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (videoRef.current.paused) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    } else {
-      videoRef.current.pause();
-      setIsPlaying(false);
+  const toggleSound = () => {
+    if (videoRef.current) {
+      const nextMuted = !videoRef.current.muted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
     }
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !videoRef.current.muted;
-    setIsMuted(videoRef.current.muted);
-  };
-
-  const handleRestart = () => {
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = 0;
-    videoRef.current.play();
-    setIsPlaying(true);
-  };
-
-  const handleFullscreen = () => {
-    if (!videoRef.current) return;
-    if (videoRef.current.requestFullscreen) {
-      videoRef.current.requestFullscreen();
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
-    const curr = videoRef.current.currentTime;
-    const dur = videoRef.current.duration || 12.43;
-    setProgress((curr / dur) * 100);
-
-    const curMins = Math.floor(curr / 60);
-    const curSecs = Math.floor(curr % 60);
-    setCurrentTime(`${curMins}:${curSecs < 10 ? '0' : ''}${curSecs}`);
-
-    const durMins = Math.floor(dur / 60);
-    const durSecs = Math.floor(dur % 60);
-    setDuration(`${durMins}:${durSecs < 10 ? '0' : ''}${durSecs}`);
-  };
-
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!videoRef.current) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pos = (e.clientX - rect.left) / rect.width;
-    videoRef.current.currentTime = pos * (videoRef.current.duration || 12.43);
   };
 
   return (
     <div
-      className="fixed inset-0 z-[2000] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
-      onClick={onClose}
+      className={`fixed inset-0 z-[9999] bg-[#0A0A0B] flex flex-col items-center justify-center transition-all duration-700 ease-out select-none ${
+        isFading ? 'opacity-0 scale-[1.02] pointer-events-none' : 'opacity-100 scale-100'
+      }`}
     >
-      <div
-        className="relative w-full max-w-4xl bg-[#191919] rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Top Header Bar */}
-        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-white/10 bg-[#141414]">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#F02D25] text-white flex items-center justify-center font-display font-bold text-sm lowercase shadow-xs">
-              <span className="-translate-y-[0.5px]">bo</span>
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-display font-bold text-base text-white lowercase">bango</span>
-                <span className="text-[10px] font-bold text-[#F02D25]">TM</span>
-                <span className="text-xs text-white/50 font-medium ml-1">Official Intro Animation</span>
-              </div>
-              <p className="text-[10px] sm:text-xs text-white/40 font-mono">
-                1080p HD &bull; 30 FPS &bull; Recreated Bot Totem & Signature Lockup
-              </p>
-            </div>
+      {/* Top Header Controls Bar */}
+      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 sm:px-10 py-5 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+        {/* Brand identity badge */}
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-[#191919] border border-white/20 flex items-center justify-center shadow-lg">
+            <span className="font-sans font-black text-xs text-white tracking-tighter">bo</span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <a
-              href="/bango_intro.mp4"
-              download="bango_intro.mp4"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors"
-              title="Download intro video file"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Download MP4</span>
-            </a>
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-xl bg-white/10 hover:bg-[#F02D25] text-white transition-colors cursor-pointer"
-              title="Close (Esc)"
-            >
-              <X className="w-5 h-5" />
-            </button>
+          <div className="flex items-center gap-1.5">
+            <span className="font-display font-extrabold text-lg text-white tracking-tight">bango</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25] animate-pulse"></span>
           </div>
         </div>
 
-        {/* Video Player Display */}
-        <div className="relative w-full aspect-video bg-black flex items-center justify-center group overflow-hidden">
-          <video
-            ref={videoRef}
-            src="/bango_intro.mp4"
-            className="w-full h-full object-contain cursor-pointer"
-            onClick={togglePlay}
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={() => setIsPlaying(false)}
-            playsInline
-            autoPlay
-          />
-
-          {/* Central Play/Pause Watermark Overlay when paused */}
-          {!isPlaying && (
-            <button
-              onClick={togglePlay}
-              className="absolute inset-0 m-auto w-18 h-18 rounded-full bg-[#F02D25]/90 hover:bg-[#F02D25] text-white flex items-center justify-center shadow-2xl transition-transform hover:scale-110 cursor-pointer"
-            >
-              <Play className="w-8 h-8 ml-1" fill="currentColor" />
-            </button>
-          )}
-        </div>
-
-        {/* Bottom Control Bar */}
-        <div className="px-5 sm:px-6 py-3.5 bg-[#141414] border-t border-white/10 flex flex-col gap-2.5">
-          {/* Progress Timeline */}
-          <div
-            className="w-full h-1.5 bg-white/15 rounded-full cursor-pointer relative overflow-hidden group/bar"
-            onClick={handleSeek}
+        {/* Action Controls */}
+        <div className="flex items-center gap-3">
+          {/* Sound Toggle Button */}
+          <button
+            onClick={toggleSound}
+            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white/80 hover:text-white backdrop-blur-md transition-all cursor-pointer"
+            title={isMuted ? 'Unmute' : 'Mute'}
           >
-            <div
-              className="h-full bg-[#F02D25] rounded-full transition-all duration-100"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={togglePlay}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                title={isPlaying ? 'Pause' : 'Play'}
-              >
-                {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" fill="currentColor" />}
-              </button>
-
-              <button
-                onClick={handleRestart}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                title="Replay from start"
-              >
-                <RotateCcw className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={toggleMute}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                title={isMuted ? 'Unmute' : 'Mute'}
-              >
-                {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4" />}
-              </button>
-
-              <span className="text-xs font-mono text-white/60">
-                {currentTime} / {duration}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleFullscreen}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                title="Fullscreen"
-              >
-                <Maximize2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+          {/* Skip Button */}
+          <button
+            onClick={handleFinish}
+            className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-[#F02D25] border border-white/15 hover:border-[#F02D25] text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer shadow-lg hover:shadow-red-500/30"
+          >
+            <span>Skip Intro</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </button>
         </div>
+      </div>
+
+      {/* Center Video Cinema Container */}
+      <div className="relative w-full h-full flex items-center justify-center p-0 sm:p-4 md:p-8">
+        <video
+          ref={videoRef}
+          playsInline
+          autoPlay
+          muted={isMuted}
+          preload="auto"
+          className="w-full h-full object-contain max-h-[92vh] max-w-[96vw] rounded-none sm:rounded-2xl shadow-2xl"
+        >
+          <source src="/bango_og_intro.webm" type="video/webm" />
+          <source src="/bango_og_intro.mp4" type="video/mp4" />
+          Your browser does not support HTML5 video playback.
+        </video>
+      </div>
+
+      {/* Bottom Progress Bar */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 h-1 bg-white/10">
+        <div
+          className="h-full bg-[#F02D25] transition-all duration-150 ease-linear shadow-[0_0_12px_rgba(240,45,37,0.8)]"
+          style={{ width: `${progress}%` }}
+        />
       </div>
     </div>
   );

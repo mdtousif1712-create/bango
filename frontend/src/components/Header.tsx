@@ -51,7 +51,6 @@ export interface HeaderProps {
   user?: AuthUser | null;
   onOpenAuthModal?: () => void;
   onLogout?: () => void;
-  onOpenIntroModal?: () => void;
 }
 
 const DOMAINS_LIST = [
@@ -77,7 +76,6 @@ export const Header: React.FC<HeaderProps> = ({
   user,
   onOpenAuthModal,
   onLogout,
-  onOpenIntroModal,
 }) => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -453,18 +451,6 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           )}
 
-          {/* 1.5 Watch Intro Pill CTA */}
-          {onOpenIntroModal && (
-            <button
-              onClick={onOpenIntroModal}
-              className="group hidden sm:flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-full border border-[#E3DFD7] hover:border-[#191919] bg-[#F5F3EE] hover:bg-white text-[#191919] hover:text-[#F02D25] text-xs font-bold transition-all cursor-pointer shrink-0 whitespace-nowrap shadow-2xs"
-              title="Watch Bango Intro Animation (12s)"
-            >
-              <span className="w-2 h-2 rounded-full bg-[#F02D25] animate-pulse shrink-0" />
-              <span>Watch Intro</span>
-            </button>
-          )}
-
           {/* 2. Explore City Pill CTA Button */}
           <button
             onClick={() => handleNavClick('map')}
@@ -730,23 +716,7 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
 
-            <div className="mt-6 pt-5 border-t border-[#E3DFD7] space-y-2.5">
-              {onOpenIntroModal && (
-                <button
-                  onClick={() => {
-                    onOpenIntroModal();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-2xl border border-[#E3DFD7] hover:border-[#F02D25] bg-white text-[#191919] text-xs font-bold cursor-pointer"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#F02D25] animate-pulse" />
-                    <span>Watch Intro Animation</span>
-                  </div>
-                  <span className="text-[10px] bg-[#F5F3EE] px-2 py-0.5 rounded font-mono text-[#77736D]">12s</span>
-                </button>
-              )}
-
+            <div className="mt-6 pt-5 border-t border-[#E3DFD7]">
               <button
                 onClick={() => handleNavClick('map')}
                 className="w-full flex items-center justify-between pl-4 pr-1.5 py-1.5 rounded-full bg-[#191919] text-white text-xs font-bold uppercase tracking-wider cursor-pointer shadow-md"

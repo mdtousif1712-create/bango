@@ -155,6 +155,11 @@ export const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageId>(initialRoute.page);
   const [selectedDomain, setSelectedDomain] = useState<string>(initialRoute.domain || 'Healthcare');
 
+  // Intro Video: Plays on first app entry or when refreshing while on Discover page
+  const [showIntroVideo, setShowIntroVideo] = useState<boolean>(() => {
+    return initialRoute.page === 'discover';
+  });
+
   // Data states
   const [categories, setCategories] = useState<CategoryMeta[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -172,7 +177,6 @@ export const App: React.FC = () => {
   // User location & saved places
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(getStoredUser);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
-  const [isIntroModalOpen, setIsIntroModalOpen] = useState<boolean>(false);
   const [pendingSavePlace, setPendingSavePlace] = useState<Place | null>(null);
   const [toast, setToast] = useState<ToastData | null>(null);
 
@@ -591,7 +595,6 @@ export const App: React.FC = () => {
         }}
         user={currentUser}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onOpenIntroModal={() => setIsIntroModalOpen(true)}
         onLogout={handleLogout}
       />
 
@@ -605,7 +608,6 @@ export const App: React.FC = () => {
             isSearching={isSearching}
             onExploreMap={() => navigateToPage('map')}
             onPlanDay={handlePlanYourDay}
-            onWatchIntro={() => setIsIntroModalOpen(true)}
           />
         )}
 
@@ -860,6 +862,11 @@ export const App: React.FC = () => {
         onShowToast={showToast}
       />
 
+      {/* Bango Intro Video Experience */}
+      {showIntroVideo && (
+        <BangoIntroModal onComplete={() => setShowIntroVideo(false)} />
+      )}
+
       {/* Google Authentication Modal */}
       <GoogleAuthModal
         isOpen={isAuthModalOpen}
@@ -869,12 +876,6 @@ export const App: React.FC = () => {
         }}
         onLoginSuccess={handleLoginSuccess}
         pendingPlaceName={pendingSavePlace?.name}
-      />
-
-      {/* Official Bango Intro Animation Video Modal */}
-      <BangoIntroModal
-        isOpen={isIntroModalOpen}
-        onClose={() => setIsIntroModalOpen(false)}
       />
 
       {/* Small Bottom Pop Up (Toast) */}
