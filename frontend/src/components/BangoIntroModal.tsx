@@ -69,11 +69,11 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
         isFading ? 'opacity-0 scale-[1.02] pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
-      {/* Top Right Skip Control */}
+      {/* Top Right Skip Control (Pure Clean, Zero Shadow) */}
       <div className="absolute top-5 right-5 sm:right-8 z-20">
         <button
           onClick={handleFinish}
-          className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-[#F02D25] border border-white/15 hover:border-[#F02D25] text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer shadow-lg hover:shadow-red-500/30"
+          className="group flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 hover:bg-[#F02D25] border border-white/20 hover:border-[#F02D25] text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer"
         >
           <span>Skip Intro</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -99,7 +99,7 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
       {/* Bottom Progress Bar */}
       <div className="absolute bottom-0 left-0 right-0 z-20 h-1 bg-white/10">
         <div
-          className="h-full bg-[#F02D25] transition-all duration-150 ease-linear shadow-[0_0_12px_rgba(240,45,37,0.8)]"
+          className="h-full bg-[#F02D25] transition-all duration-150 ease-linear"
           style={{ width: `${progress}%` }}
         />
       </div>
