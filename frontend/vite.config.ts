@@ -5,21 +5,74 @@ import { fileURLToPath, URL } from 'node:url'
 import fs from 'node:fs'
 import path from 'node:path'
 
-// Plugin to duplicate index.html to 404.html for SPA host fallbacks
-function copyIndexTo404() {
+const ALL_ROUTES = [
+  'map',
+  'assistant',
+  'trending',
+  'domains',
+  'domain-detail',
+  'friends',
+  'saved',
+  'bango-ai',
+  'healthcare',
+  'transportation',
+  'tourism',
+  'shopping',
+  'education',
+  'entertainment',
+  'restaurants',
+  'startups',
+]
+
+const DOMAIN_SLUGS = [
+  'healthcare',
+  'transportation',
+  'tourism',
+  'shopping',
+  'education',
+  'entertainment',
+  'restaurants',
+  'startups',
+]
+
+// Plugin to pre-render static HTML route files so Vercel can serve any SPA route without 404
+function generateStaticRoutes() {
   return {
-    name: 'copy-index-to-404',
+    name: 'generate-static-routes',
     closeBundle() {
       try {
         const distDir = fileURLToPath(new URL('./dist', import.meta.url))
         const indexPath = path.join(distDir, 'index.html')
-        const notFoundPath = path.join(distDir, '404.html')
-        if (fs.existsSync(indexPath)) {
-          fs.copyFileSync(indexPath, notFoundPath)
-          console.log('✓ Successfully created dist/404.html for SPA fallback')
+        if (!fs.existsSync(indexPath)) return
+        const indexHtml = fs.readFileSync(indexPath, 'utf-8')
+
+        // 1. Create 404.html fallback
+        fs.writeFileSync(path.join(distDir, '404.html'), indexHtml)
+
+        // 2. Create static files and directories for all known routes
+        for (const route of ALL_ROUTES) {
+          // dist/route.html
+          fs.writeFileSync(path.join(distDir, `${route}.html`), indexHtml)
+          // dist/route/index.html
+          const subDir = path.join(distDir, route)
+          fs.mkdirSync(subDir, { recursive: true })
+          fs.writeFileSync(path.join(subDir, 'index.html'), indexHtml)
         }
+
+        // 3. Create domain subroutes: domains/healthcare, domain/healthcare, etc.
+        for (const slug of DOMAIN_SLUGS) {
+          const d1 = path.join(distDir, 'domains', slug)
+          fs.mkdirSync(d1, { recursive: true })
+          fs.writeFileSync(path.join(d1, 'index.html'), indexHtml)
+
+          const d2 = path.join(distDir, 'domain', slug)
+          fs.mkdirSync(d2, { recursive: true })
+          fs.writeFileSync(path.join(d2, 'index.html'), indexHtml)
+        }
+
+        console.log('✓ Successfully pre-rendered static SPA route files for Vercel')
       } catch (err) {
-        console.warn('Could not copy index.html to 404.html:', err)
+        console.warn('Could not generate static route files:', err)
       }
     }
   }
@@ -27,7 +80,7 @@ function copyIndexTo404() {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), copyIndexTo404()],
+  plugins: [react(), tailwindcss(), generateStaticRoutes()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
