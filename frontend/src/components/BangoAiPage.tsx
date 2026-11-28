@@ -362,43 +362,11 @@ export const BangoAiPage: React.FC<BangoAiPageProps> = ({
 
           </div>
         ) : (
-          /* 2. ACTIVE CONVERSATION & INTELLIGENT RESULTS VIEW */
-          <div className="flex-1 flex flex-col max-w-5xl mx-auto w-full pb-8">
+          /* 2. ACTIVE CONVERSATION & INTELLIGENT RESULTS VIEW (ChatGPT Style) */
+          <div className="flex-1 flex flex-col max-w-5xl mx-auto w-full relative">
             
-            {/* Pinned Top Input for Ongoing Follow-ups */}
-            <div className="w-full mb-8 sticky top-22 z-20">
-              <form
-                onSubmit={handleFormSubmit}
-                className="relative flex items-center bg-white rounded-full pl-2.5 pr-2 py-2 sm:py-2.5 shadow-lg border border-[#E3DFD7] hover:border-[#191919] focus-within:border-[#F02D25] focus-within:ring-2 focus-within:ring-[#F02D25]/20 transition-all"
-              >
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0 select-none shadow-xs">
-                  <BangoRobotEyes size="sm" isHovered={false} followCursor={true} />
-                </div>
-
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Ask a follow-up or plan another day..."
-                  className="flex-1 bg-transparent border-none outline-hidden px-4 text-sm sm:text-base font-medium text-[#191919] placeholder:text-[#77736D]"
-                />
-
-                <button
-                  type="submit"
-                  disabled={!inputValue.trim() || isLoading}
-                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#191919] hover:bg-[#F02D25] disabled:opacity-40 text-white flex items-center justify-center shrink-0 transition-all cursor-pointer shadow-xs active:scale-95 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4 -rotate-12 translate-x-0.5" />
-                  )}
-                </button>
-              </form>
-            </div>
-
-            {/* Conversation Stream */}
-            <div className="space-y-8 flex-1">
+            {/* Conversation Stream (Chat flows down and scrolls upwards) */}
+            <div className="space-y-8 flex-1 pb-36">
               {messages.map((msg) => (
                 <div key={msg.id} className="space-y-4">
                   {/* User Bubble */}
@@ -643,6 +611,42 @@ export const BangoAiPage: React.FC<BangoAiPageProps> = ({
               )}
 
               <div ref={chatBottomRef} />
+            </div>
+
+            {/* Sticky Bottom Chatbox (ChatGPT Style: Input anchored at bottom, chat goes up) */}
+            <div className="sticky bottom-4 z-30 w-full mt-auto">
+              <div className="w-full bg-[#ECE9E2]/90 backdrop-blur-md pt-2 pb-1 rounded-full">
+                <form
+                  onSubmit={handleFormSubmit}
+                  className="relative flex items-center bg-white rounded-full pl-2.5 pr-2 py-2 sm:py-2.5 shadow-xl border border-[#E3DFD7] hover:border-[#191919] focus-within:border-[#F02D25] focus-within:ring-2 focus-within:ring-[#F02D25]/20 transition-all"
+                >
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0 select-none shadow-xs">
+                    <BangoRobotEyes size="sm" isHovered={false} followCursor={true} />
+                  </div>
+
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Ask a follow-up or plan another day..."
+                    className="flex-1 bg-transparent border-none outline-hidden px-4 text-sm sm:text-base font-medium text-[#191919] placeholder:text-[#77736D]"
+                  />
+
+                  <button
+                    type="submit"
+                    disabled={!inputValue.trim() || isLoading}
+                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#191919] hover:bg-[#F02D25] disabled:opacity-40 text-white flex items-center justify-center shrink-0 transition-all cursor-pointer shadow-xs active:scale-95 disabled:cursor-not-allowed"
+                    title="Send Query"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4 -rotate-12 translate-x-0.5" />
+                    )}
+                  </button>
+                </form>
+              </div>
             </div>
 
           </div>
