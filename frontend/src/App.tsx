@@ -149,7 +149,6 @@ export const App: React.FC = () => {
   const initialRoute = getInitialRoute();
   const [currentPage, setCurrentPage] = useState<PageId>(initialRoute.page);
   const [selectedDomain, setSelectedDomain] = useState<string>(initialRoute.domain || 'Healthcare');
-  const [rightPanelTab, setRightPanelTab] = useState<'recommendations' | 'places' | 'saved'>('recommendations');
 
   // Data states
   const [categories, setCategories] = useState<CategoryMeta[]>([]);
@@ -488,7 +487,6 @@ export const App: React.FC = () => {
       }
       if (res.apriori_recommendations && res.apriori_recommendations.length > 0) {
         setRecommendations(res.apriori_recommendations);
-        setRightPanelTab('recommendations');
       } else if (res.matched_places.length > 0) {
         handleSelectPlace(res.matched_places[0]);
       }
@@ -666,156 +664,34 @@ export const App: React.FC = () => {
                 </div>
               )}
 
-              {/* 3. FIXED: View Tabs (For You / Places / Saved) */}
-              <div className="flex items-center justify-between border-b border-[#E3DFD7] pb-2 mb-2.5 shrink-0">
-                <div className="flex items-center gap-1 bg-[#F5F3EE] p-1 rounded-xl">
-                  <button
-                    onClick={() => setRightPanelTab('recommendations')}
-                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      rightPanelTab === 'recommendations'
-                        ? 'bg-[#191919] text-white shadow-xs'
-                        : 'text-[#77736D] hover:text-[#191919]'
-                    }`}
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-[#F02D25]" />
-                    <span>For You</span>
-                    {recommendations.length > 0 && (
-                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#F02D25] text-white">
-                        {recommendations.length}
-                      </span>
-                    )}
-                  </button>
-
-                  <button
-                    onClick={() => setRightPanelTab('places')}
-                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      rightPanelTab === 'places'
-                        ? 'bg-[#191919] text-white shadow-xs'
-                        : 'text-[#77736D] hover:text-[#191919]'
-                    }`}
-                  >
-                    <MapPin className="w-3.5 h-3.5" />
-                    <span>Places</span>
-                    <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#ECE9E2] text-[#191919]">
-                      {places.length}
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => setRightPanelTab('saved')}
-                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      rightPanelTab === 'saved'
-                        ? 'bg-[#191919] text-white shadow-xs'
-                        : 'text-[#77736D] hover:text-[#191919]'
-                    }`}
-                  >
-                    <Bookmark className="w-3.5 h-3.5" />
-                    <span>Saved</span>
-                    {savedPlaces.length > 0 && (
-                      <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-[#F02D25] text-white">
-                        {savedPlaces.length}
-                      </span>
-                    )}
-                  </button>
-                </div>
+              {/* 3. INDEPENDENT SCROLLABLE FEED OF PLACES */}
+              <div className="flex-1 overflow-y-auto min-h-0 space-y-3 pr-1 pt-1">
+                {isLoadingPlaces ? (
+                  <div className="py-16 text-center text-xs text-[#77736D]">
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F02D25]" />
+                    Loading places...
+                  </div>
+                ) : places.length > 0 ? (
+                  places.map((place) => (
+                    <PlaceCard
+                      key={place.place_id}
+                      place={place}
+                      isSelected={selectedPlace?.place_id === place.place_id}
+                      isSaved={isPlaceSaved(place.place_id)}
+                      onSelect={(p) => handleSelectPlace(p, false)}
+                      onSave={handleSavePlace}
+                      onViewDetails={(p) => setDrawerPlace(p)}
+                    />
+                  ))
+                ) : (
+                  <div className="py-16 text-center text-xs text-[#77736D] bg-[#ECE9E2] rounded-2xl border border-dashed border-[#E3DFD7] p-6">
+                    <p className="font-bold text-[#191919] uppercase">No places found</p>
+                    <p className="text-[11px] text-[#77736D] mt-1">
+                      Try selecting another category from the filters above.
+                    </p>
+                  </div>
+                )}
               </div>
-
-              {/* 4. INDEPENDENT SCROLLABLE FEED OF PLACES / RECOMMENDATIONS */}
-              <div className="flex-1 overflow-y-auto min-h-0 space-y-3 pr-1">
-                  {/* 1. RECOMMENDATIONS TAB */}
-                  {rightPanelTab === 'recommendations' && (
-                    <div className="space-y-3.5">
-                      {recNotice && (
-                        <div className="p-3 bg-[#ECE9E2] rounded-2xl border border-[#E3DFD7] text-xs text-[#191919] flex items-start gap-2">
-                          <AlertCircle className="w-4 h-4 text-[#F02D25] shrink-0 mt-0.5" />
-                          <p className="leading-snug">{recNotice}</p>
-                        </div>
-                      )}
-
-                      {isLoadingRecs ? (
-                        <div className="py-16 text-center text-xs text-[#77736D]">
-                          <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F02D25]" />
-                          Mining association rules...
-                        </div>
-                      ) : recommendations.length > 0 ? (
-                        recommendations.map((item) => (
-                          <RecommendationCard
-                            key={item.place.place_id}
-                            item={item}
-                            isSelected={selectedPlace?.place_id === item.place.place_id}
-                            isSaved={isPlaceSaved(item.place.place_id)}
-                            onSelect={(p) => handleSelectPlace(p, false)}
-                            onSave={handleSavePlace}
-                            onViewDetails={(p) => setDrawerPlace(p)}
-                          />
-                        ))
-                      ) : (
-                        <div className="py-16 text-center text-xs text-[#77736D] bg-[#F5F3EE] rounded-2xl border border-dashed border-[#E3DFD7] p-6">
-                          <Sparkles className="w-8 h-8 text-[#D1CCC4] mx-auto mb-2" />
-                          <p className="font-bold text-[#191919] uppercase">No active associations</p>
-                          <p className="text-[11px] text-[#77736D] mt-1">
-                            Click other markers on the map to trigger dynamic Apriori basket recommendations.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* 2. PLACES TAB */}
-                  {rightPanelTab === 'places' && (
-                    <div className="space-y-3">
-                      {isLoadingPlaces ? (
-                        <div className="py-16 text-center text-xs text-[#77736D]">
-                          <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F02D25]" />
-                          Loading places...
-                        </div>
-                      ) : places.length > 0 ? (
-                        places.map((place) => (
-                          <PlaceCard
-                            key={place.place_id}
-                            place={place}
-                            isSelected={selectedPlace?.place_id === place.place_id}
-                            isSaved={isPlaceSaved(place.place_id)}
-                            onSelect={(p) => handleSelectPlace(p, false)}
-                            onSave={handleSavePlace}
-                            onViewDetails={(p) => setDrawerPlace(p)}
-                          />
-                        ))
-                      ) : (
-                        <div className="py-16 text-center text-xs text-[#77736D]">
-                          No places found in this domain.
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* 3. SAVED TAB */}
-                  {rightPanelTab === 'saved' && (
-                    <div className="space-y-3">
-                      {savedPlaces.length > 0 ? (
-                        savedPlaces.map((place) => (
-                          <PlaceCard
-                            key={place.place_id}
-                            place={place}
-                            isSelected={selectedPlace?.place_id === place.place_id}
-                            isSaved={true}
-                            onSelect={(p) => handleSelectPlace(p, false)}
-                            onSave={handleSavePlace}
-                            onViewDetails={(p) => setDrawerPlace(p)}
-                          />
-                        ))
-                      ) : (
-                        <div className="py-16 text-center text-xs text-[#77736D] bg-[#F5F3EE] rounded-2xl border border-dashed border-[#E3DFD7] p-6">
-                          <Bookmark className="w-8 h-8 text-[#D1CCC4] mx-auto mb-2" />
-                          <p className="font-bold text-[#191919] uppercase">No saved places yet</p>
-                          <p className="text-[11px] text-[#77736D] mt-1">
-                            Click the bookmark icon on any card to save your favorite destinations!
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
 
             </div>
 
@@ -987,8 +863,7 @@ export const App: React.FC = () => {
                                   <div className="flex items-center gap-1.5 shrink-0">
                                     <button
                                       onClick={() => {
-                                        navigateToPage('map');
-                                        setRightPanelTab('saved');
+                                        navigateToPage('saved');
                                         setToast(null);
                                       }}
                                       className="text-[11px] font-bold uppercase tracking-wider text-white hover:text-[#F02D25] bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"

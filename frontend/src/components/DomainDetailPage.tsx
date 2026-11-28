@@ -296,8 +296,8 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
                           onSavePlace(place);
                         }}
                         className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${isSaved
-                            ? 'bg-[#F02D25] text-white border-[#F02D25]'
-                            : 'border-[#E3DFD7] text-[#77736D] hover:text-[#191919] hover:bg-[#F5F3EE]'
+                          ? 'bg-[#F02D25] text-white border-[#F02D25]'
+                          : 'border-[#E3DFD7] text-[#77736D] hover:text-[#191919] hover:bg-[#F5F3EE]'
                           }`}
                         title={isSaved ? 'Saved to collection' : 'Save Place'}
                       >
