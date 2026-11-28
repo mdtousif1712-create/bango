@@ -56,6 +56,17 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
     }
   }, [place, userLocation]);
 
+  // Handle escape key to close side panel
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !isShareModalOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, isShareModalOpen]);
+
   if (!place) return null;
 
   const handleDirections = () => {
@@ -68,7 +79,15 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full sm:w-[500px] bg-white shadow-2xl z-[1500] flex flex-col border-l border-[#E3DFD7] animate-in slide-in-from-right duration-300 font-sans">
+    <>
+      {/* Backdrop overlay - click anywhere outside to slide in / dismiss the side panel */}
+      <div
+        onClick={onClose}
+        className="fixed inset-0 top-18 sm:top-20 bg-black/25 backdrop-blur-[1px] z-[1490] transition-opacity animate-in fade-in duration-200 cursor-pointer"
+        aria-label="Close location dossier"
+      />
+
+      <div className="fixed inset-y-0 right-0 w-full sm:w-[500px] bg-white shadow-2xl z-[1500] flex flex-col border-l border-[#E3DFD7] animate-in slide-in-from-right duration-300 font-sans">
       {/* Header Bar */}
       <div className="h-16 px-6 border-b border-[#E3DFD7] flex items-center justify-between shrink-0 bg-[#F5F3EE]">
         <div className="flex items-center gap-2">
@@ -303,5 +322,6 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
         onShowToast={onShowToast}
       />
     </div>
+    </>
   );
 };

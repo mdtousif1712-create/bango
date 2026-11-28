@@ -249,6 +249,9 @@ export const App: React.FC = () => {
 
   // Centralized page navigation handler with HTML5 History API integration
   const navigateToPage = (targetPage: PageId, replace: boolean = false) => {
+    // Automatically close any open Location Dossier side panel when switching/exiting pages
+    setDrawerPlace(null);
+
     if (targetPage === currentPage && targetPage !== 'domain-detail') return;
 
     const targetPath = targetPage === 'discover' ? '/' : `/${targetPage}`;
@@ -272,6 +275,9 @@ export const App: React.FC = () => {
 
   // Dedicated navigation to an individual domain page (Healthcare, Transportation, etc.)
   const navigateToDomainPage = (domainName: string, replace: boolean = false) => {
+    // Automatically close any open Location Dossier side panel when navigating to another domain
+    setDrawerPlace(null);
+
     const slug = domainName.toLowerCase();
     const targetPath = `/domains/${slug}`;
 
@@ -294,6 +300,11 @@ export const App: React.FC = () => {
     setCurrentPage('domain-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Automatically slide the side panel in / close whenever exiting a page or domain
+  useEffect(() => {
+    setDrawerPlace(null);
+  }, [currentPage, selectedDomain]);
 
   // Sync initial URL, History state & Title on mount
   useEffect(() => {
@@ -323,6 +334,9 @@ export const App: React.FC = () => {
   // Handle browser popstate (Back & Forward buttons)
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
+      // Automatically close any open Location Dossier side panel on back/forward navigation
+      setDrawerPlace(null);
+
       const statePage = event.state?.page;
       const stateDomain = event.state?.domain;
 
