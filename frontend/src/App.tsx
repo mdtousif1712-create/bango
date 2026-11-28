@@ -157,6 +157,7 @@ export const App: React.FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [trendingPlaces, setTrendingPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [singleFocusedPlace, setSingleFocusedPlace] = useState<Place | null>(null);
   const [drawerPlace, setDrawerPlace] = useState<Place | null>(null);
 
   // Apriori Recommendations state
@@ -414,6 +415,7 @@ export const App: React.FC = () => {
 
   // Handle Category Selection
   const handleCategorySelect = async (catName: string) => {
+    setSingleFocusedPlace(null);
     setSelectedCategory(catName);
     setIsLoadingPlaces(true);
     try {
@@ -461,6 +463,7 @@ export const App: React.FC = () => {
 
   // Handle Natural Language Search
   const handleNaturalSearch = async (query: string) => {
+    setSingleFocusedPlace(null);
     setIsSearching(true);
     setActiveSearchExplanation(null);
     try {
@@ -550,15 +553,24 @@ export const App: React.FC = () => {
       <Header
         currentPage={currentPage}
         currentDomain={selectedDomain}
-        onSelectPage={(page) => navigateToPage(page)}
+        onSelectPage={(page) => {
+          if (page === 'map') {
+            setSingleFocusedPlace(null);
+          }
+          navigateToPage(page);
+        }}
         onSelectDomainPage={(domain) => navigateToDomainPage(domain)}
         savedCount={savedPlaces.length}
         savedPlaces={savedPlaces}
         onSelectCategory={(cat) => {
+          setSingleFocusedPlace(null);
           handleCategorySelect(cat);
           navigateToPage('map');
         }}
-        onSelectPlace={(p) => handleSelectPlace(p, true)}
+        onSelectPlace={(p) => {
+          setSingleFocusedPlace(p);
+          handleSelectPlace(p, true);
+        }}
         user={currentUser}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
         onLogout={handleLogout}
@@ -603,6 +615,8 @@ export const App: React.FC = () => {
                 <CityMap
                   places={places}
                   selectedPlace={selectedPlace}
+                  focusedPlace={singleFocusedPlace}
+                  onClearFocus={() => setSingleFocusedPlace(null)}
                   onSelectPlace={(p) => handleSelectPlace(p, false)}
                   onSavePlace={handleSavePlace}
                   isPlaceSaved={isPlaceSaved}
@@ -814,11 +828,17 @@ export const App: React.FC = () => {
                                 <TrendingSection
                                   places={trendingPlaces && trendingPlaces.length >= 30 ? trendingPlaces : places}
                                   allPlaces={places}
-                                  onSelectPlace={(p) => handleSelectPlace(p, false)}
+                                  onSelectPlace={(p) => {
+                                    setSingleFocusedPlace(p);
+                                    handleSelectPlace(p, true);
+                                  }}
                                   onSavePlace={handleSavePlace}
                                   isPlaceSaved={isPlaceSaved}
                                   onViewDetails={(p) => setDrawerPlace(p)}
-                                  onNavigateToMap={() => navigateToPage('map')}
+                                  onNavigateToMap={() => {
+                                    setSingleFocusedPlace(null);
+                                    navigateToPage('map');
+                                  }}
                                 />
                               )}
 
@@ -842,9 +862,11 @@ export const App: React.FC = () => {
                                   places={places}
                                   onSelectDomain={(d) => navigateToDomainPage(d)}
                                   onExploreOnMap={(place) => {
+                                    setSingleFocusedPlace(place);
                                     handleSelectPlace(place, true);
                                   }}
                                   onExploreDomainOnMap={(domain) => {
+                                    setSingleFocusedPlace(null);
                                     handleCategorySelect(domain);
                                     navigateToPage('map');
                                   }}
@@ -860,12 +882,16 @@ export const App: React.FC = () => {
                                 <FriendsSection
                                   places={places}
                                   onSelectPlace={(place) => {
+                                    setSingleFocusedPlace(place);
                                     handleSelectPlace(place, true);
                                   }}
                                   onSavePlace={handleSavePlace}
                                   isPlaceSaved={isPlaceSaved}
                                   onViewDetails={(place) => setDrawerPlace(place)}
-                                  onNavigateToMap={() => navigateToPage('map')}
+                                  onNavigateToMap={() => {
+                                    setSingleFocusedPlace(null);
+                                    navigateToPage('map');
+                                  }}
                                   onShowToast={showToast}
                                 />
                               )}
@@ -874,10 +900,16 @@ export const App: React.FC = () => {
                               {currentPage === 'saved' && (
                                 <SavedPlacesSection
                                   savedPlaces={savedPlaces}
-                                  onSelectPlace={(p) => handleSelectPlace(p, false)}
+                                  onSelectPlace={(p) => {
+                                    setSingleFocusedPlace(p);
+                                    handleSelectPlace(p, true);
+                                  }}
                                   onRemovePlace={handleSavePlace}
                                   onViewDetails={(p) => setDrawerPlace(p)}
-                                  onNavigateToMap={() => navigateToPage('map')}
+                                  onNavigateToMap={() => {
+                                    setSingleFocusedPlace(null);
+                                    navigateToPage('map');
+                                  }}
                                 />
                               )}
 
@@ -890,6 +922,7 @@ export const App: React.FC = () => {
                               onSavePlace={handleSavePlace}
                               isSaved={drawerPlace ? isPlaceSaved(drawerPlace.place_id) : false}
                               onSelectPlace={(p) => {
+                                setSingleFocusedPlace(p);
                                 handleSelectPlace(p, true);
                                 setDrawerPlace(null);
                               }}

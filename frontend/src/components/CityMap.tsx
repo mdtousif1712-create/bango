@@ -7,6 +7,8 @@ import { Bookmark, ExternalLink, Star, Navigation, MapPin } from 'lucide-react';
 interface CityMapProps {
   places: Place[];
   selectedPlace: Place | null;
+  focusedPlace?: Place | null;
+  onClearFocus?: () => void;
   onSelectPlace: (place: Place) => void;
   onSavePlace: (place: Place) => void;
   isPlaceSaved: (placeId: string) => boolean;
@@ -79,17 +81,23 @@ const userLocationIcon = L.divIcon({
   iconAnchor: [11, 11],
 });
 
-// Map controller component for user geolocation pan only (no auto-zoom focus factor)
-const MapController: React.FC<{ userLocation: { lat: number; lng: number } | null }> = ({
-  userLocation,
-}) => {
+// Map controller component for user geolocation pan and focused place flyTo
+const MapController: React.FC<{
+  userLocation: { lat: number; lng: number } | null;
+  focusedPlace?: Place | null;
+}> = ({ userLocation, focusedPlace }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (userLocation) {
+    if (focusedPlace) {
+      map.flyTo([focusedPlace.latitude, focusedPlace.longitude], 16, {
+        animate: true,
+        duration: 0.8,
+      });
+    } else if (userLocation) {
       map.panTo([userLocation.lat, userLocation.lng]);
     }
-  }, [userLocation, map]);
+  }, [userLocation, focusedPlace, map]);
 
   return null;
 };
@@ -97,6 +105,8 @@ const MapController: React.FC<{ userLocation: { lat: number; lng: number } | nul
 export const CityMap: React.FC<CityMapProps> = ({
   places,
   selectedPlace,
+  focusedPlace,
+  onClearFocus,
   onSelectPlace,
   onSavePlace,
   isPlaceSaved,
@@ -104,14 +114,20 @@ export const CityMap: React.FC<CityMapProps> = ({
   onLocateMe,
   onViewDetails,
 }) => {
-  // Bengaluru coordinates
-  const defaultCenter: [number, number] = [12.9716, 77.5946];
+  // If a single place is focused, show only that specific location!
+  const displayPlaces = focusedPlace ? [focusedPlace] : places;
+
+  // Bengaluru coordinates or focused place coordinates
+  const defaultCenter: [number, number] = focusedPlace
+    ? [focusedPlace.latitude, focusedPlace.longitude]
+    : [12.9716, 77.5946];
+  const defaultZoom = focusedPlace ? 16 : 12;
 
   return (
     <div className="relative w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-lg bg-[#ECE9E2]">
       <MapContainer
         center={defaultCenter}
-        zoom={12}
+        zoom={defaultZoom}
         minZoom={10}
         maxZoom={18}
         scrollWheelZoom={true}
@@ -122,7 +138,7 @@ export const CityMap: React.FC<CityMapProps> = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <MapController userLocation={userLocation} />
+        <MapController userLocation={userLocation} focusedPlace={focusedPlace} />
 
         {/* User Location Marker */}
         {userLocation && (
@@ -133,16 +149,26 @@ export const CityMap: React.FC<CityMapProps> = ({
           </Marker>
         )}
 
-        {/* Bengaluru Place Markers Classified by Category & Colors */}
-        {places.map((place) => {
+        {/* Bengaluru Place Markers (Single isolated marker if focusedPlace is set, or all places) */}
+        {displayPlaces.map((place) => {
           const markerIcon = createCustomMarkerIcon(place.category);
           const categoryColor = CATEGORY_COLORS[place.category] || '#F02D25';
+          const isFocused = Boolean(focusedPlace && place.place_id === focusedPlace.place_id);
 
           return (
             <Marker
               key={place.place_id}
               position={[place.latitude, place.longitude]}
               icon={markerIcon}
+              ref={(marker) => {
+                if (marker && isFocused) {
+                  setTimeout(() => {
+                    try {
+                      marker.openPopup();
+                    } catch {}
+                  }, 400);
+                }
+              }}
               eventHandlers={{
                 click: () => onSelectPlace(place),
               }}
@@ -191,7 +217,7 @@ export const CityMap: React.FC<CityMapProps> = ({
                     <div className="mt-3.5 pt-3 border-t border-[#E3DFD7] flex items-center justify-between gap-2">
                       <button
                         onClick={() => onViewDetails(place)}
-                        className="flex-1 py-2 px-3 bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5"
+                        className="flex-1 py-2 px-3 bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <span>View Details</span>
                         <ExternalLink className="w-3 h-3" />
@@ -199,7 +225,7 @@ export const CityMap: React.FC<CityMapProps> = ({
 
                       <button
                         onClick={() => onSavePlace(place)}
-                        className={`p-2 rounded-xl border transition-all ${
+                        className={`p-2 rounded-xl border transition-all cursor-pointer ${
                           isPlaceSaved(place.place_id)
                             ? 'bg-[#F02D25] text-white border-[#F02D25]'
                             : 'border-[#E3DFD7] text-[#77736D] hover:text-[#191919] hover:bg-[#F5F3EE]'
@@ -219,6 +245,31 @@ export const CityMap: React.FC<CityMapProps> = ({
         })}
       </MapContainer>
 
+      {/* Floating Single Focused Location Pill Banner */}
+      {focusedPlace && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[400] flex items-center gap-2.5 sm:gap-3 bg-white/95 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#E3DFD7] shadow-lg max-w-[92%] sm:max-w-md animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#F02D25] animate-pulse shrink-0" />
+          <div className="min-w-0 flex-1">
+            <h4 className="font-display font-bold text-xs sm:text-sm text-[#191919] truncate leading-tight">
+              {focusedPlace.name}
+            </h4>
+            <p className="text-[10px] sm:text-[11px] text-[#77736D] truncate leading-tight mt-0.5">
+              Showing single location in {focusedPlace.locality}
+            </p>
+          </div>
+          {onClearFocus && (
+            <button
+              onClick={onClearFocus}
+              className="shrink-0 px-2.5 py-1 rounded-xl bg-[#191919] hover:bg-[#F02D25] text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-xs flex items-center gap-1"
+              title="Show all Bengaluru locations"
+            >
+              <span>Show All</span>
+              <span className="text-xs">&times;</span>
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Floating Geolocation Control */}
       <div className="absolute top-4 right-4 z-[400] flex flex-col gap-2">
         <button
@@ -234,17 +285,29 @@ export const CityMap: React.FC<CityMapProps> = ({
       <div className="absolute top-3.5 left-[58px] z-[400] bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-2xl border border-[#E3DFD7] shadow-sm text-xs font-semibold text-[#191919] hidden sm:flex items-center gap-2.5 flex-wrap max-w-[calc(100%-130px)] select-none">
         <div className="flex items-center gap-1.5 pr-2.5 border-r border-[#E3DFD7]">
           <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#77736D] whitespace-nowrap">
-            {places.length} Places
+            {focusedPlace ? '1 Isolated Place' : `${places.length} Places`}
           </span>
         </div>
-        <div className="flex items-center gap-2.5 flex-wrap">
-          {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
-            <div key={cat} className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full shrink-0 shadow-xs" style={{ backgroundColor: color }}></span>
-              <span className="text-[11px] font-medium text-[#191919] whitespace-nowrap">{cat}</span>
-            </div>
-          ))}
-        </div>
+        {focusedPlace ? (
+          <div className="flex items-center gap-1.5">
+            <span
+              className="w-2 h-2 rounded-full shrink-0 shadow-xs"
+              style={{ backgroundColor: CATEGORY_COLORS[focusedPlace.category] || '#F02D25' }}
+            ></span>
+            <span className="text-[11px] font-bold text-[#191919] truncate max-w-[200px]">
+              {focusedPlace.category} &bull; {focusedPlace.name}
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2.5 flex-wrap">
+            {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
+              <div key={cat} className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full shrink-0 shadow-xs" style={{ backgroundColor: color }}></span>
+                <span className="text-[11px] font-medium text-[#191919] whitespace-nowrap">{cat}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

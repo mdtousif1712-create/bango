@@ -12,7 +12,8 @@ import {
   Tag,
   Share2,
   Check,
-  ArrowUpRight
+  ArrowUpRight,
+  Compass
 } from 'lucide-react';
 
 interface PlaceDetailDrawerProps {
@@ -133,18 +134,28 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="p-6 border-b border-[#E3DFD7] flex items-center gap-3 bg-[#F5F3EE]">
+        <div className="p-4 sm:p-6 border-b border-[#E3DFD7] flex flex-wrap items-center gap-2.5 sm:gap-3 bg-[#F5F3EE]">
+          <button
+            onClick={() => onSelectPlace(place)}
+            className="flex-1 py-3 px-4 bg-[#F02D25] hover:bg-[#d0251e] text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+            title="Explore this location on inside app map"
+          >
+            <Compass className="w-4 h-4 text-white" />
+            <span>Explore on Map</span>
+          </button>
+
           <button
             onClick={handleDirections}
-            className="flex-1 py-3 px-4 bg-[#191919] hover:bg-[#F02D25] text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2"
+            className="py-3 px-3.5 bg-[#191919] hover:bg-[#333] text-white text-xs font-bold uppercase tracking-wider rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+            title="Google Maps Directions"
           >
             <Navigation2 className="w-4 h-4 fill-white" />
-            <span>Google Maps Directions</span>
+            <span className="hidden sm:inline">Directions</span>
           </button>
 
           <button
             onClick={() => onSavePlace(place)}
-            className={`py-3 px-4 border text-xs font-bold uppercase tracking-wider rounded-2xl transition-all flex items-center gap-2 ${
+            className={`py-3 px-3.5 border text-xs font-bold uppercase tracking-wider rounded-2xl transition-all flex items-center gap-2 cursor-pointer ${
               isSaved
                 ? 'bg-[#F02D25] text-white border-[#F02D25]'
                 : 'border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2]'
