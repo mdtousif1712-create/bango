@@ -907,6 +907,8 @@ export const App: React.FC = () => {
                                     navigateToPage('map');
                                   }}
                                   onShowToast={showToast}
+                                  user={currentUser}
+                                  onOpenAuthModal={() => setIsAuthModalOpen(true)}
                                 />
                               )}
 
