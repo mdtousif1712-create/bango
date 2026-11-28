@@ -69,30 +69,15 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
         isFading ? 'opacity-0 scale-[1.02] pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
-      {/* Top Header Controls Bar */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 sm:px-10 py-5 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-        {/* Brand identity badge */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-[#191919] border border-white/20 flex items-center justify-center shadow-lg">
-            <span className="font-sans font-black text-xs text-white tracking-tighter">bo</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="font-display font-extrabold text-lg text-white tracking-tight">bango</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#F02D25] animate-pulse"></span>
-          </div>
-        </div>
-
-        {/* Action Controls */}
-        <div className="flex items-center gap-3">
-          {/* Skip Button */}
-          <button
-            onClick={handleFinish}
-            className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-[#F02D25] border border-white/15 hover:border-[#F02D25] text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer shadow-lg hover:shadow-red-500/30"
-          >
-            <span>Skip Intro</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </button>
-        </div>
+      {/* Top Right Skip Control */}
+      <div className="absolute top-5 right-5 sm:right-8 z-20">
+        <button
+          onClick={handleFinish}
+          className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-[#F02D25] border border-white/15 hover:border-[#F02D25] text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer shadow-lg hover:shadow-red-500/30"
+        >
+          <span>Skip Intro</span>
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        </button>
       </div>
 
       {/* Fullscreen Video Container */}
