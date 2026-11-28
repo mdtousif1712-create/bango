@@ -169,7 +169,8 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
             return (
               <div
                 key={place.place_id}
-                className="group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                onClick={() => onViewDetails(place)}
+                className="group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer"
               >
                 {/* Photo Header */}
                 <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-[#ECE9E2]">
@@ -207,8 +208,7 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
                   <div>
                     {/* Place Name in Bold Display Font */}
                     <h3
-                      onClick={() => onViewDetails(place)}
-                      className="font-display font-bold text-lg sm:text-xl text-[#191919] uppercase tracking-tight group-hover:text-[#F02D25] transition-colors cursor-pointer line-clamp-1"
+                      className="font-display font-bold text-lg sm:text-xl text-[#191919] uppercase tracking-tight group-hover:text-[#F02D25] transition-colors line-clamp-1"
                       title={place.name}
                     >
                       {place.name}
@@ -243,25 +243,37 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
                   {/* Card Footer: EXPLORE ON MAP -> (exact match to Image 1) */}
                   <div className="mt-5 pt-3.5 border-t border-[#E3DFD7] flex items-center justify-between gap-2">
                     <button
-                      onClick={() => onExploreOnMap(place)}
-                      className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F02D25] hover:text-[#191919] transition-colors cursor-pointer"
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onExploreOnMap(place);
+                      }}
+                      className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F02D25] hover:text-[#191919] transition-colors cursor-pointer group/btn"
                     >
                       <span>Explore on Map</span>
-                      <span className="text-sm leading-none">&rarr;</span>
+                      <span className="text-sm leading-none transition-transform group-hover/btn:translate-x-1">&rarr;</span>
                     </button>
 
                     <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => onViewDetails(place)}
-                        className="p-1.5 rounded-xl border border-[#E3DFD7] text-[#77736D] hover:text-[#191919] hover:bg-[#F5F3EE] transition-colors"
-                        title="View Full Details"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onViewDetails(place);
+                        }}
+                        className="p-1.5 rounded-xl border border-[#E3DFD7] text-[#77736D] hover:text-[#191919] hover:bg-[#F5F3EE] transition-colors cursor-pointer"
+                        title="View Full Details in Side Panel"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </button>
 
                       <button
-                        onClick={() => onSavePlace(place)}
-                        className={`p-1.5 rounded-xl border transition-colors ${
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSavePlace(place);
+                        }}
+                        className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${
                           isSaved
                             ? 'bg-[#F02D25] text-white border-[#F02D25]'
                             : 'border-[#E3DFD7] text-[#77736D] hover:text-[#191919] hover:bg-[#F5F3EE]'
