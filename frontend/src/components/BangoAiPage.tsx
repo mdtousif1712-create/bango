@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Place, RecommendationItem } from '../types';
 import { performNaturalSearch } from '../services/api';
+import { BangoRobotEyes } from './BangoRobotEyes';
 
 interface BangoAiPageProps {
   places: Place[];
@@ -268,9 +269,9 @@ export const BangoAiPage: React.FC<BangoAiPageProps> = ({
                 onSubmit={handleFormSubmit}
                 className="relative flex items-center bg-white rounded-full pl-2.5 pr-2 py-2 sm:py-2.5 shadow-lg border border-[#E3DFD7] hover:border-[#191919] focus-within:border-[#F02D25] focus-within:ring-2 focus-within:ring-[#F02D25]/20 transition-all"
               >
-                {/* Round black 'bo' badge */}
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-black text-lg sm:text-xl shrink-0 select-none shadow-xs">
-                  bo
+                {/* Round black companion robot face with blinking eyes */}
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0 select-none shadow-xs">
+                  <BangoRobotEyes size="sm" isHovered={false} followCursor={true} />
                 </div>
 
                 {/* Input with exact placeholder from image */}
@@ -370,8 +371,8 @@ export const BangoAiPage: React.FC<BangoAiPageProps> = ({
                 onSubmit={handleFormSubmit}
                 className="relative flex items-center bg-white rounded-full pl-2.5 pr-2 py-2 sm:py-2.5 shadow-lg border border-[#E3DFD7] hover:border-[#191919] focus-within:border-[#F02D25] focus-within:ring-2 focus-within:ring-[#F02D25]/20 transition-all"
               >
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-black text-base sm:text-lg shrink-0 select-none shadow-xs">
-                  bo
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0 select-none shadow-xs">
+                  <BangoRobotEyes size="sm" isHovered={false} followCursor={true} />
                 </div>
 
                 <input
@@ -411,8 +412,8 @@ export const BangoAiPage: React.FC<BangoAiPageProps> = ({
                     /* AI Assistant Response */
                     <div className="space-y-6">
                       <div className="flex items-start gap-3.5">
-                        <div className="w-10 h-10 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-black text-base shrink-0 shadow-xs mt-0.5">
-                          bo
+                        <div className="w-10 h-10 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+                          <BangoRobotEyes size="sm" isHovered={false} followCursor={true} />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm sm:text-base font-medium text-[#191919] leading-relaxed">
@@ -631,8 +632,8 @@ export const BangoAiPage: React.FC<BangoAiPageProps> = ({
               {/* Loading Indicator */}
               {isLoading && (
                 <div className="flex items-center gap-3 text-sm font-semibold text-[#77736D]">
-                  <div className="w-10 h-10 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-black text-base shrink-0 shadow-xs">
-                    bo
+                  <div className="w-10 h-10 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <BangoRobotEyes size="sm" isHovered={false} followCursor={true} />
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white border border-[#E3DFD7] shadow-xs">
                     <Loader2 className="w-4 h-4 animate-spin text-[#F02D25]" />

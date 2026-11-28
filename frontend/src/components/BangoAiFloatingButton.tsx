@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles } from 'lucide-react';
 import { PageId } from './Header';
+import { BangoRobotEyes } from './BangoRobotEyes';
 
 interface BangoAiFloatingButtonProps {
   onClick: () => void;
@@ -13,11 +13,10 @@ export const BangoAiFloatingButton: React.FC<BangoAiFloatingButtonProps> = ({
 }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [innerOffset, setInnerOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   useEffect(() => {
-    // Smooth magnetic cursor tracking physics
+    // Subtle magnetic physics when the mouse gets near the floating element
     const handleMouseMove = (e: MouseEvent) => {
       if (!buttonRef.current) return;
       const rect = buttonRef.current.getBoundingClientRect();
@@ -28,29 +27,22 @@ export const BangoAiFloatingButton: React.FC<BangoAiFloatingButtonProps> = ({
       const distY = e.clientY - centerY;
       const distance = Math.hypot(distX, distY);
 
-      // Magnetic interaction radius (within 240px cursor pull)
-      const magneticRadius = 240;
+      const magneticRadius = 180;
 
       if (distance < magneticRadius) {
-        // Non-linear ease: closer cursor = stronger pull
-        const power = Math.pow((magneticRadius - distance) / magneticRadius, 1.4);
-        const maxPull = 32; // max displacement in pixels
-        const pullX = (distX / distance) * power * maxPull;
-        const pullY = (distY / distance) * power * maxPull;
-
-        setOffset({ x: pullX, y: pullY });
-        // Inner "bo" text parallax
-        setInnerOffset({ x: pullX * 0.45, y: pullY * 0.45 });
+        const power = Math.pow((magneticRadius - distance) / magneticRadius, 1.3);
+        const maxPull = 15;
+        setOffset({
+          x: (distX / distance) * power * maxPull,
+          y: (distY / distance) * power * maxPull,
+        });
       } else {
-        // Spring back gently to center
         setOffset({ x: 0, y: 0 });
-        setInnerOffset({ x: 0, y: 0 });
       }
     };
 
     const handleMouseLeave = () => {
       setOffset({ x: 0, y: 0 });
-      setInnerOffset({ x: 0, y: 0 });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -65,22 +57,31 @@ export const BangoAiFloatingButton: React.FC<BangoAiFloatingButtonProps> = ({
   const isCurrentPageAi = currentPage === 'bango-ai';
 
   return (
-    <div className="fixed bottom-6 right-6 z-[2500] pointer-events-none select-none">
-      <div className="relative flex items-center justify-end">
+    <aside
+      aria-label="Bango AI Quick Access"
+      className="fixed bottom-6 right-6 z-[2500] pointer-events-none select-none"
+    >
+      <div className="relative flex items-center gap-3">
         
-        {/* Tooltip Label expanding to the left on hover */}
-        <div
-          className={`pointer-events-none absolute right-full mr-3.5 px-3.5 py-1.5 rounded-full bg-[#191919] text-white text-xs font-display font-bold shadow-xl border border-white/10 whitespace-nowrap flex items-center gap-1.5 transition-all duration-300 ${
-            isHovered
-              ? 'opacity-100 translate-x-0 scale-100'
-              : 'opacity-0 translate-x-2 scale-95'
+        {/* Pill Label on the left: "bango ai for your help !!" */}
+        <button
+          type="button"
+          onClick={onClick}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className={`pointer-events-auto cursor-pointer flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-[#E3DFD7] text-[#191919] shadow-lg hover:shadow-xl hover:border-[#191919] transition-all duration-300 active:scale-95 ${
+            isCurrentPageAi && !isHovered
+              ? 'opacity-0 translate-x-4 pointer-events-none'
+              : 'opacity-100 translate-x-0'
           }`}
+          title="Plan your day with Bango AI"
         >
-          <span className="w-2 h-2 rounded-full bg-[#F02D25] animate-pulse"></span>
-          <span>bango <span className="text-[#F02D25]">ai</span></span>
-        </div>
+          <span className="font-display font-bold text-xs sm:text-sm text-[#191919] whitespace-nowrap">
+            bango <span className="text-[#F02D25]">ai</span> for your help !!
+          </span>
+        </button>
 
-        {/* Magnetic Floating "bo" Button */}
+        {/* Circular Robot Head Button with Reactive Blinking Eyes */}
         <button
           ref={buttonRef}
           type="button"
@@ -88,36 +89,18 @@ export const BangoAiFloatingButton: React.FC<BangoAiFloatingButtonProps> = ({
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           style={{
-            transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${isHovered ? 1.08 : 1})`,
+            transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${isHovered ? 1.06 : 1})`,
             transition: 'transform 0.18s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.25s ease',
           }}
-          className={`pointer-events-auto relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#191919] text-white flex items-center justify-center cursor-pointer shadow-2xl hover:shadow-[0_12px_30px_rgba(240,45,37,0.35)] border-2 ${
-            isCurrentPageAi
-              ? 'border-[#F02D25] ring-4 ring-[#F02D25]/20'
-              : 'border-white/15 hover:border-[#F02D25]'
-          } active:scale-95`}
+          className="pointer-events-auto relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#191919] text-white flex items-center justify-center cursor-pointer shadow-2xl border border-white/10 hover:border-white/25 active:scale-95"
           title="Open Bango AI Day Planner"
           aria-label="Open Bango AI"
         >
-          {/* Inner Parallax "bo" Branding Typography */}
-          <span
-            style={{
-              transform: `translate3d(${innerOffset.x}px, ${innerOffset.y}px, 0)`,
-              transition: 'transform 0.12s ease-out',
-            }}
-            className="font-display font-black text-2xl sm:text-3xl tracking-normal lowercase text-white leading-none select-none inline-block"
-          >
-            bo
-          </span>
-
-          {/* Glowing Red AI Activity Badge at top right */}
-          <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F02D25] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#F02D25] border-2 border-white"></span>
-          </span>
+          {/* Reactive Blinking Robot Eyes */}
+          <BangoRobotEyes size="md" isHovered={isHovered} followCursor={true} />
         </button>
 
       </div>
-    </div>
+    </aside>
   );
 };
