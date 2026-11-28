@@ -622,295 +622,294 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          {/* 65 / 35 Responsive Grid Layout - Locked to remaining screen height (flex-1 min-h-0) */}
-          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 min-h-0 overflow-hidden">
+            {/* 65 / 35 Responsive Grid Layout - Locked to remaining screen height (flex-1 min-h-0) */}
+            <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 min-h-0 overflow-hidden">
 
-            {/* LEFT: 65% Interactive Leaflet Map (8 cols) - 100% Height of Screen */}
-            <div className="lg:col-span-8 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm bg-white relative">
-              <div className="flex-1 w-full h-full relative min-h-0">
-                <CityMap
-                  places={places}
-                  selectedPlace={selectedPlace}
-                  focusedPlace={singleFocusedPlace}
-                  onClearFocus={() => setSingleFocusedPlace(null)}
-                  onSelectPlace={(p) => handleSelectPlace(p, false)}
-                  onSavePlace={handleSavePlace}
-                  isPlaceSaved={isPlaceSaved}
-                  userLocation={userLocation}
-                  onLocateMe={handleLocateMe}
-                  onViewDetails={(p) => setDrawerPlace(p)}
-                />
-              </div>
-            </div>
-
-            {/* RIGHT: 35% Editorial Discovery Panel (4 cols) - Fixed Top Controls + Independent Scrollable Feed */}
-            <div className="lg:col-span-4 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl bg-white border border-[#E3DFD7] p-3.5 sm:p-4 shadow-sm overflow-hidden">
-
-              {/* 1. FIXED: Category Filter Pills at Top */}
-              <div className="mb-2 shrink-0 min-w-0 w-full">
-                <CategoryFilters
-                  categories={categories}
-                  selectedCategory={selectedCategory}
-                  onSelectCategory={handleCategorySelect}
-                />
-              </div>
-
-              {/* 2. FIXED: Natural Search Explanation Bar (if active) */}
-              {activeSearchExplanation && (
-                <div className="mb-2.5 px-3 py-1.5 bg-[#F5F3EE] rounded-xl border border-[#E3DFD7] text-xs text-[#191919] flex items-center justify-between shrink-0">
-                  <span className="font-semibold truncate text-[11px]">{activeSearchExplanation}</span>
-                  <button
-                    onClick={() => setActiveSearchExplanation(null)}
-                    className="text-[#F02D25] hover:underline text-[10px] font-bold shrink-0 ml-2 uppercase tracking-wider"
-                  >
-                    Clear
-                  </button>
+              {/* LEFT: 65% Interactive Leaflet Map (8 cols) - 100% Height of Screen */}
+              <div className="lg:col-span-8 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm bg-white relative">
+                <div className="flex-1 w-full h-full relative min-h-0">
+                  <CityMap
+                    places={places}
+                    selectedPlace={selectedPlace}
+                    focusedPlace={singleFocusedPlace}
+                    onClearFocus={() => setSingleFocusedPlace(null)}
+                    onSelectPlace={(p) => handleSelectPlace(p, false)}
+                    onSavePlace={handleSavePlace}
+                    isPlaceSaved={isPlaceSaved}
+                    userLocation={userLocation}
+                    onLocateMe={handleLocateMe}
+                    onViewDetails={(p) => setDrawerPlace(p)}
+                  />
                 </div>
-              )}
+              </div>
 
-              {/* 3. INDEPENDENT SCROLLABLE FEED OF PLACES */}
-              <div className="flex-1 overflow-y-auto min-h-0 space-y-3 pr-1 pt-1">
-                {isLoadingPlaces ? (
-                  <div className="py-16 text-center text-xs text-[#77736D]">
-                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F02D25]" />
-                    Loading places...
-                  </div>
-                ) : places.length > 0 ? (
-                  places.map((place) => (
-                    <PlaceCard
-                      key={place.place_id}
-                      place={place}
-                      isSelected={selectedPlace?.place_id === place.place_id}
-                      isSaved={isPlaceSaved(place.place_id)}
-                      onSelect={(p) => handleSelectPlace(p, false)}
-                      onSave={handleSavePlace}
-                      onViewDetails={(p) => setDrawerPlace(p)}
-                    />
-                  ))
-                ) : (
-                  <div className="py-16 text-center text-xs text-[#77736D] bg-[#ECE9E2] rounded-2xl border border-dashed border-[#E3DFD7] p-6">
-                    <p className="font-bold text-[#191919] uppercase">No places found</p>
-                    <p className="text-[11px] text-[#77736D] mt-1">
-                      Try selecting another category from the filters above.
-                    </p>
+              {/* RIGHT: 35% Editorial Discovery Panel (4 cols) - Fixed Top Controls + Independent Scrollable Feed */}
+              <div className="lg:col-span-4 flex flex-col h-full min-h-0 rounded-2xl sm:rounded-3xl bg-white border border-[#E3DFD7] p-3.5 sm:p-4 shadow-sm overflow-hidden">
+
+                {/* 1. FIXED: Category Filter Pills at Top */}
+                <div className="mb-2 shrink-0 min-w-0 w-full">
+                  <CategoryFilters
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    onSelectCategory={handleCategorySelect}
+                  />
+                </div>
+
+                {/* 2. FIXED: Natural Search Explanation Bar (if active) */}
+                {activeSearchExplanation && (
+                  <div className="mb-2.5 px-3 py-1.5 bg-[#F5F3EE] rounded-xl border border-[#E3DFD7] text-xs text-[#191919] flex items-center justify-between shrink-0">
+                    <span className="font-semibold truncate text-[11px]">{activeSearchExplanation}</span>
+                    <button
+                      onClick={() => setActiveSearchExplanation(null)}
+                      className="text-[#F02D25] hover:underline text-[10px] font-bold shrink-0 ml-2 uppercase tracking-wider"
+                    >
+                      Clear
+                    </button>
                   </div>
                 )}
+
+                {/* 3. INDEPENDENT SCROLLABLE FEED OF PLACES */}
+                <div className="flex-1 overflow-y-auto min-h-0 space-y-3 pr-1 pt-1">
+                  {isLoadingPlaces ? (
+                    <div className="py-16 text-center text-xs text-[#77736D]">
+                      <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#F02D25]" />
+                      Loading places...
+                    </div>
+                  ) : places.length > 0 ? (
+                    places.map((place) => (
+                      <PlaceCard
+                        key={place.place_id}
+                        place={place}
+                        isSelected={selectedPlace?.place_id === place.place_id}
+                        isSaved={isPlaceSaved(place.place_id)}
+                        onSelect={(p) => handleSelectPlace(p, false)}
+                        onSave={handleSavePlace}
+                        onViewDetails={(p) => setDrawerPlace(p)}
+                      />
+                    ))
+                  ) : (
+                    <div className="py-16 text-center text-xs text-[#77736D] bg-[#ECE9E2] rounded-2xl border border-dashed border-[#E3DFD7] p-6">
+                      <p className="font-bold text-[#191919] uppercase">No places found</p>
+                      <p className="text-[11px] text-[#77736D] mt-1">
+                        Try selecting another category from the filters above.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
               </div>
 
             </div>
-
           </div>
-        </div>
-      )}
+        )}
 
-      {/* PAGE: BANGO AI (DAY PLANNER & AI CONVERSATION) */}
-      {currentPage === 'bango-ai' && (
-        <BangoAiPage
-          places={places}
-          onSelectPlace={(p) => handleSelectPlace(p, false)}
-          onExploreOnMap={(place) => {
-            setSingleFocusedPlace(place);
-            handleSelectPlace(place, true);
-          }}
-          onViewDetails={(place) => setDrawerPlace(place)}
-          onSavePlace={handleSavePlace}
-          isPlaceSaved={isPlaceSaved}
-          userLocation={userLocation}
-          onNavigateToMap={() => {
-            setSingleFocusedPlace(null);
-            navigateToPage('map');
-          }}
-        />
-      )}
+        {/* PAGE: BANGO AI (DAY PLANNER & AI CONVERSATION) */}
+        {currentPage === 'bango-ai' && (
+          <BangoAiPage
+            places={places}
+            onSelectPlace={(p) => handleSelectPlace(p, false)}
+            onExploreOnMap={(place) => {
+              setSingleFocusedPlace(place);
+              handleSelectPlace(place, true);
+            }}
+            onViewDetails={(place) => setDrawerPlace(place)}
+            onSavePlace={handleSavePlace}
+            isPlaceSaved={isPlaceSaved}
+            userLocation={userLocation}
+            onNavigateToMap={() => {
+              setSingleFocusedPlace(null);
+              navigateToPage('map');
+            }}
+          />
+        )}
 
-      {/* PAGE: NATURAL SEARCH ASSISTANT WITH FULL MAP & BOTTOM CHATBOT */}
-      {currentPage === 'assistant' && (
-        <MapAssistantPage
-          places={places}
-          selectedPlace={selectedPlace}
-          onSelectPlace={(p) => handleSelectPlace(p, false)}
-          onSavePlace={handleSavePlace}
-          isPlaceSaved={isPlaceSaved}
-          userLocation={userLocation}
-          onLocateMe={handleLocateMe}
-          onViewDetails={(p) => setDrawerPlace(p)}
-        />
-      )}
+        {/* PAGE: NATURAL SEARCH ASSISTANT WITH FULL MAP & BOTTOM CHATBOT */}
+        {currentPage === 'assistant' && (
+          <MapAssistantPage
+            places={places}
+            selectedPlace={selectedPlace}
+            onSelectPlace={(p) => handleSelectPlace(p, false)}
+            onSavePlace={handleSavePlace}
+            isPlaceSaved={isPlaceSaved}
+            userLocation={userLocation}
+            onLocateMe={handleLocateMe}
+            onViewDetails={(p) => setDrawerPlace(p)}
+          />
+        )}
 
-      {/* PAGE 3: TRENDING */}
-                              {currentPage === 'trending' && (
-                                <TrendingSection
-                                  places={trendingPlaces && trendingPlaces.length >= 30 ? trendingPlaces : places}
-                                  allPlaces={places}
-                                  onSelectPlace={(p) => {
-                                    setSingleFocusedPlace(p);
-                                    handleSelectPlace(p, true);
-                                  }}
-                                  onExploreOnMap={(place) => {
-                                    setSingleFocusedPlace(place);
-                                    handleSelectPlace(place, true);
-                                  }}
-                                  onSavePlace={handleSavePlace}
-                                  isPlaceSaved={isPlaceSaved}
-                                  onViewDetails={(p) => setDrawerPlace(p)}
-                                  onNavigateToMap={() => {
-                                    setSingleFocusedPlace(null);
-                                    navigateToPage('map');
-                                  }}
-                                />
-                              )}
+        {/* PAGE 3: TRENDING */}
+        {currentPage === 'trending' && (
+          <TrendingSection
+            places={trendingPlaces && trendingPlaces.length >= 30 ? trendingPlaces : places}
+            allPlaces={places}
+            onSelectPlace={(p) => {
+              setSingleFocusedPlace(p);
+              handleSelectPlace(p, true);
+            }}
+            onExploreOnMap={(place) => {
+              setSingleFocusedPlace(place);
+              handleSelectPlace(place, true);
+            }}
+            onSavePlace={handleSavePlace}
+            isPlaceSaved={isPlaceSaved}
+            onViewDetails={(p) => setDrawerPlace(p)}
+            onNavigateToMap={() => {
+              setSingleFocusedPlace(null);
+              navigateToPage('map');
+            }}
+          />
+        )}
 
-                              {/* PAGE 4: DOMAINS (ALL 8 SECTORS OVERVIEW) */}
-                              {currentPage === 'domains' && (
-                                <CategoryGrid
-                                  categories={categories}
-                                  onSelectCategory={(catName) => {
-                                    handleCategorySelect(catName);
-                                    navigateToPage('map');
-                                  }}
-                                  onSelectDomainPage={(domainName) => navigateToDomainPage(domainName)}
-                                  onNavigateToMap={() => navigateToPage('map')}
-                                />
-                              )}
+        {/* PAGE 4: DOMAINS (ALL 8 SECTORS OVERVIEW) */}
+        {currentPage === 'domains' && (
+          <CategoryGrid
+            categories={categories}
+            onSelectCategory={(catName) => {
+              handleCategorySelect(catName);
+              navigateToPage('map');
+            }}
+            onSelectDomainPage={(domainName) => navigateToDomainPage(domainName)}
+            onNavigateToMap={() => navigateToPage('map')}
+          />
+        )}
 
-                              {/* PAGE 4.5: INDIVIDUAL DOMAIN PAGE (Healthcare, Tourism, etc.) */}
-                              {currentPage === 'domain-detail' && (
-                                <DomainDetailPage
-                                  domainName={selectedDomain}
-                                  places={places}
-                                  onSelectDomain={(d) => navigateToDomainPage(d)}
-                                  onExploreOnMap={(place) => {
-                                    setSingleFocusedPlace(place);
-                                    handleSelectPlace(place, true);
-                                  }}
-                                  onExploreDomainOnMap={(domain) => {
-                                    setSingleFocusedPlace(null);
-                                    handleCategorySelect(domain);
-                                    navigateToPage('map');
-                                  }}
-                                  onViewDetails={(place) => setDrawerPlace(place)}
-                                  onSavePlace={handleSavePlace}
-                                  isPlaceSaved={isPlaceSaved}
-                                  onBackToAllDomains={() => navigateToPage('domains')}
-                                />
-                              )}
+        {/* PAGE 4.5: INDIVIDUAL DOMAIN PAGE (Healthcare, Tourism, etc.) */}
+        {currentPage === 'domain-detail' && (
+          <DomainDetailPage
+            domainName={selectedDomain}
+            places={places}
+            onSelectDomain={(d) => navigateToDomainPage(d)}
+            onExploreOnMap={(place) => {
+              setSingleFocusedPlace(place);
+              handleSelectPlace(place, true);
+            }}
+            onExploreDomainOnMap={(domain) => {
+              setSingleFocusedPlace(null);
+              handleCategorySelect(domain);
+              navigateToPage('map');
+            }}
+            onViewDetails={(place) => setDrawerPlace(place)}
+            onSavePlace={handleSavePlace}
+            isPlaceSaved={isPlaceSaved}
+            onBackToAllDomains={() => navigateToPage('domains')}
+          />
+        )}
 
-                              {/* PAGE 4.75: FRIENDS DISCOVERY & CIRCLES */}
-                              {currentPage === 'friends' && (
-                                <FriendsSection
-                                  places={places}
-                                  onSelectPlace={(place) => {
-                                    setSingleFocusedPlace(place);
-                                    handleSelectPlace(place, true);
-                                  }}
-                                  onSavePlace={handleSavePlace}
-                                  isPlaceSaved={isPlaceSaved}
-                                  onViewDetails={(place) => setDrawerPlace(place)}
-                                  onNavigateToMap={() => {
-                                    setSingleFocusedPlace(null);
-                                    navigateToPage('map');
-                                  }}
-                                  onShowToast={showToast}
-                                  user={currentUser}
-                                  onOpenAuthModal={() => setIsAuthModalOpen(true)}
-                                />
-                              )}
+        {/* PAGE 4.75: FRIENDS DISCOVERY & CIRCLES */}
+        {currentPage === 'friends' && (
+          <FriendsSection
+            places={places}
+            onSelectPlace={(place) => {
+              setSingleFocusedPlace(place);
+              handleSelectPlace(place, true);
+            }}
+            onSavePlace={handleSavePlace}
+            isPlaceSaved={isPlaceSaved}
+            onViewDetails={(place) => setDrawerPlace(place)}
+            onNavigateToMap={() => {
+              setSingleFocusedPlace(null);
+              navigateToPage('map');
+            }}
+            onShowToast={showToast}
+            user={currentUser}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          />
+        )}
 
-                              {/* PAGE 5: SAVED PLACES */}
-                              {currentPage === 'saved' && (
-                                <SavedPlacesSection
-                                  savedPlaces={savedPlaces}
-                                  onSelectPlace={(p) => {
-                                    setSingleFocusedPlace(p);
-                                    handleSelectPlace(p, true);
-                                  }}
-                                  onRemovePlace={handleSavePlace}
-                                  onViewDetails={(p) => setDrawerPlace(p)}
-                                  onNavigateToMap={() => {
-                                    setSingleFocusedPlace(null);
-                                    navigateToPage('map');
-                                  }}
-                                />
-                              )}
+        {/* PAGE 5: SAVED PLACES */}
+        {currentPage === 'saved' && (
+          <SavedPlacesSection
+            savedPlaces={savedPlaces}
+            onSelectPlace={(p) => {
+              setSingleFocusedPlace(p);
+              handleSelectPlace(p, true);
+            }}
+            onRemovePlace={handleSavePlace}
+            onViewDetails={(p) => setDrawerPlace(p)}
+            onNavigateToMap={() => {
+              setSingleFocusedPlace(null);
+              navigateToPage('map');
+            }}
+          />
+        )}
 
-                            </main>
+      </main>
 
-                            {/* Persistent Floating Bango AI "bo" Button with Cursor Following Physics */}
+      {/* Persistent Floating Bango AI "bo" Button with Cursor Following Physics */}
       <BangoAiFloatingButton
         currentPage={currentPage}
         onClick={() => navigateToPage('bango-ai')}
       />
 
       {/* Place Detail Slide-over Drawer */}
-                            <PlaceDetailDrawer
-                              place={drawerPlace}
-                              onClose={() => setDrawerPlace(null)}
-                              onSavePlace={handleSavePlace}
-                              isSaved={drawerPlace ? isPlaceSaved(drawerPlace.place_id) : false}
-                              onSelectPlace={(p) => {
-                                setSingleFocusedPlace(p);
-                                handleSelectPlace(p, true);
-                                setDrawerPlace(null);
-                              }}
-                              userLocation={userLocation}
-                              onShowToast={showToast}
-                            />
+      <PlaceDetailDrawer
+        place={drawerPlace}
+        onClose={() => setDrawerPlace(null)}
+        onSavePlace={handleSavePlace}
+        isSaved={drawerPlace ? isPlaceSaved(drawerPlace.place_id) : false}
+        onSelectPlace={(p) => {
+          setSingleFocusedPlace(p);
+          handleSelectPlace(p, true);
+          setDrawerPlace(null);
+        }}
+        userLocation={userLocation}
+        onShowToast={showToast}
+      />
 
-                            {/* Google Authentication Modal */}
-                            <GoogleAuthModal
-                              isOpen={isAuthModalOpen}
-                              onClose={() => {
-                                setIsAuthModalOpen(false);
-                                setPendingSavePlace(null);
-                              }}
-                              onLoginSuccess={handleLoginSuccess}
-                              pendingPlaceName={pendingSavePlace?.name}
-                            />
+      {/* Google Authentication Modal */}
+      <GoogleAuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => {
+          setIsAuthModalOpen(false);
+          setPendingSavePlace(null);
+        }}
+        onLoginSuccess={handleLoginSuccess}
+        pendingPlaceName={pendingSavePlace?.name}
+      />
 
-                            {/* Small Bottom Pop Up (Toast) */}
-                            {toast && (
-                              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[3000] max-w-md w-[92%] sm:w-auto animate-in fade-in slide-in-from-bottom-5 duration-300">
-                                <div className="bg-[#191919] text-white px-4 py-3 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-3 backdrop-blur-md">
-                                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                                    toast.type === 'saved' ? 'bg-[#F02D25] text-white' : 'bg-white/15 text-white'
-                                  }`}>
-                                    {toast.type === 'saved' ? (
-                                      <Bookmark className="w-4 h-4 fill-current" />
-                                    ) : (
-                                      <X className="w-4 h-4" />
-                                    )}
-                                  </div>
+      {/* Small Bottom Pop Up (Toast) */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[3000] max-w-md w-[92%] sm:w-auto animate-in fade-in slide-in-from-bottom-5 duration-300">
+          <div className="bg-[#191919] text-white px-4 py-3 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-3 backdrop-blur-md">
+            <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${toast.type === 'saved' ? 'bg-[#F02D25] text-white' : 'bg-white/15 text-white'
+              }`}>
+              {toast.type === 'saved' ? (
+                <Bookmark className="w-4 h-4 fill-current" />
+              ) : (
+                <X className="w-4 h-4" />
+              )}
+            </div>
 
-                                  <div className="flex-1 min-w-0 pr-2">
-                                    <p className="text-xs font-bold truncate text-white">
-                                      {toast.placeName || 'Location'}
-                                    </p>
-                                    <p className="text-[11px] text-[#A8A29E] truncate">
-                                      {toast.message}
-                                    </p>
-                                  </div>
+            <div className="flex-1 min-w-0 pr-2">
+              <p className="text-xs font-bold truncate text-white">
+                {toast.placeName || 'Location'}
+              </p>
+              <p className="text-[11px] text-[#A8A29E] truncate">
+                {toast.message}
+              </p>
+            </div>
 
-                                  <div className="flex items-center gap-1.5 shrink-0">
-                                    <button
-                                      onClick={() => {
-                                        navigateToPage('saved');
-                                        setToast(null);
-                                      }}
-                                      className="text-[11px] font-bold uppercase tracking-wider text-white hover:text-[#F02D25] bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
-                                    >
-                                      View
-                                    </button>
-                                    <button
-                                      onClick={() => setToast(null)}
-                                      className="p-1 text-[#A8A29E] hover:text-white transition-colors cursor-pointer"
-                                      title="Dismiss"
-                                    >
-                                      <X className="w-3.5 h-3.5" />
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                          );
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => {
+                  navigateToPage('saved');
+                  setToast(null);
+                }}
+                className="text-[11px] font-bold uppercase tracking-wider text-white hover:text-[#F02D25] bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+              >
+                View
+              </button>
+              <button
+                onClick={() => setToast(null)}
+                className="p-1 text-[#A8A29E] hover:text-white transition-colors cursor-pointer"
+                title="Dismiss"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };

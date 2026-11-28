@@ -237,10 +237,10 @@ export const Header: React.FC<HeaderProps> = ({
                         <h4 className={`text-sm sm:text-[15px] font-extrabold transition-colors leading-snug whitespace-nowrap ${
                           currentPage === 'assistant' ? 'text-[#F02D25]' : 'text-[#191919] group-hover:text-[#F02D25]'
                         }`}>
-                          Natural Search Assistant
+                          Bango AI Assistant
                         </h4>
                         <p className="text-xs font-medium text-[#66635C] leading-normal mt-1">
-                          Search places using semantic queries and natural language
+                          Interactive map with Bango AI chat, natural language queries & day planner
                         </p>
                       </div>
                     </div>

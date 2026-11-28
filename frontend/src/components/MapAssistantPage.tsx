@@ -20,6 +20,7 @@ import {
 import { Place, RecommendationItem } from '../types';
 import { CityMap, CATEGORY_COLORS } from './CityMap';
 import { performNaturalSearch } from '../services/api';
+import { BangoRobotEyes } from './BangoRobotEyes';
 
 interface MapAssistantPageProps {
   places: Place[];
@@ -45,12 +46,13 @@ interface ChatMessage {
   explanation?: string;
 }
 
-const QUICK_PROMPTS = [
-  'Craft breweries in Indiranagar',
-  'Heritage parks near MG Road',
-  'Top universities & colleges',
-  'Specialty hospitals in Whitefield',
-  'Shopping markets in Commercial Street',
+const BANGO_AI_SUGGESTIONS = [
+  { text: 'plan ur day', query: 'Plan an ideal full-day itinerary exploring Bengaluru with breakfast, culture, parks, and dinner', isRed: true },
+  { text: 'gyms near me', query: 'Gyms and fitness centers near central Bengaluru', isRed: false },
+  { text: 'trending in malleshwaram', query: 'Top trending cafes and heritage places in Malleshwaram', isRed: false },
+  { text: 'best pub in church street', query: 'Best microbreweries and pubs near Church Street and Brigade Road', isRed: true },
+  { text: 'craft breweries in indiranagar', query: 'Top craft breweries and brewpubs in Indiranagar', isRed: false },
+  { text: 'heritage parks near MG road', query: 'Heritage parks, botanical gardens and historic spots near MG Road', isRed: false },
 ];
 
 export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
@@ -80,7 +82,7 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
     {
       id: 'welcome-1',
       sender: 'assistant',
-      text: "Hello! I am your Bengaluru AI Assistant. Ask me anything about places, food, transit, culture, or activities in natural language. I'll pinpoint them directly on the map!",
+      text: "Hello! I am bango ai, your Bengaluru smart city companion. Ask me anything about places, food, transit, culture, or plan your day in natural language. I'll pinpoint them directly on the map!",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -238,22 +240,23 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
           </div>
         )}
 
-        {/* BOTTOM FLOATING CHATBOT PANEL */}
+        {/* BOTTOM FLOATING CHATBOT PANEL: BANGO AI CHAT BOX */}
         <div className="absolute bottom-4 left-3 right-3 sm:left-6 sm:right-6 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl lg:max-w-3xl z-[450]">
           <div className="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-[#E3DFD7] shadow-2xl overflow-hidden flex flex-col transition-all duration-300">
-            {/* Header bar of Chatbot */}
-            <div className="px-4 py-2.5 bg-[#FAF8F5] border-b border-[#E3DFD7] flex items-center justify-between shrink-0">
+            {/* Header bar of Bango AI Chatbot */}
+            <div className="px-4 py-2.5 bg-[#FAF8F5] border-b border-[#E3DFD7] flex items-center justify-between shrink-0 select-none">
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0">
-                  <Sparkles className="w-3.5 h-3.5 text-[#F02D25]" />
+                <div className="w-8 h-8 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <BangoRobotEyes size="sm" isHovered={false} followCursor={true} />
                 </div>
-                <div>
-                  <h3 className="text-xs sm:text-sm font-extrabold text-[#191919] flex items-center gap-2 leading-none">
-                    <span>Bango Assistant</span>
-                    <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                      Apriori Semantic Engine
-                    </span>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-display font-bold text-base sm:text-lg text-[#191919] leading-none tracking-tight flex items-center gap-1.5">
+                    <span>bango</span>
+                    <span className="text-[#F02D25]">ai</span>
                   </h3>
+                  <span className="text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    Apriori Semantic Engine
+                  </span>
                 </div>
               </div>
 
@@ -261,7 +264,7 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
                 {activeQuery && (
                   <button
                     onClick={handleResetMap}
-                    className="text-[11px] font-extrabold text-[#77736D] hover:text-[#191919] transition-colors cursor-pointer"
+                    className="text-[11px] font-extrabold text-[#77736D] hover:text-[#191919] transition-colors cursor-pointer px-2 py-1 rounded-lg hover:bg-[#ECE9E2]"
                   >
                     Reset Map
                   </button>
@@ -279,21 +282,24 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
             {/* Expandable Conversation Body */}
             {isExpanded && (
               <div className="max-h-[220px] sm:max-h-[280px] overflow-y-auto p-3.5 sm:p-4 space-y-3 bg-[#FAF8F5]/80">
-                {/* Quick Prompts Suggestions */}
+                {/* Bango AI Quick Prompts Suggestions */}
                 {messages.length <= 2 && (
                   <div className="pb-1">
-                    <p className="text-[11px] font-bold text-[#77736D] uppercase tracking-wider mb-2">
-                      Suggested Questions
+                    <p className="text-[10px] font-bold text-[#77736D] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3 text-[#F02D25]" />
+                      <span>Suggested Queries</span>
                     </p>
                     <div className="flex flex-wrap gap-1.5">
-                      {QUICK_PROMPTS.map((prompt, idx) => (
+                      {BANGO_AI_SUGGESTIONS.map((item, idx) => (
                         <button
                           key={idx}
-                          onClick={() => handleSendMessage(prompt)}
+                          onClick={() => handleSendMessage(item.query)}
                           disabled={isSearching}
-                          className="px-2.5 py-1 rounded-xl bg-white border border-[#E3DFD7] hover:border-[#191919] text-[11px] font-semibold text-[#191919] hover:bg-[#F5F3EE] transition-all cursor-pointer shadow-2xs whitespace-nowrap"
+                          className={`px-3 py-1.5 rounded-full bg-white border border-[#E3DFD7] hover:border-[#191919] text-xs font-display font-bold transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 whitespace-nowrap ${
+                            item.isRed ? 'text-[#F02D25] hover:border-[#F02D25]' : 'text-[#191919]'
+                          }`}
                         >
-                          {prompt}
+                          {item.text}
                         </button>
                       ))}
                     </div>
@@ -315,6 +321,17 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
                             : 'bg-white text-[#191919] border border-[#E3DFD7] rounded-bl-xs shadow-xs'
                         }`}
                       >
+                        {!isUser && (
+                          <div className="flex items-center gap-1.5 mb-1.5 select-none">
+                            <div className="w-4 h-4 rounded-full bg-[#191919] text-white flex items-center justify-center text-[8px] font-bold">
+                              bo
+                            </div>
+                            <span className="font-display font-bold text-[11px] text-[#191919]">
+                              bango <span className="text-[#F02D25]">ai</span>
+                            </span>
+                          </div>
+                        )}
+
                         {/* Text explanation */}
                         <p className="text-xs font-medium">{msg.text}</p>
 
@@ -379,20 +396,20 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
                                   <div className="mt-2 pt-1.5 border-t border-[#E3DFD7] flex items-center justify-between gap-1">
                                     <button
                                       onClick={() => onSelectPlace(plc)}
-                                      className="flex-1 py-1 px-2 bg-[#191919] hover:bg-[#F02D25] text-white text-[10px] font-bold rounded-lg transition-colors text-center"
+                                      className="flex-1 py-1 px-2 bg-[#191919] hover:bg-[#F02D25] text-white text-[10px] font-bold rounded-lg transition-colors text-center cursor-pointer"
                                     >
                                       Pin on Map
                                     </button>
                                     <button
                                       onClick={() => onViewDetails(plc)}
-                                      className="p-1 rounded-lg border border-[#E3DFD7] text-[#191919] hover:bg-white"
+                                      className="p-1 rounded-lg border border-[#E3DFD7] text-[#191919] hover:bg-white cursor-pointer"
                                       title="View Details"
                                     >
                                       <ExternalLink className="w-3 h-3" />
                                     </button>
                                     <button
                                       onClick={() => onSavePlace(plc)}
-                                      className={`p-1 rounded-lg border ${
+                                      className={`p-1 rounded-lg border cursor-pointer ${
                                         isPlaceSaved(plc.place_id)
                                           ? 'bg-[#F02D25] text-white border-[#F02D25]'
                                           : 'border-[#E3DFD7] text-[#77736D] hover:bg-white'
@@ -441,10 +458,10 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
 
                 {/* Loading indicator inside chat */}
                 {isSearching && (
-                  <div className="flex items-center gap-2 p-3 bg-white rounded-2xl border border-[#E3DFD7] w-fit shadow-xs">
+                  <div className="flex items-center gap-2.5 p-3 bg-white rounded-2xl border border-[#E3DFD7] w-fit shadow-xs">
                     <Loader2 className="w-4 h-4 animate-spin text-[#F02D25]" />
                     <span className="text-xs font-medium text-[#77736D]">
-                      Mining Bengaluru destinations & Apriori association rules...
+                      bango ai is thinking & searching destinations on map...
                     </span>
                   </div>
                 )}
@@ -453,40 +470,45 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
               </div>
             )}
 
-            {/* Input Bar */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendMessage();
-              }}
-              className="p-2 sm:p-2.5 bg-white flex items-center gap-2 shrink-0 border-t border-[#E3DFD7]"
-            >
-              <div className="relative flex-1">
+            {/* Input Bar: Signature Bango AI Pill Chat Box */}
+            <div className="p-2 sm:p-2.5 bg-white border-t border-[#E3DFD7]">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendMessage();
+                }}
+                className="relative flex items-center bg-[#FAF8F5] rounded-full pl-2 pr-1.5 py-1.5 sm:py-2 border border-[#E3DFD7] hover:border-[#191919] focus-within:border-[#F02D25] focus-within:ring-2 focus-within:ring-[#F02D25]/20 focus-within:bg-white transition-all shadow-xs"
+              >
+                {/* Round black companion robot face with blinking eyes */}
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#191919] text-white flex items-center justify-center shrink-0 select-none shadow-xs">
+                  <BangoRobotEyes size="sm" isHovered={false} followCursor={true} />
+                </div>
+
+                {/* Input with exact signature placeholder */}
                 <input
                   type="text"
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
-                  placeholder="Ask Bango Assistant (e.g., 'Parks near MG Road', 'Craft breweries in Indiranagar')..."
-                  className="w-full pl-3.5 pr-3 py-2 sm:py-2.5 rounded-xl bg-[#F5F3EE] border border-[#E3DFD7] focus:border-[#191919] focus:outline-hidden text-xs sm:text-sm text-[#191919] placeholder:text-[#77736D] transition-colors"
+                  placeholder="bango ai for your help !!"
+                  className="flex-1 bg-transparent border-none outline-hidden px-3 text-xs sm:text-sm font-medium text-[#191919] placeholder:text-[#77736D]"
                   disabled={isSearching}
                 />
-              </div>
 
-              <button
-                type="submit"
-                disabled={!inputQuery.trim() || isSearching}
-                className="px-4 py-2 sm:py-2.5 rounded-xl bg-[#191919] hover:bg-[#F02D25] disabled:opacity-40 text-white text-xs sm:text-sm font-extrabold flex items-center gap-1.5 transition-all cursor-pointer disabled:cursor-not-allowed shrink-0"
-              >
-                {isSearching ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <>
-                    <span>Ask</span>
-                    <Send className="w-3.5 h-3.5" />
-                  </>
-                )}
-              </button>
-            </form>
+                {/* Submit button with Send icon */}
+                <button
+                  type="submit"
+                  disabled={!inputQuery.trim() || isSearching}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#191919] hover:bg-[#F02D25] disabled:opacity-40 text-white flex items-center justify-center shrink-0 transition-all cursor-pointer shadow-xs active:scale-95 disabled:cursor-not-allowed"
+                  title="Ask Bango AI"
+                >
+                  {isSearching ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4 -rotate-12 translate-x-0.5" />
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
