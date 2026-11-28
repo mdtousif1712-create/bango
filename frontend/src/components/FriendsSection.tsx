@@ -210,7 +210,7 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
     places.find((p) => p.place_id === midpointData.spotPlaceId) || places[0];
 
   return (
-    <section className="py-8 sm:py-12 bg-[#F5F3EE] min-h-[calc(100vh-80px)] font-sans antialiased selection:bg-[#F02D25] selection:text-white">
+    <section className="py-8 sm:py-12 bg-[#ECE9E2] min-h-[calc(100vh-80px)] font-sans antialiased selection:bg-[#F02D25] selection:text-white">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* 1. SECTION HERO HEADER */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 sm:mb-12">

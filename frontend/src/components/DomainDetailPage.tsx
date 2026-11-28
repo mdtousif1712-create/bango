@@ -136,7 +136,7 @@ export const DomainDetailPage: React.FC<DomainDetailPageProps> = ({
   );
 
   return (
-    <div className="py-8 sm:py-12 bg-[#F5F3EE] min-h-[calc(100vh-80px)] font-sans antialiased">
+    <div className="py-8 sm:py-12 bg-[#ECE9E2] min-h-[calc(100vh-80px)] font-sans antialiased">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* HERO DISPLAY SECTION (Matches Healthcare reference) */}
         <div className="mb-10 sm:mb-12">

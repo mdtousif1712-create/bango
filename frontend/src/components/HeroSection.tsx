@@ -68,7 +68,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onPlanDay,
 }) => {
   return (
-    <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-6 sm:py-8 md:py-10 overflow-hidden">
+    <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-6 sm:py-8 md:py-10 overflow-hidden bg-[#ECE9E2]">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         
         {/* 2-Column Editorial Hero Layout */}

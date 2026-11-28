@@ -561,7 +561,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#F5F3EE] text-[#191919] font-sans antialiased flex flex-col selection:bg-[#F02D25] selection:text-white">
+    <div className="min-h-screen w-full bg-[#ECE9E2] text-[#191919] font-sans antialiased flex flex-col selection:bg-[#F02D25] selection:text-white">
 
       {/* 1. PERSISTENT NAVIGATION HEADER */}
       <Header

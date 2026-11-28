@@ -81,7 +81,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({
   };
 
   return (
-    <section className="py-8 sm:py-12 bg-[#F5F3EE] min-h-[calc(100vh-80px)]">
+    <section className="py-8 sm:py-12 bg-[#ECE9E2] min-h-[calc(100vh-80px)]">
       <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
         
         {/* Section Header */}
