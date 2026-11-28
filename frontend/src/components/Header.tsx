@@ -124,27 +124,29 @@ export const Header: React.FC<HeaderProps> = ({
           {/* 1. BRAND LOGO */}
           <div
             onClick={() => handleNavClick('discover')}
-            className="cursor-pointer group flex items-center gap-2.5 sm:gap-3 shrink-0"
+            className="cursor-pointer group flex flex-col justify-center shrink-0 select-none py-1"
             title="bango™ • smart city discovery"
           >
-            {/* Circular bo Monogram */}
-            <div className="w-10 h-10 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display font-bold text-lg lowercase tracking-tight transition-colors shrink-0">
-              bo
-            </div>
+            {/* Primary Row: Circular bo Monogram + bango Brand Name centered on exact same axis */}
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display font-bold text-base sm:text-lg lowercase tracking-tight transition-colors shrink-0 shadow-xs">
+                <span className="-translate-y-[0.5px]">bo</span>
+              </div>
 
-            <div className="flex flex-col">
-              <div className="flex items-start">
+              <div className="flex items-center leading-none">
                 <span className="font-display font-bold text-2xl sm:text-3xl lowercase tracking-tight text-[#191919] leading-none group-hover:text-[#F02D25] transition-colors">
                   bango
                 </span>
-                <span className="text-[11px] font-bold text-[#F02D25] ml-0.5 -mt-0.5 select-none">
+                <span className="text-[11px] font-bold text-[#F02D25] ml-0.5 -mt-1 select-none">
                   ™
                 </span>
               </div>
-              <span className="text-[8px] sm:text-[10px] font-semibold uppercase tracking-widest text-[#77736D] mt-0.5 whitespace-nowrap">
-                smart city discovery
-              </span>
             </div>
+
+            {/* Subtitle: smart city discovery aligned neatly below bango name */}
+            <span className="text-[8px] sm:text-[9.5px] font-semibold uppercase tracking-widest text-[#77736D] pl-11.5 sm:pl-13 -mt-0.5 whitespace-nowrap">
+              smart city discovery
+            </span>
           </div>
 
           {/* 2. NAVIGATION SLIDE DOWN OPTIONS (Desktop lg+) */}

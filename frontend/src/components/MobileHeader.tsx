@@ -38,13 +38,18 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-start">
-          <span className="font-display font-bold text-2xl lowercase tracking-tight text-[#191919] leading-none">
-            bango
-          </span>
-          <span className="text-[10px] font-bold text-[#F02D25] ml-0.5 -mt-0.5">
-            ™
-          </span>
+        <div className="flex items-center gap-2 select-none">
+          <div className="w-7 h-7 rounded-full bg-[#191919] text-white flex items-center justify-center font-display font-bold text-xs lowercase tracking-tight shrink-0">
+            bo
+          </div>
+          <div className="flex items-center leading-none">
+            <span className="font-display font-bold text-2xl lowercase tracking-tight text-[#191919] leading-none">
+              bango
+            </span>
+            <span className="text-[10px] font-bold text-[#F02D25] ml-0.5 -mt-1">
+              ™
+            </span>
+          </div>
         </div>
       </div>
 
