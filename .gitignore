@@ -53,5 +53,6 @@ Thumbs.db
 
 # Media & Temp
 *.mp4
+!frontend/public/bango_intro.mp4
 temp_frames/
 

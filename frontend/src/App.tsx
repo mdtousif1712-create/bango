@@ -9,6 +9,7 @@ import {
 } from './services/api';
 import { Header, PageId } from './components/Header';
 import { GoogleAuthModal } from './components/GoogleAuthModal';
+import { BangoIntroModal } from './components/BangoIntroModal';
 import { AuthUser, getStoredUser, clearStoredUser, syncUserSavedPlaces } from './services/auth';
 import { HeroSection } from './components/HeroSection';
 import { CityMap } from './components/CityMap';
@@ -171,6 +172,7 @@ export const App: React.FC = () => {
   // User location & saved places
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(getStoredUser);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isIntroModalOpen, setIsIntroModalOpen] = useState<boolean>(false);
   const [pendingSavePlace, setPendingSavePlace] = useState<Place | null>(null);
   const [toast, setToast] = useState<ToastData | null>(null);
 
@@ -589,6 +591,7 @@ export const App: React.FC = () => {
         }}
         user={currentUser}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onOpenIntroModal={() => setIsIntroModalOpen(true)}
         onLogout={handleLogout}
       />
 
@@ -602,6 +605,7 @@ export const App: React.FC = () => {
             isSearching={isSearching}
             onExploreMap={() => navigateToPage('map')}
             onPlanDay={handlePlanYourDay}
+            onWatchIntro={() => setIsIntroModalOpen(true)}
           />
         )}
 
@@ -865,6 +869,12 @@ export const App: React.FC = () => {
         }}
         onLoginSuccess={handleLoginSuccess}
         pendingPlaceName={pendingSavePlace?.name}
+      />
+
+      {/* Official Bango Intro Animation Video Modal */}
+      <BangoIntroModal
+        isOpen={isIntroModalOpen}
+        onClose={() => setIsIntroModalOpen(false)}
       />
 
       {/* Small Bottom Pop Up (Toast) */}

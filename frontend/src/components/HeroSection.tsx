@@ -8,6 +8,7 @@ interface HeroSectionProps {
   onExploreMap: () => void;
   onPlanDay?: () => void;
   onOpenAlgorithm?: () => void;
+  onWatchIntro?: () => void;
 }
 
 const DISCOVER_GALLERY_ITEMS: GalleryItem[] = [
@@ -66,6 +67,7 @@ const DISCOVER_GALLERY_ITEMS: GalleryItem[] = [
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onExploreMap,
   onPlanDay,
+  onWatchIntro,
 }) => {
   return (
     <section className="relative w-full min-h-[calc(100vh-80px)] flex items-center py-6 sm:py-8 md:py-10 overflow-hidden bg-[#ECE9E2]">
@@ -118,6 +120,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-45 group-hover:scale-110" />
                 </div>
               </button>
+
+              {/* Watch Intro Button */}
+              {onWatchIntro && (
+                <button
+                  onClick={onWatchIntro}
+                  className="group relative flex items-center justify-between gap-3 px-6 sm:px-8 py-4 sm:py-4.5 rounded-full border-2 border-[#191919] hover:border-[#F02D25] bg-white/70 hover:bg-white text-[#191919] hover:text-[#F02D25] text-xs sm:text-[13px] font-bold uppercase tracking-wider transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer overflow-hidden backdrop-blur-xs"
+                  title="Watch Bango Official Intro Animation"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-6 h-6 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center font-display text-[10px] lowercase transition-colors font-bold">
+                      bo
+                    </div>
+                    <span>Watch Intro</span>
+                  </div>
+                  <span className="text-[10px] bg-[#ECE9E2] group-hover:bg-[#F5F3EE] px-2 py-0.5 rounded font-mono text-[#77736D]">
+                    12s
+                  </span>
+                </button>
+              )}
             </div>
 
           </div>
