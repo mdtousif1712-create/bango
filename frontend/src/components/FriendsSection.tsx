@@ -441,47 +441,8 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
               )}
             </div>
 
-            {/* Right 4 Cols: Quick Circles & Apriori Group Hangout Recommendations */}
+            {/* Right 4 Cols: Invite Card */}
             <div className="lg:col-span-4 space-y-6">
-              {/* Group Hangout Rules Card */}
-              <div className="bg-white rounded-3xl border border-[#E3DFD7] p-6 shadow-xs">
-                <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-4 h-4 text-[#F02D25]" />
-                  <h3 className="font-display font-bold text-base text-[#191919] uppercase tracking-wider">
-                    Group Co-Visit Rules
-                  </h3>
-                </div>
-                <p className="text-xs text-[#66635C] leading-relaxed mb-4">
-                  Apriori Association mining indicates these destinations are frequently co-visited when exploring Bangalore with groups:
-                </p>
-
-                <div className="space-y-2.5">
-                  {[
-                    { from: 'Cubbon Park', to: 'State Central Library', lift: '10.8x', conf: '89%' },
-                    { from: 'Toit Brewpub', to: 'Truffles Indiranagar', lift: '8.4x', conf: '82%' },
-                    { from: 'UB City', to: 'Commercial Street', lift: '7.2x', conf: '78%' },
-                  ].map((rule, i) => (
-                    <div
-                      key={i}
-                      className="p-3 bg-[#FAF8F5] rounded-xl border border-[#E3DFD7] flex items-center justify-between text-xs"
-                    >
-                      <div className="min-w-0 pr-2">
-                        <span className="font-bold text-[#191919] block truncate">{rule.from}</span>
-                        <span className="text-[#77736D] text-[11px] block truncate">
-                          &rarr; Co-visit {rule.to}
-                        </span>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <span className="text-[10px] font-black text-[#F02D25] bg-white px-2 py-0.5 rounded-full border border-[#E3DFD7] block">
-                          {rule.lift} Lift
-                        </span>
-                        <span className="text-[10px] text-[#77736D] mt-0.5 block">{rule.conf} Conf</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Invite Card */}
               <div className="bg-[#191919] text-white rounded-3xl p-6 shadow-md relative overflow-hidden">
                 <div className="relative z-10">
