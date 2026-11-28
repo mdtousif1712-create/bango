@@ -927,6 +927,7 @@ export const App: React.FC = () => {
                                 setDrawerPlace(null);
                               }}
                               userLocation={userLocation}
+                              onShowToast={showToast}
                             />
 
                             {/* Google Authentication Modal */}

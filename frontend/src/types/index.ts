@@ -83,3 +83,15 @@ export interface SearchResultResponse {
   explanation: string;
   notice?: string;
 }
+
+export interface FriendProfile {
+  id: string;
+  name: string;
+  handle: string;
+  avatar: string;
+  locality: string;
+  savedPlacesCount: number;
+  favoriteDomain: string;
+  status: string;
+  recentSavedPlaceId: string;
+}

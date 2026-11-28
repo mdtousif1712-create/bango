@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Place, RecommendationItem } from '../types';
 import { fetchRecommendations } from '../services/api';
+import { SharePlaceModal } from './SharePlaceModal';
 import {
   X,
   Star,
@@ -23,6 +24,7 @@ interface PlaceDetailDrawerProps {
   isSaved: boolean;
   onSelectPlace: (place: Place) => void;
   userLocation: { lat: number; lng: number } | null;
+  onShowToast?: (message: string, placeName?: string, type?: 'saved' | 'removed') => void;
 }
 
 export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
@@ -32,10 +34,12 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
   isSaved,
   onSelectPlace,
   userLocation,
+  onShowToast,
 }) => {
   const [recommendations, setRecommendations] = useState<RecommendationItem[]>([]);
   const [isLoadingRecs, setIsLoadingRecs] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (place) {
@@ -60,17 +64,7 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
   };
 
   const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: place.name,
-        text: `Explore ${place.name} in Bengaluru Smart City Discovery!`,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(`${place.name} - ${place.address}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    setIsShareModalOpen(true);
   };
 
   return (
@@ -163,6 +157,15 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
           >
             <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
             <span>{isSaved ? 'Saved' : 'Bookmark'}</span>
+          </button>
+
+          <button
+            onClick={() => setIsShareModalOpen(true)}
+            className="py-3 px-3.5 border border-[#E3DFD7] bg-white text-[#191919] hover:bg-[#ECE9E2] text-xs font-bold uppercase tracking-wider rounded-2xl transition-all flex items-center gap-2 cursor-pointer shadow-2xs"
+            title="Share with friends in app or via link"
+          >
+            <Share2 className="w-4 h-4 text-[#F02D25]" />
+            <span>Share</span>
           </button>
         </div>
 
@@ -291,6 +294,14 @@ export const PlaceDetailDrawer: React.FC<PlaceDetailDrawerProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Share with Friends & Destinations Modal */}
+      <SharePlaceModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        place={place}
+        onShowToast={onShowToast}
+      />
     </div>
   );
 };
