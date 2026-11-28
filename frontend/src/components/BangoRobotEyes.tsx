@@ -9,7 +9,7 @@ export interface BangoRobotEyesProps {
 
 /**
  * Bango AI companion face featuring the original "bo" typography design
- * acting as reactive, blinking companion eyes that follow the cursor.
+ * acting as highly responsive, blinking companion eyes that actively track cursor movement.
  */
 export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
   size = 'md',
@@ -65,7 +65,7 @@ export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
     };
   }, []);
 
-  // Smooth cursor tracking across the screen
+  // Highly responsive smooth cursor tracking across the screen
   useEffect(() => {
     if (!followCursor) return;
 
@@ -79,18 +79,22 @@ export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
       const distY = e.clientY - centerY;
       const distance = Math.hypot(distX, distY);
 
-      const maxShift = size === 'sm' ? 4 : size === 'lg' ? 8 : 6;
-      const gazeDistance = Math.min(distance, 450);
-      const ratio = gazeDistance / 450;
+      // Increased shift range so eye movement is prominent and lively
+      const maxShiftX = size === 'sm' ? 5 : size === 'lg' ? 10 : 8.5;
+      const maxShiftY = size === 'sm' ? 4 : size === 'lg' ? 8.5 : 7;
+
+      // Higher sensitivity: looks strongly towards mouse even from afar
+      const gazeDistance = Math.min(distance, 400);
+      const ratio = Math.min(gazeDistance / 240, 1);
       const angle = Math.atan2(distY, distX);
 
       setEyeOffset({
-        x: Math.cos(angle) * ratio * maxShift,
-        y: Math.sin(angle) * ratio * maxShift,
+        x: Math.cos(angle) * ratio * maxShiftX,
+        y: Math.sin(angle) * ratio * maxShiftY,
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [followCursor, size]);
 
@@ -108,7 +112,7 @@ export const BangoRobotEyes: React.FC<BangoRobotEyesProps> = ({
       ref={containerRef}
       style={{
         transform: `translate3d(${eyeOffset.x}px, ${eyeOffset.y}px, 0)`,
-        transition: 'transform 0.12s ease-out',
+        transition: 'transform 0.06s ease-out',
       }}
       className={`flex items-center justify-center select-none pointer-events-none ${className}`}
     >
