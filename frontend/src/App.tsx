@@ -846,6 +846,10 @@ export const App: React.FC = () => {
                                     setSingleFocusedPlace(p);
                                     handleSelectPlace(p, true);
                                   }}
+                                  onExploreOnMap={(place) => {
+                                    setSingleFocusedPlace(place);
+                                    handleSelectPlace(place, true);
+                                  }}
                                   onSavePlace={handleSavePlace}
                                   isPlaceSaved={isPlaceSaved}
                                   onViewDetails={(p) => setDrawerPlace(p)}

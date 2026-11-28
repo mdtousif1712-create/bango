@@ -10,6 +10,7 @@ interface TrendingSectionProps {
   isPlaceSaved: (placeId: string) => boolean;
   onViewDetails: (place: Place) => void;
   onNavigateToMap?: () => void;
+  onExploreOnMap?: (place: Place) => void;
 }
 
 const CATEGORY_TABS = [
@@ -32,6 +33,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   isPlaceSaved,
   onViewDetails,
   onNavigateToMap,
+  onExploreOnMap,
 }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState<number>(0);
@@ -85,10 +87,15 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   const secondary = otherPlaces.slice(0, 2);
   const tertiary = otherPlaces.slice(2);
 
-  const handleCardClick = (place: Place) => {
-    onSelectPlace(place);
-    if (onNavigateToMap) {
-      onNavigateToMap();
+  const handleExploreMap = (place: Place, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onExploreOnMap) {
+      onExploreOnMap(place);
+    } else {
+      onSelectPlace(place);
+      if (onNavigateToMap) {
+        onNavigateToMap();
+      }
     }
   };
 
@@ -137,7 +144,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
               <div
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
-                onClick={() => handleCardClick(featured)}
+                onClick={() => onViewDetails(featured)}
                 className="group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[460px] flex-1 flex flex-col justify-between select-none"
               >
                 {/* Photo with overlay and smooth keyframe fade */}
@@ -199,9 +206,14 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                     </p>
                   </div>
 
-                  <div className="w-12 h-12 rounded-full bg-[#F02D25] group-hover:bg-[#E9473D] text-white flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 shadow-lg">
+                  <button
+                    type="button"
+                    onClick={(e) => handleExploreMap(featured, e)}
+                    className="w-12 h-12 rounded-full bg-[#F02D25] hover:bg-[#D9221A] text-white flex items-center justify-center shrink-0 transition-all hover:scale-110 shadow-lg cursor-pointer"
+                    title="Explore on Map"
+                  >
                     <ArrowUpRight className="w-6 h-6" />
-                  </div>
+                  </button>
                 </div>
               </div>
 
@@ -237,7 +249,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
             {secondary.map((place) => (
               <div
                 key={place.place_id}
-                onClick={() => handleCardClick(place)}
+                onClick={() => onViewDetails(place)}
                 className="group relative bg-white rounded-3xl overflow-hidden border border-[#E3DFD7] shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer flex-1 flex flex-col justify-between min-h-[220px]"
               >
                 <div className="relative h-36 w-full overflow-hidden bg-[#ECE9E2]">
@@ -273,9 +285,14 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                     </p>
                   </div>
 
-                  <div className="w-9 h-9 rounded-full bg-[#191919] group-hover:bg-[#F02D25] text-white flex items-center justify-center shrink-0 transition-colors">
+                  <button
+                    type="button"
+                    onClick={(e) => handleExploreMap(place, e)}
+                    className="w-9 h-9 rounded-full bg-[#191919] hover:bg-[#F02D25] text-white flex items-center justify-center shrink-0 transition-all hover:scale-110 cursor-pointer shadow-xs"
+                    title="Explore on Map"
+                  >
                     <ArrowUpRight className="w-4 h-4" />
-                  </div>
+                  </button>
                 </div>
               </div>
             ))}
@@ -289,7 +306,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
             {tertiary.map((place) => (
               <div
                 key={place.place_id}
-                onClick={() => handleCardClick(place)}
+                onClick={() => onViewDetails(place)}
                 className="group relative bg-white rounded-3xl p-4 border border-[#E3DFD7] shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center gap-4"
               >
                 <div className="relative w-20 h-20 rounded-2xl overflow-hidden shrink-0 bg-[#ECE9E2]">
@@ -317,9 +334,14 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                   </p>
                 </div>
 
-                <div className="w-8 h-8 rounded-full bg-[#ECE9E2] group-hover:bg-[#F02D25] group-hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-colors">
+                <button
+                  type="button"
+                  onClick={(e) => handleExploreMap(place, e)}
+                  className="w-8 h-8 rounded-full bg-[#ECE9E2] hover:bg-[#F02D25] hover:text-white text-[#191919] flex items-center justify-center shrink-0 transition-all hover:scale-110 cursor-pointer shadow-xs"
+                  title="Explore on Map"
+                >
                   <ArrowUpRight className="w-3.5 h-3.5" />
-                </div>
+                </button>
               </div>
             ))}
           </div>
