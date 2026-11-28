@@ -108,7 +108,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
           <div>
             <h2 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
               the city <br />
-              is talking.
+              is <span className="text-[#F02D25]">talking.</span>
             </h2>
           </div>
 

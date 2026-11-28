@@ -185,7 +185,7 @@ export const MapAssistantPage: React.FC<MapAssistantPageProps> = ({
         <div className="flex items-center gap-3 min-w-0">
           <span className="w-3.5 h-3.5 rounded-full bg-[#F02D25] shrink-0"></span>
           <h2 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-[#191919] tracking-tight leading-none whitespace-nowrap">
-            bengaluru map & ai assistant.
+            bengaluru map & ai <span className="text-[#F02D25]">assistant.</span>
           </h2>
           <span className="hidden md:inline text-xs sm:text-sm text-[#77736D] font-normal border-l border-[#D1CCC4] pl-3 truncate">
             Natural language search and conversational discovery powered by Apriori association mining

@@ -217,7 +217,7 @@ export const FriendsSection: React.FC<FriendsSectionProps> = ({
           <div>
             <h1 className="font-display font-black text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
               explore bengaluru <br className="hidden sm:inline" />
-              with friends.
+              with <span className="text-[#F02D25]">friends.</span>
             </h1>
             <p className="text-sm sm:text-base text-[#66635C] mt-3 max-w-2xl font-medium leading-relaxed">
               Coordinate group hangouts, track where your friends are exploring, discover midpoint meetups, and uncover group co-visit patterns powered by Apriori algorithm intelligence.

@@ -33,7 +33,7 @@ export const SavedPlacesSection: React.FC<SavedPlacesSectionProps> = ({
           <div>
             <h2 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-[#191919] tracking-tight leading-tight">
               your city. <br />
-              your collection.
+              your <span className="text-[#F02D25]">collection.</span>
             </h2>
           </div>
 
