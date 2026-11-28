@@ -8,7 +8,6 @@ interface BangoIntroModalProps {
 export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) => {
   const [isFading, setIsFading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
-  const [isSoundBlocked, setIsSoundBlocked] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleFinish = () => {
@@ -19,47 +18,36 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
     }, 600);
   };
 
-  const handleUnmute = () => {
-    const video = videoRef.current;
-    if (video) {
-      video.muted = false;
-      video.volume = 1;
-      setIsSoundBlocked(false);
-    }
-  };
-
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Attempt to play with full sound enabled
+    // Automatically play with full sound enabled
     video.muted = false;
     video.volume = 1;
 
     const playPromise = video.play();
     if (playPromise !== undefined) {
       playPromise.catch((err) => {
-        console.warn('Unmuted autoplay prevented by browser policy:', err);
-        // Fallback: If browser blocks unmuted audio on cold start, play muted and let user tap to unmute
+        console.warn('Browser required gesture for sound:', err);
+        // Play video immediately, and unmute on first gesture silently without showing any UI badge
         video.muted = true;
-        setIsSoundBlocked(true);
-        video.play().catch(() => {
-          handleFinish();
-        });
+        video.play().then(() => {
+          video.muted = false;
+        }).catch(() => {});
       });
     }
 
-    const handleGlobalInteraction = () => {
+    const handleSilentUnmute = () => {
       if (video && video.muted) {
         video.muted = false;
         video.volume = 1;
-        setIsSoundBlocked(false);
       }
     };
 
-    window.addEventListener('click', handleGlobalInteraction);
-    window.addEventListener('keydown', handleGlobalInteraction);
-    window.addEventListener('touchstart', handleGlobalInteraction);
+    window.addEventListener('click', handleSilentUnmute);
+    window.addEventListener('keydown', handleSilentUnmute);
+    window.addEventListener('touchstart', handleSilentUnmute);
 
     const handleTimeUpdate = () => {
       if (video.duration) {
@@ -83,9 +71,9 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener('click', handleGlobalInteraction);
-      window.removeEventListener('keydown', handleGlobalInteraction);
-      window.removeEventListener('touchstart', handleGlobalInteraction);
+      window.removeEventListener('click', handleSilentUnmute);
+      window.removeEventListener('keydown', handleSilentUnmute);
+      window.removeEventListener('touchstart', handleSilentUnmute);
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('ended', handleEnded);
       window.removeEventListener('keydown', handleKeyDown);
@@ -123,16 +111,6 @@ export const BangoIntroModal: React.FC<BangoIntroModalProps> = ({ onComplete }) 
           Your browser does not support HTML5 video playback.
         </video>
       </div>
-
-      {/* Floating Unmute Helper (Only shown if browser autoplay policy blocks unmuted audio on cold start) */}
-      {isSoundBlocked && (
-        <button
-          onClick={handleUnmute}
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/60 hover:bg-[#F02D25] border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md transition-all cursor-pointer shadow-lg animate-pulse"
-        >
-          <span>🔊 Tap anywhere for sound</span>
-        </button>
-      )}
 
       {/* Bottom Progress Bar */}
       <div className="absolute bottom-0 left-0 right-0 z-20 h-1 bg-white/10">
